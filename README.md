@@ -1,0 +1,126 @@
+# GaweTracker
+
+A personal job application tracker to log applications, monitor recruitment pipeline, and analyze patterns.
+
+## Screenshots
+
+> Screenshots of dashboard, kanban board, and analytics — run locally to see it live.
+
+## Why This Exists
+
+Kyan started applying for jobs and realized applications were scattered across emails, spreadsheets, and memory. GaweTracker was built to solve that problem: a single place to track every application, see where each one stands in the pipeline, and learn from the data over time.
+
+## Features
+
+- **CRUD for job applications** — company, position, location, work type, source, link, salary range, HR contact, notes
+- **Pipeline stages** — wishlist → applied → screening → interview → offer → hired (plus rejected)
+- **Kanban board** — visual cards grouped by stage
+- **Dashboard** — total applications, follow-up reminders (>7 days without updates), weekly target progress, offer deadline alerts
+- **Status timeline** — history of stage changes per application
+- **Pipeline analytics** — conversion funnel, rejection breakdown by stage, time-to-response averages, weekly volume, 12-month activity heatmap
+- **Offer comparison matrix** — side-by-side view of multiple offers with salary, benefits, and deadline
+- **Interview prep checklist** — per-application checklist
+- **Filter and search** — by company, position, status, work type; state persisted in URL
+- **Company logos** — auto-resolved via Google Favicon API with initial-letter fallback
+- **CSV export** — export filtered application data
+
+## Tech Stack
+
+| Layer | Choice | Why |
+|-------|--------|-----|
+| Framework | Laravel 13 | Full-featured PHP framework, active ecosystem |
+| Frontend | Blade templates | Server-rendered HTML, no build step complexity |
+| CSS | Pure CSS (public/css/shadcn.css) | No Vite/Node toolchain — reduces setup for solo project |
+| Database | MySQL | Standard relational DB, works with Laravel migrations |
+| Auth | Single-user login | v1 scope is personal use only, no public registration |
+| Testing | PHPUnit | Laravel's default test framework |
+
+## Local Setup
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/ridzkyan/gawetracker.git
+   cd gawetracker
+   ```
+
+2. Copy environment file
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Configure database in `.env`
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=gawetracker
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
+
+4. Install dependencies
+   ```bash
+   composer install
+   ```
+
+5. Generate application key
+   ```bash
+   php artisan key:generate
+   ```
+
+6. Run migrations with seed data
+   ```bash
+   php artisan migrate --seed
+   ```
+
+7. Start development server
+   ```bash
+   php artisan serve
+   ```
+
+8. Open http://localhost:8000 in your browser
+
+Default login credentials (from UserSeeder):
+- Email: user@gawetracker.local
+- Password: password
+
+## Tests
+
+77 tests, 598 assertions — run the full suite:
+
+```bash
+php artisan test
+```
+
+Run specific test suites:
+
+```bash
+php artisan test --testsuite=Feature
+php artisan test --testsuite=Unit
+```
+
+## Project Structure
+
+```
+app/
+├── Http/Controllers/     # Request handlers (AuthController, JobApplicationController, AnalyticsController, etc.)
+├── Models/               # Eloquent models (JobApplication, StatusHistory, OfferDetail, InterviewChecklist)
+
+resources/
+├── views/                # Blade templates (dashboard, kanban, analytics, offers, forms)
+
+public/
+├── css/shadcn.css        # Pure CSS styling (no build step)
+
+tests/
+├── Feature/              # Full-stack integration tests
+├── Unit/                 # Isolated unit tests
+
+database/
+├── migrations/           # Schema definitions
+├── seeders/              # Realistic Indonesian tech company seed data
+```
+
+## License
+
+MIT
