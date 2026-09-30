@@ -1,0 +1,5 @@
+scripts:
+  setup: composer install --no-interaction
+worktree:
+  sharedDirectories:
+    - vendor
