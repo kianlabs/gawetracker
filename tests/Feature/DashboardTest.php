@@ -21,7 +21,7 @@ class DashboardTest extends TestCase
 
     public function test_guest_is_redirected_to_login(): void
     {
-        $response = $this->get('/dashboard');
+        $response = $this->get('/');
 
         $response->assertRedirect('/login');
     }
@@ -103,7 +103,7 @@ class DashboardTest extends TestCase
         // Reached interview: 4 (D, E, F, G)
         // Win rate: round((4 / 7) * 100, 1) = 57.1%
 
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
 
         $response->assertStatus(200);
         $response->assertViewIs('dashboard');
@@ -124,7 +124,7 @@ class DashboardTest extends TestCase
 
     public function test_win_rate_is_zero_when_no_applications_exist(): void
     {
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
 
         $response->assertStatus(200);
         $response->assertViewHas('total', 0);
@@ -154,7 +154,7 @@ class DashboardTest extends TestCase
         ]);
 
         // Default target is 8: count = 2, target = 8, percentage = round((2/8)*100) = 25%
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
 
         $response->assertStatus(200);
         $response->assertViewHas('weeklyCount', 2);
@@ -166,7 +166,7 @@ class DashboardTest extends TestCase
         $response->assertSee('8');
 
         // Custom target: ?target=4 -> percentage = round((2/4)*100) = 50%
-        $responseCustom = $this->actingAs($this->user)->get('/dashboard?target=4');
+        $responseCustom = $this->actingAs($this->user)->get('/?target=4');
         $responseCustom->assertStatus(200);
         $responseCustom->assertViewHas('weeklyCount', 2);
         $responseCustom->assertViewHas('weeklyTarget', 4);
@@ -174,7 +174,7 @@ class DashboardTest extends TestCase
         $responseCustom->assertSee('50%');
 
         // Target exceeded: count = 2, target = 1 -> capped at 100%
-        $responseExceeded = $this->actingAs($this->user)->get('/dashboard?target=1');
+        $responseExceeded = $this->actingAs($this->user)->get('/?target=1');
         $responseExceeded->assertStatus(200);
         $responseExceeded->assertViewHas('weeklyCount', 2);
         $responseExceeded->assertViewHas('weeklyTarget', 1);
@@ -247,7 +247,7 @@ class DashboardTest extends TestCase
             'last_status_change_at' => null,
         ]);
 
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
 
         $response->assertStatus(200);
         $response->assertViewHas('followUpApplications');
@@ -280,7 +280,7 @@ class DashboardTest extends TestCase
             'applied_at' => now()->subDays(2),
         ]);
 
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('Tidak ada lamaran yang menggantung. Semua proses terkontrol!');
@@ -297,7 +297,7 @@ class DashboardTest extends TestCase
             ]);
         }
 
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
 
         $response->assertStatus(200);
         $recent = $response->viewData('recentApplications');
@@ -318,7 +318,7 @@ class DashboardTest extends TestCase
         ]);
 
         // Initially appears in follow-up list on dashboard
-        $response = $this->actingAs($this->user)->get('/dashboard');
+        $response = $this->actingAs($this->user)->get('/');
         $response->assertSee('PT Teknologi Maju');
         $response->assertSee('12 hari tanpa kabar');
 
@@ -344,7 +344,7 @@ class DashboardTest extends TestCase
         ]);
 
         // Follow-up list should no longer include this app because it was updated just now (< 7 days ago)
-        $followUpResponse = $this->actingAs($this->user)->get('/dashboard');
+        $followUpResponse = $this->actingAs($this->user)->get('/');
         $followUps = $followUpResponse->viewData('followUpApplications');
         $this->assertFalse($followUps->contains('id', $app->id));
     }

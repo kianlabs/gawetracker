@@ -11,12 +11,11 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_guest_can_see_welcome_page(): void
+    public function test_guest_is_redirected_to_login_page(): void
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
-        $response->assertSee('GaweTracker');
+        $response->assertRedirect('/login');
     }
 
     public function test_login_page_can_be_rendered(): void
@@ -48,7 +47,7 @@ class AuthTest extends TestCase
         ]);
 
         $this->assertAuthenticatedAs($user);
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/');
     }
 
     public function test_authentication_fails_with_invalid_credentials_and_indonesian_message(): void
