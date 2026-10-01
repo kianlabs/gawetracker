@@ -13,21 +13,22 @@ class DashboardController extends Controller
      */
     public function index(Request $request): View
     {
-        $total = JobApplication::count();
+        // Consolidate all status counts into a single grouped query
+        $statusCounts = JobApplication::query()
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
 
-        $active = JobApplication::whereIn('status', [
-            'wishlist',
-            'applied',
-            'screening',
-            'interview',
-        ])->count();
-        $wishlist = JobApplication::where('status', 'wishlist')->count();
-        $applied = JobApplication::where('status', 'applied')->count();
-        $screening = JobApplication::where('status', 'screening')->count();
-        $interview = JobApplication::where('status', 'interview')->count();
-        $offer = JobApplication::where('status', 'offer')->count();
-        $hired = JobApplication::where('status', 'hired')->count();
-        $rejected = JobApplication::where('status', 'rejected')->count();
+        $total = $statusCounts->sum();
+        $wishlist = $statusCounts['wishlist'] ?? 0;
+        $applied = $statusCounts['applied'] ?? 0;
+        $screening = $statusCounts['screening'] ?? 0;
+        $interview = $statusCounts['interview'] ?? 0;
+        $offer = $statusCounts['offer'] ?? 0;
+        $hired = $statusCounts['hired'] ?? 0;
+        $rejected = $statusCounts['rejected'] ?? 0;
+
+        $active = $wishlist + $applied + $screening + $interview;
 
         $interviewReachedCount = JobApplication::where(function ($query) {
             $query->whereIn('status', ['interview', 'offer', 'hired'])

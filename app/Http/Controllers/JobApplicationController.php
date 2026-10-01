@@ -43,29 +43,11 @@ class JobApplicationController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = JobApplication::query();
+        $query = $this->applyFilters(JobApplication::query(), $request);
 
-        if ($search = trim((string) $request->input('search'))) {
-            $query->where(function ($q) use ($search) {
-                $q->where('company', 'like', "%{$search}%")
-                  ->orWhere('position', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%")
-                  ->orWhere('contact_name', 'like', "%{$search}%");
-            });
-        }
-
-        if ($status = $request->input('status')) {
-            if (array_key_exists($status, self::STATUSES)) {
-                $query->where('status', $status);
-            }
-        }
-
-        if ($workType = $request->input('work_type')) {
-            if (array_key_exists($workType, self::WORK_TYPES)) {
-                $query->where('work_type', $workType);
-            }
-        }
-
+        $search = trim((string) $request->input('search'));
+        $status = $request->input('status');
+        $workType = $request->input('work_type');
         $allowedSorts = ['applied_at', 'company', 'created_at', 'status'];
         $sortBy = in_array($request->input('sort_by'), $allowedSorts, true) ? $request->input('sort_by') : 'applied_at';
         $sortDir = strtolower((string) $request->input('sort_dir')) === 'asc' ? 'asc' : 'desc';
@@ -296,28 +278,7 @@ class JobApplicationController extends Controller
      */
     public function exportCsv(Request $request): StreamedResponse
     {
-        $query = JobApplication::query();
-
-        if ($search = trim((string) $request->input('search'))) {
-            $query->where(function ($q) use ($search) {
-                $q->where('company', 'like', "%{$search}%")
-                  ->orWhere('position', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%")
-                  ->orWhere('contact_name', 'like', "%{$search}%");
-            });
-        }
-
-        if ($status = $request->input('status')) {
-            if (array_key_exists($status, self::STATUSES)) {
-                $query->where('status', $status);
-            }
-        }
-
-        if ($workType = $request->input('work_type')) {
-            if (array_key_exists($workType, self::WORK_TYPES)) {
-                $query->where('work_type', $workType);
-            }
-        }
+        $query = $this->applyFilters(JobApplication::query(), $request);
 
         $fileName = 'lamaran_pekerjaan_' . now()->format('Ymd_His') . '.csv';
 
@@ -372,5 +333,34 @@ class JobApplicationController extends Controller
 
             fclose($handle);
         }, 200, $headers);
+    }
+
+    /**
+     * Apply common filters (search, status, work_type) to a query.
+     */
+    private function applyFilters($query, Request $request)
+    {
+        if ($search = trim((string) $request->input('search'))) {
+            $query->where(function ($q) use ($search) {
+                $q->where('company', 'like', "%{$search}%")
+                  ->orWhere('position', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%")
+                  ->orWhere('contact_name', 'like', "%{$search}%");
+            });
+        }
+
+        if ($status = $request->input('status')) {
+            if (array_key_exists($status, self::STATUSES)) {
+                $query->where('status', $status);
+            }
+        }
+
+        if ($workType = $request->input('work_type')) {
+            if (array_key_exists($workType, self::WORK_TYPES)) {
+                $query->where('work_type', $workType);
+            }
+        }
+
+        return $query;
     }
 }

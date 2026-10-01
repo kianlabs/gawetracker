@@ -26,6 +26,9 @@ class InterviewChecklistController extends Controller
 
     public function toggle(InterviewChecklist $checklist): RedirectResponse
     {
+        // Single-user app: route model binding provides 404 for non-existent records.
+        // Multi-user TODO: verify $checklist->jobApplication->user_id === Auth::id()
+        
         $checklist->is_completed = ! $checklist->is_completed;
         $checklist->completed_at = $checklist->is_completed ? now() : null;
         $checklist->save();
@@ -35,6 +38,9 @@ class InterviewChecklistController extends Controller
 
     public function destroy(InterviewChecklist $checklist): RedirectResponse
     {
+        // Single-user app: route model binding provides 404 for non-existent records.
+        // Multi-user TODO: verify $checklist->jobApplication->user_id === Auth::id()
+        
         $checklist->delete();
 
         return back()->with('success', 'Item checklist berhasil dihapus.');
