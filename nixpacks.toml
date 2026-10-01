@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ['php83', 'php83Extensions.pdo', 'php83Extensions.pdo_mysql', 'php83Extensions.mbstring', 'nodejs']
+
+[phases.install]
+cmds = ['composer install --no-dev --optimize-autoloader --no-interaction']
+
+[phases.build]
+cmds = ['php artisan config:cache', 'php artisan route:cache', 'php artisan view:cache']
+
+[start]
+cmd = 'php artisan migrate --force && php artisan db:seed --force --class=DatabaseSeeder && php artisan serve --host=0.0.0.0 --port=$PORT'

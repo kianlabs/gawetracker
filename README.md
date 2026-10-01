@@ -84,6 +84,22 @@ Default login credentials (from UserSeeder):
 - Email: user@gawetracker.local
 - Password: password
 
+
+## Deployment
+
+### Quick Deploy to Railway
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/gawetracker)
+
+**Live Demo**: Coming soon
+
+For detailed deployment instructions (Railway, Fly.io, or custom VPS), see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Default Credentials
+- Email: `user@gawetracker.local`
+- Password: `password`
+
+⚠️ **Change default password immediately after first login in production.**
 ## Tests
 
 77 tests, 598 assertions — run the full suite:
