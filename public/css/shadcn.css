@@ -1251,3 +1251,24 @@ header.site-header {
 .heatmap-month-label { font-size:0.65rem; color:hsl(var(--muted-foreground)); width:13px; overflow:visible; white-space:nowrap; }
 .heatmap-day-labels { display:flex; flex-direction:column; gap:3px; margin-right:4px; padding-top:0; }
 .heatmap-day-label { height:13px; font-size:0.65rem; color:hsl(var(--muted-foreground)); line-height:13px; }
+
+/* ── Welcome Landing Page ── */
+.welcome-nav { display:flex; justify-content:space-between; align-items:center; max-width:56rem; margin:0 auto; padding:1rem 1.5rem; }
+.welcome-nav-brand { display:flex; align-items:center; gap:0.5rem; font-weight:600; color:hsl(var(--foreground)); text-decoration:none; }
+.welcome-container { max-width:56rem; margin:0 auto; padding:3rem 1.5rem; }
+.welcome-hero { text-align:center; margin-bottom:3rem; }
+.welcome-hero-title { font-size:2.5rem; font-weight:700; margin-bottom:0.5rem; color:hsl(var(--foreground)); }
+.welcome-hero-subtitle { font-size:1.125rem; color:hsl(var(--muted-foreground)); margin-bottom:1rem; }
+.welcome-hero-description { max-width:42rem; margin:0 auto; line-height:1.6; color:hsl(var(--foreground)); }
+.welcome-problem { max-width:42rem; margin:0 auto 3rem; line-height:1.6; color:hsl(var(--muted-foreground)); text-align:center; }
+.welcome-section { margin-bottom:3rem; }
+.welcome-section-title { font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:hsl(var(--foreground)); }
+.welcome-features { display:grid; grid-template-columns:repeat(auto-fit,minmax(16rem,1fr)); gap:1.5rem; }
+.welcome-feature-card { padding:1.5rem; background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:calc(var(--radius) + 2px); }
+.welcome-feature-title { font-size:1.125rem; font-weight:600; margin-bottom:0.5rem; color:hsl(var(--foreground)); }
+.welcome-feature-desc { font-size:0.875rem; color:hsl(var(--muted-foreground)); line-height:1.5; margin:0; }
+.welcome-tech-badges { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-bottom:0.5rem; }
+.welcome-tech-badge { display:inline-block; padding:0.25rem 0.75rem; background:hsl(var(--muted)); color:hsl(var(--foreground)); border-radius:calc(var(--radius)); font-size:0.875rem; font-weight:500; }
+.welcome-tech-note { text-align:center; font-size:0.875rem; color:hsl(var(--muted-foreground)); margin-bottom:2rem; }
+.welcome-cta { text-align:center; }
+.welcome-cta-secondary { margin-top:1rem; font-size:0.875rem; color:hsl(var(--muted-foreground)); }
