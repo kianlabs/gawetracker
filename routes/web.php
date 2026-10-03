@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GmailConnectionController;
 use App\Http\Controllers\InterviewChecklistController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\KanbanController;
@@ -17,6 +18,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Gmail OAuth connection (read-only mailbox linking)
+    Route::get('/gmail/connect', [GmailConnectionController::class, 'redirect'])->name('gmail.connect');
+    Route::get('/gmail/callback', [GmailConnectionController::class, 'callback'])->name('gmail.callback');
+    Route::delete('/gmail/disconnect', [GmailConnectionController::class, 'destroy'])->name('gmail.disconnect');
 
     // Applications specialized routes (must be defined before resource route)
     Route::get('/applications/kanban', [KanbanController::class, 'index'])->name('applications.kanban');

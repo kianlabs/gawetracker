@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'gmail' => [
+        // OAuth2 access token with the gmail.readonly scope. Used by
+        // `php artisan emails:import --gmail` to pull JobStreet/Glints mail.
+        'access_token' => env('GMAIL_ACCESS_TOKEN'),
+
+        // OAuth2 client used by the "Connect Gmail" flow. Create these in the
+        // Google Cloud Console and add the redirect URI below to the client.
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 ];
