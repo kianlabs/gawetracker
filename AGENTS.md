@@ -22,7 +22,7 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-Default credentials: `user@gawetracker.local` / `password`
+Default credentials: `kyan@gawetracker.test` / `password`
 
 ## Key Conventions
 

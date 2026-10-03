@@ -1,0 +1,18 @@
+# GaweTracker cron — install to /etc/cron.d/gawetracker
+#
+#   sudo cp deploy/oracle/crontab /etc/cron.d/gawetracker
+#   sudo chown root:root /etc/cron.d/gawetracker && sudo chmod 644 /etc/cron.d/gawetracker
+#
+# Paths assume the helper scripts were copied to /usr/local/bin (see the guide).
+
+# ── Laravel scheduler (runs the email-sync job every 30 min) ─────────────────
+* * * * * www-data cd /var/www/gawetracker && php artisan schedule:run >> /dev/null 2>&1
+
+# ── Queue worker (also keeps a long-running process alive) ───────────────────
+@reboot www-data cd /var/www/gawetracker && php artisan queue:work --sleep=3 --tries=3 --max-time=3600 >> /var/www/gawetracker/storage/logs/queue.log 2>&1
+
+# ── Anti-idle keepalive (Oracle reclaims instances idle for 7 days) ──────────
+*/5 * * * * root /usr/local/bin/gawetracker-keepalive
+
+# ── Nightly database backup (7-day rotation) ─────────────────────────────────
+15 3 * * * root /usr/local/bin/gawetracker-backup
