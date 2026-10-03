@@ -43,6 +43,49 @@ class JobApplication extends Model
     ];
 
     /**
+     * All valid pipeline statuses, in funnel order. `rejected` is terminal but
+     * kept here so it is accepted anywhere a status is validated.
+     *
+     * @var list<string>
+     */
+    public const STATUSES = [
+        'wishlist',
+        'applied',
+        'screening',
+        'interview',
+        'offer',
+        'hired',
+        'rejected',
+    ];
+
+    /**
+     * Statuses that count as "still in the pipeline" (active). Everything except
+     * the terminal states `hired` and `rejected`.
+     *
+     * @var list<string>
+     */
+    public const ACTIVE_STATUSES = [
+        'wishlist',
+        'applied',
+        'screening',
+        'interview',
+        'offer',
+    ];
+
+    /**
+     * Scope to applications whose current status is still active (not hired or
+     * rejected). Use this everywhere "Aktif Diproses" is shown so the metric has
+     * a single, consistent definition.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<JobApplication>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<JobApplication>
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', self::ACTIVE_STATUSES);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

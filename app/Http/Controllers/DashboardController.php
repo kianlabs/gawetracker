@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $hired = $statusCounts['hired'] ?? 0;
         $rejected = $statusCounts['rejected'] ?? 0;
 
-        $active = $wishlist + $applied + $screening + $interview;
+        $active = $statusCounts->only(JobApplication::ACTIVE_STATUSES)->sum();
 
         $interviewReachedCount = JobApplication::where(function ($query) {
             $query->whereIn('status', ['interview', 'offer', 'hired'])

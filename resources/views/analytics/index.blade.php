@@ -68,12 +68,6 @@
         $rejRate = ($totalApplications > 0)
             ? round(($totalRejected / $totalApplications) * 100, 1)
             : null;
-
-        // Active: all statuses except hired and rejected
-        $activeCount = 0;
-        foreach (['wishlist','applied','screening','interview','offer'] as $s) {
-            $activeCount += $funnel[$s]['count'] ?? 0;
-        }
     @endphp
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="metric-card accent-primary">

@@ -95,7 +95,7 @@ class DashboardTest extends TestCase
         ]);
 
         // Total: 7
-        // Active: 4 (A: wishlist, B: applied, C: screening, D: interview)
+        // Active: 5 (A: wishlist, B: applied, C: screening, D: interview, E: offer)
         // Interview: 1 (D)
         // Offer: 1 (E)
         // Hired: 1 (F)
@@ -108,7 +108,7 @@ class DashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('dashboard');
         $response->assertViewHas('total', 7);
-        $response->assertViewHas('active', 4);
+        $response->assertViewHas('active', 5);
         $response->assertViewHas('interview', 1);
         $response->assertViewHas('offer', 1);
         $response->assertViewHas('hired', 1);

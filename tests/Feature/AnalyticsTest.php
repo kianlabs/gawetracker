@@ -39,6 +39,76 @@ class AnalyticsTest extends TestCase
         $response->assertSee('Ringkasan Analisis');
     }
 
+    public function test_active_count_reflects_current_status_not_cumulative_funnel(): void
+    {
+        // One application that passed through every funnel stage and ended in a
+        // terminal state. The cumulative funnel counts it at each stage, so summing
+        // the funnel would over-count — this is the regression guard.
+        $app = JobApplication::create([
+            'company' => 'PT Terminal',
+            'position' => 'Engineer',
+            'status' => 'rejected',
+            'applied_at' => now()->subDays(30),
+        ]);
+        $app->statusHistories()->create(['from_status' => null, 'to_status' => 'wishlist', 'created_at' => now()->subDays(30)]);
+        $app->statusHistories()->create(['from_status' => 'wishlist', 'to_status' => 'applied', 'created_at' => now()->subDays(28)]);
+        $app->statusHistories()->create(['from_status' => 'applied', 'to_status' => 'screening', 'created_at' => now()->subDays(24)]);
+        $app->statusHistories()->create(['from_status' => 'screening', 'to_status' => 'interview', 'created_at' => now()->subDays(18)]);
+        $app->statusHistories()->create(['from_status' => 'interview', 'to_status' => 'offer', 'created_at' => now()->subDays(10)]);
+        $app->statusHistories()->create(['from_status' => 'offer', 'to_status' => 'rejected', 'created_at' => now()->subDays(5)]);
+
+        // 2 genuinely active applications (current status in the pipeline)
+        JobApplication::create(['company' => 'PT Aktif 1', 'position' => 'Engineer', 'status' => 'applied', 'applied_at' => now()->subDays(3)]);
+        JobApplication::create(['company' => 'PT Aktif 2', 'position' => 'Engineer', 'status' => 'interview', 'applied_at' => now()->subDays(2)]);
+
+        // 1 hired (terminal)
+        JobApplication::create(['company' => 'PT Hired', 'position' => 'Engineer', 'status' => 'hired', 'applied_at' => now()->subDays(20)]);
+
+        $response = $this->actingAs($this->user)->get('/analytics');
+
+        $response->assertStatus(200);
+        $response->assertViewHas('totalApplications', 4);
+
+        // Active = only the 2 with a current non-terminal status.
+        $response->assertViewHas('activeCount', 2);
+
+        // Sanity: active can never exceed the total number of applications.
+        $activeCount = $response->viewData('activeCount');
+        $this->assertLessThanOrEqual($response->viewData('totalApplications'), $activeCount);
+    }
+
+    public function test_active_count_is_zero_when_no_applications_exist(): void
+    {
+        $response = $this->actingAs($this->user)->get('/analytics');
+
+        $response->assertStatus(200);
+        $response->assertViewHas('activeCount', 0);
+    }
+
+    public function test_active_metric_matches_dashboard(): void
+    {
+        // Mix of every status, including terminal ones and a rejected app that
+        // passed through several stages (would inflate a cumulative count).
+        JobApplication::create(['company' => 'W', 'position' => 'E', 'status' => 'wishlist', 'applied_at' => now()->subDays(9)]);
+        JobApplication::create(['company' => 'A', 'position' => 'E', 'status' => 'applied', 'applied_at' => now()->subDays(8)]);
+        JobApplication::create(['company' => 'S', 'position' => 'E', 'status' => 'screening', 'applied_at' => now()->subDays(7)]);
+        JobApplication::create(['company' => 'I', 'position' => 'E', 'status' => 'interview', 'applied_at' => now()->subDays(6)]);
+        JobApplication::create(['company' => 'O', 'position' => 'E', 'status' => 'offer', 'applied_at' => now()->subDays(5)]);
+        JobApplication::create(['company' => 'H', 'position' => 'E', 'status' => 'hired', 'applied_at' => now()->subDays(4)]);
+        JobApplication::create(['company' => 'R', 'position' => 'E', 'status' => 'rejected', 'applied_at' => now()->subDays(3)]);
+
+        $analytics = $this->actingAs($this->user)->get('/analytics');
+        $dashboard = $this->actingAs($this->user)->get('/');
+
+        // 5 active (wishlist, applied, screening, interview, offer) — hired/rejected excluded.
+        $this->assertEquals(5, $analytics->viewData('activeCount'));
+        $this->assertEquals(
+            $dashboard->viewData('active'),
+            $analytics->viewData('activeCount'),
+            'Dashboard and analytics must report the same active count.'
+        );
+    }
+
     public function test_funnel_calculations_with_applications_at_different_stages(): void
     {
         // 1. Wishlist (never moved)

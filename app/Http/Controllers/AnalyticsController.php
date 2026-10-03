@@ -68,6 +68,10 @@ class AnalyticsController extends Controller
         $interviewReachedCount = $funnel['interview']['count'] ?? 0;
         $totalOffers = $funnel['offer']['count'] ?? 0;
 
+        // Active = applications whose CURRENT status is still in the pipeline.
+        // Uses the shared scope so the metric matches the dashboard exactly.
+        $activeCount = JobApplication::active()->count();
+
         return view('analytics.index', [
             // Funnel
             'funnel' => $funnel,
@@ -95,6 +99,7 @@ class AnalyticsController extends Controller
             // KPI Summary
             'totalApplications' => $totalApplications,
             'total' => $totalApplications,
+            'activeCount' => $activeCount,
             'interviewReachedCount' => $interviewReachedCount,
             'totalInterviewReached' => $interviewReachedCount,
             'totalOffers' => $totalOffers,
