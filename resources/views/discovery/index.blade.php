@@ -99,7 +99,7 @@
                                           onsubmit="return confirm('Hapus pencarian tersimpan \"{{ addslashes($saved->keyword) }}\"?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-ghost btn-sm">Hapus</button>
+                                        <button type="submit" class="btn btn-destructive btn-sm">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
@@ -271,7 +271,7 @@
                                               style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-ghost btn-sm">Hapus</button>
+                                            <button type="submit" class="btn btn-destructive btn-sm">Hapus</button>
                                         </form>
                                     </div>
                                 </td>
