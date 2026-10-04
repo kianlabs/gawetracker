@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     // Job discovery from external boards (Glints, Jobstreet)
     Route::get('/discovery', [JobDiscoveryController::class, 'index'])->name('discovery.index');
     Route::post('/discovery/search', [JobDiscoveryController::class, 'search'])->name('discovery.search');
+    Route::post('/discovery/saved', [JobDiscoveryController::class, 'storeSavedSearch'])->name('discovery.saved.store');
+    Route::delete('/discovery/saved/{savedSearch}', [JobDiscoveryController::class, 'destroySavedSearch'])->name('discovery.saved.destroy');
     Route::post('/discovery/{posting}/promote', [JobDiscoveryController::class, 'promote'])->name('discovery.promote');
     Route::delete('/discovery/{posting}', [JobDiscoveryController::class, 'destroy'])->name('discovery.destroy');
 

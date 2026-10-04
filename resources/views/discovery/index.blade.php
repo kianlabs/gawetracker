@@ -60,6 +60,83 @@
     </div>
 </div>
 
+{{-- Saved searches (auto-refreshed by the scheduler) --}}
+<div class="section-card mb-4">
+    <div class="section-header">
+        <span class="section-title">Pencarian Tersimpan</span>
+        <span class="text-xs text-muted">Diperbarui otomatis tiap jam</span>
+    </div>
+    <div class="section-body">
+        @if ($savedSearches->count() > 0)
+            <div class="table-wrapper mb-3">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Kata Kunci</th>
+                            <th>Maks</th>
+                            <th>Terakhir Dijalankan</th>
+                            <th>Hasil Terakhir</th>
+                            <th style="text-align:right;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($savedSearches as $saved)
+                            <tr>
+                                <td><span class="font-semibold">{{ $saved->keyword }}</span></td>
+                                <td><span class="text-sm text-muted tabular-nums">{{ $saved->limit }}</span></td>
+                                <td>
+                                    <span class="text-sm text-muted">
+                                        {{ $saved->last_run_at ? $saved->last_run_at->diffForHumans() : 'Belum pernah' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-sm tabular-nums">
+                                        {{ $saved->last_created }} baru / {{ $saved->last_seen }} dilihat
+                                    </span>
+                                </td>
+                                <td style="text-align:right;">
+                                    <form method="POST" action="{{ route('discovery.saved.destroy', $saved) }}" style="display:inline;"
+                                          onsubmit="return confirm('Hapus pencarian tersimpan \"{{ addslashes($saved->keyword) }}\"?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-ghost btn-sm">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p class="text-sm text-muted mb-3">
+                Belum ada pencarian tersimpan. Simpan kata kunci agar lowongan baru masuk otomatis tanpa harus mencari manual.
+            </p>
+        @endif
+
+        <form method="POST" action="{{ route('discovery.saved.store') }}">
+            @csrf
+            <div class="filter-bar">
+                <div style="display:flex;flex-direction:column;gap:0.25rem;min-width:14rem;flex:2;">
+                    <label for="saved_keyword" class="label text-xs font-semibold text-muted" style="text-transform:uppercase;letter-spacing:.04em;">Kata Kunci</label>
+                    <input type="text" id="saved_keyword" name="keyword" class="input" placeholder="Contoh: laravel developer" required>
+                    @error('keyword')<span class="input-error text-xs">{{ $message }}</span>@enderror
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.25rem;min-width:8rem;flex:0 0 auto;">
+                    <label for="saved_limit" class="label text-xs font-semibold text-muted" style="text-transform:uppercase;letter-spacing:.04em;">Maks / Sumber</label>
+                    <select id="saved_limit" name="limit" class="select">
+                        @foreach ([10, 20, 30, 60] as $opt)
+                            <option value="{{ $opt }}" {{ $opt === 30 ? 'selected' : '' }}>{{ $opt }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="display:flex;align-items:flex-end;gap:0.5rem;padding-bottom:0.0625rem;">
+                    <button type="submit" class="btn btn-default btn-sm">Simpan Pencarian</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 {{-- Filter bar --}}
 <div class="section-card mb-4">
     <form method="GET" action="{{ route('discovery.index') }}">

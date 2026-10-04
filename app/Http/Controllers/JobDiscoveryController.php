@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\JobApplication;
 use App\Models\JobPosting;
+use App\Models\SavedSearch;
 use App\Services\Discovery\GlintsSource;
 use App\Services\Discovery\JobDiscoveryService;
 use App\Services\Discovery\JobstreetSource;
@@ -74,7 +75,46 @@ class JobDiscoveryController extends Controller
             'currentPromoted' => $promoted,
             'totalPostings' => JobPosting::count(),
             'newPostings' => JobPosting::whereNull('job_application_id')->count(),
+            'savedSearches' => SavedSearch::query()->orderBy('keyword')->get(),
         ]);
+    }
+
+    /**
+     * Save a keyword so the scheduler re-runs it automatically.
+     */
+    public function storeSavedSearch(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'keyword' => ['required', 'string', 'max:100'],
+            'limit' => ['nullable', 'integer', 'min:1', 'max:60'],
+        ], [
+            'keyword.required' => 'Kata kunci pencarian wajib diisi.',
+            'keyword.max' => 'Kata kunci maksimal 100 karakter.',
+            'limit.integer' => 'Jumlah maksimal harus berupa angka.',
+            'limit.min' => 'Jumlah minimal 1.',
+            'limit.max' => 'Jumlah maksimal 60.',
+        ]);
+
+        SavedSearch::updateOrCreate(
+            ['keyword' => trim($validated['keyword'])],
+            ['limit' => (int) ($validated['limit'] ?? 30), 'is_active' => true],
+        );
+
+        return redirect()
+            ->route('discovery.index')
+            ->with('success', 'Pencarian disimpan. Sistem akan memperbaruinya secara berkala.');
+    }
+
+    /**
+     * Stop (and remove) a saved search.
+     */
+    public function destroySavedSearch(SavedSearch $savedSearch): RedirectResponse
+    {
+        $savedSearch->delete();
+
+        return redirect()
+            ->route('discovery.index')
+            ->with('success', 'Pencarian tersimpan dihapus.');
     }
 
     /**

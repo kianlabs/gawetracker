@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -41,5 +42,13 @@ class User extends Authenticatable
     public function weeklyTarget(): int
     {
         return $this->weekly_target > 0 ? (int) $this->weekly_target : 8;
+    }
+
+    /**
+     * Postings discovered on this user's behalf.
+     */
+    public function jobPostings(): HasMany
+    {
+        return $this->hasMany(JobPosting::class);
     }
 }
