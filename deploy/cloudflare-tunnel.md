@@ -117,3 +117,49 @@ app's own login form would mean it is NOT protected.
   cloudflared config, and the generated DB + admin passwords.
 - **Change the seeded admin password** before any public exposure (done for this
   deployment; stored in the backup dir).
+
+## Scheduler (cron replacement)
+
+`crontab` is not installed on this host, so Laravel's scheduler is driven by a
+systemd **user** timer instead:
+
+- `~/.config/systemd/user/gawetracker-schedule.timer` fires every minute
+  (`OnCalendar=*:*:00`).
+- `~/.config/systemd/user/gawetracker-schedule.service` runs
+  `docker exec gawetracker-app php artisan schedule:run`.
+
+What the schedule actually does lives in `routes/console.php` — currently
+`jobs:discover-saved` (hourly, `withoutOverlapping`). Lingering is enabled, so
+the timer survives reboots without an interactive login.
+
+```bash
+systemctl --user status gawetracker-schedule.timer --no-pager
+systemctl --user list-timers gawetracker-schedule.timer
+docker exec gawetracker-app php artisan schedule:list
+```
+
+## Email verification
+
+The app implements `MustVerifyEmail`, but enforcement is **off by default**
+(`EMAIL_VERIFICATION_ENABLED=false`) because there is no mailer on this host —
+with `MAIL_MAILER=log` a verification link would only reach the container log,
+locking every new signup (and the owner) out.
+
+To turn it on:
+
+1. Create a Resend account and verify a sending domain.
+2. Put `RESEND_API_KEY`, `MAIL_FROM_ADDRESS` (on the verified domain) and
+   `MAIL_MAILER=resend` in the project `.env`.
+3. **Backfill existing accounts first** so nobody is locked out:
+   ```bash
+   docker exec gawetracker-app php artisan email:mark-verified            # list
+   docker exec gawetracker-app php artisan email:mark-verified you@example.com --force
+   ```
+4. Set `EMAIL_VERIFICATION_ENABLED=true` in `.env`, then redeploy
+   (`GAWETRACKER_BIND=0.0.0.0 ./scripts/deploy-container.sh`) — the deploy script
+   forwards the `MAIL_*` / `RESEND_API_KEY` / `EMAIL_VERIFICATION_ENABLED` values.
+5. Verify a real email actually arrives before trusting the flow. A `log` mailer
+   reports success without delivering anything.
+
+While the flag is off, `/email/verify*` still exists but nothing links to it and
+the app never redirects there.

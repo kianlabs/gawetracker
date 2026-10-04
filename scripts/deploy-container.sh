@@ -32,6 +32,11 @@ APP_KEY="$(get APP_KEY)"
 ADMIN_EMAIL="$(get ADMIN_EMAIL)"
 ADMIN_NAME="$(get ADMIN_NAME)"
 ADMIN_PASSWORD="$(get ADMIN_PASSWORD)"
+MAIL_MAILER="$(get MAIL_MAILER)"
+MAIL_FROM_ADDRESS="$(get MAIL_FROM_ADDRESS)"
+MAIL_FROM_NAME="$(get MAIL_FROM_NAME)"
+RESEND_API_KEY="$(get RESEND_API_KEY)"
+EMAIL_VERIFICATION_ENABLED="$(get EMAIL_VERIFICATION_ENABLED)"
 
 # Only forward admin credentials when set. Passing an empty ADMIN_PASSWORD would
 # override the seeder's default with an empty string and create a passwordless
@@ -40,6 +45,16 @@ ADMIN_ENV=()
 [[ -n "$ADMIN_EMAIL" ]] && ADMIN_ENV+=(-e "ADMIN_EMAIL=$ADMIN_EMAIL")
 [[ -n "$ADMIN_NAME" ]] && ADMIN_ENV+=(-e "ADMIN_NAME=$ADMIN_NAME")
 [[ -n "$ADMIN_PASSWORD" ]] && ADMIN_ENV+=(-e "ADMIN_PASSWORD=$ADMIN_PASSWORD")
+
+# Mail is only forwarded when the host .env actually configures it. Leaving
+# these unset keeps the container on its built-in log mailer, which is the
+# correct default until a Resend key exists.
+MAIL_ENV=()
+[[ -n "$MAIL_MAILER" ]] && MAIL_ENV+=(-e "MAIL_MAILER=$MAIL_MAILER")
+[[ -n "$MAIL_FROM_ADDRESS" ]] && MAIL_ENV+=(-e "MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS")
+[[ -n "$MAIL_FROM_NAME" ]] && MAIL_ENV+=(-e "MAIL_FROM_NAME=$MAIL_FROM_NAME")
+[[ -n "$RESEND_API_KEY" ]] && MAIL_ENV+=(-e "RESEND_API_KEY=$RESEND_API_KEY")
+[[ -n "$EMAIL_VERIFICATION_ENABLED" ]] && MAIL_ENV+=(-e "EMAIL_VERIFICATION_ENABLED=$EMAIL_VERIFICATION_ENABLED")
 
 DB_PW_FILE="$(ls -t "$HOME"/backups/gawetracker-deploy-*/db_app_password.txt 2>/dev/null | head -1 || true)"
 [[ -n "$DB_PW_FILE" ]] || { echo "missing db_app_password.txt under ~/backups/gawetracker-deploy-*/" >&2; exit 1; }
@@ -60,6 +75,7 @@ docker run -d --name "$CONTAINER" --restart unless-stopped \
   -e DB_DATABASE=gawetracker -e DB_USERNAME=gawetracker -e DB_PASSWORD="$DB_PASSWORD" \
   -e SESSION_DRIVER=database -e CACHE_STORE=database -e QUEUE_CONNECTION=database \
   "${ADMIN_ENV[@]}" \
+  "${MAIL_ENV[@]}" \
   "$IMAGE" >/dev/null
 
 # Warm the production caches. Do NOT run `config:clear` here: without a cached

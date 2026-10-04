@@ -27,6 +27,16 @@ return [
     'registration_enabled' => env('REGISTRATION_ENABLED', true),
 
     /*
+     * Require a verified email before an account may use the app.
+     *
+     * Off by default: verification emails can only be delivered when a real
+     * mailer (e.g. Resend) is configured. With MAIL_MAILER=log the links would
+     * only reach the container log, so enabling this would lock every new
+     * signup — and the owner — out of the app. Turn it on once MAIL_* is set.
+     */
+    'email_verification_enabled' => env('EMAIL_VERIFICATION_ENABLED', false),
+
+    /*
     |--------------------------------------------------------------------------
     | Authentication Guards
     |--------------------------------------------------------------------------

@@ -90,6 +90,14 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
+        // Send the verification link when enforcement is on AND a real mailer
+        // is configured. With MAIL_MAILER=log/array the mail only lands in the
+        // log/void, so there is nothing to send and no point slowing signup.
+        if (config('auth.email_verification_enabled')
+            && ! in_array(config('mail.default'), ['log', 'array'], true)) {
+            $user->sendEmailVerificationNotification();
+        }
+
         return redirect()->route('dashboard');
     }
 

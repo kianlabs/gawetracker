@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureEmailIsVerifiedWhenEnabled;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,6 +13,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Gate the app behind a verified email only when verification is on;
+        // a no-op otherwise so accounts predating a mailer are never locked out.
+        $middleware->alias([
+            'verified.when-enabled' => EnsureEmailIsVerifiedWhenEnabled::class,
+        ]);
+
         // Behind Cloudflare Tunnel the app is served over plain HTTP from the
         // tunnel origin but the public request is HTTPS. Trust the forwarded
         // headers so Laravel generates https:// URLs and secure cookies.
