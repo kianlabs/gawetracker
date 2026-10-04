@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GmailConnectionController;
 use App\Http\Controllers\InterviewChecklistController;
 use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\JobDiscoveryController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\OfferController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/gmail/connect', [GmailConnectionController::class, 'redirect'])->name('gmail.connect');
     Route::get('/gmail/callback', [GmailConnectionController::class, 'callback'])->name('gmail.callback');
     Route::delete('/gmail/disconnect', [GmailConnectionController::class, 'destroy'])->name('gmail.disconnect');
+
+    // Job discovery from external boards (Glints, Jobstreet)
+    Route::get('/discovery', [JobDiscoveryController::class, 'index'])->name('discovery.index');
+    Route::post('/discovery/search', [JobDiscoveryController::class, 'search'])->name('discovery.search');
+    Route::post('/discovery/{posting}/promote', [JobDiscoveryController::class, 'promote'])->name('discovery.promote');
+    Route::delete('/discovery/{posting}', [JobDiscoveryController::class, 'destroy'])->name('discovery.destroy');
 
     // Applications specialized routes (must be defined before resource route)
     Route::get('/applications/kanban', [KanbanController::class, 'index'])->name('applications.kanban');

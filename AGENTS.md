@@ -56,6 +56,8 @@ Default credentials: `kyan@gawetracker.test` / `password`
   Requires browser-like headers or Glints' firewall returns HTML.
 - `JobstreetSource` — SEEK v5 REST at `id.jobstreet.com/api/jobsearch/v5/search` (`siteKey=ID-Main`)
 - `JobDiscoveryService` — runs all sources, persists via `JobPosting`; one failing board never aborts the run
+- `JobDiscoveryController` — the "Cari Kerja" page (`/discovery`): live search form, filter by
+  source/promoted, "+ Lamar" promotes a `JobPosting` into a `JobApplication` (idempotent)
 - `php artisan jobs:discover "<keyword>" --limit=30` — pull postings into the DB
 - `php artisan companies:backfill [--dry-run]` — link legacy applications to canonical companies
 

@@ -32,6 +32,11 @@
                        aria-current="{{ request()->routeIs('applications.kanban') ? 'page' : 'false' }}">
                         Kanban
                     </a>
+                    <a href="{{ route('discovery.index') }}"
+                       class="nav-item {{ request()->routeIs('discovery.*') ? 'active' : '' }}"
+                       aria-current="{{ request()->routeIs('discovery.*') ? 'page' : 'false' }}">
+                        Cari Kerja
+                    </a>
                     <a href="{{ route('analytics.index') }}"
                        class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}"
                        aria-current="{{ request()->routeIs('analytics.*') ? 'page' : 'false' }}">

@@ -76,4 +76,25 @@ class CompanyNameNormalizerTest extends TestCase
         $this->assertSame($company->id, $enriched->id);
         $this->assertSame('tokopedia.com', $enriched->fresh()->domain);
     }
+
+    /**
+     * Regression: the relation must resolve `company_id`, not the
+     * `company_record_id` Laravel infers from the method name. Before the fix
+     * every application's canonical company silently came back null.
+     */
+    public function test_application_company_record_relation_resolves_via_company_id(): void
+    {
+        $company = Company::findOrCreateByName('PT Infomedia Nusantara');
+
+        $application = \App\Models\JobApplication::create([
+            'company' => 'Infomedia Nusantara',
+            'company_id' => $company->id,
+            'position' => 'Back End Developer',
+            'applied_at' => now()->toDateString(),
+            'status' => 'wishlist',
+        ]);
+
+        $this->assertNotNull($application->fresh()->companyRecord);
+        $this->assertSame($company->id, $application->fresh()->companyRecord->id);
+    }
 }

@@ -104,11 +104,13 @@ class JobApplication extends Model
      * Get the canonical company this application belongs to.
      *
      * Named `companyRecord` (not `company`) because `company` is already a
-     * free-text column on this table that views read directly.
+     * free-text column on this table that views read directly. The foreign key
+     * is passed explicitly — Laravel would otherwise infer `company_record_id`
+     * from the method name and silently return null on every lookup.
      */
     public function companyRecord(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     /**
