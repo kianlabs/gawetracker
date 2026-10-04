@@ -2,20 +2,28 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Concerns\ResolvesCommandUser;
 use App\Services\EmailIngestionService;
 use App\Support\Email\JobEmailParser;
 use Illuminate\Console\Command;
 
 class ImportJobEmails extends Command
 {
+    use ResolvesCommandUser;
+
     protected $signature = 'emails:import
         {path? : File or directory of .eml messages to ingest}
-        {--dry-run : Parse and report without writing to the database}';
+        {--dry-run : Parse and report without writing to the database}
+        {--user= : Owning user (email or id); defaults to the first account}';
 
     protected $description = 'Ingest JobStreet/Glints application emails into GaweTracker';
 
     public function handle(EmailIngestionService $ingestion, JobEmailParser $parser): int
     {
+        if (! $this->option('dry-run') && $this->resolveUser() === null) {
+            return self::FAILURE;
+        }
+
         return $this->fromPath($ingestion, $parser);
     }
 

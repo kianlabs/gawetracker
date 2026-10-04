@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\IngestedEmail;
 use App\Models\JobApplication;
+use App\Models\User;
 use App\Services\EmailIngestionService;
 use App\Support\Email\JobEmailParser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -129,6 +130,10 @@ class EmailIngestionTest extends TestCase
 
     public function test_import_command_ingests_a_directory_of_emails(): void
     {
+        // The command stamps every ingested row with an owner, so an account
+        // must exist for it to resolve (defaults to the first user).
+        User::factory()->create();
+
         $this->artisan('emails:import', ['path' => __DIR__.'/../Fixtures/emails'])
             ->assertExitCode(0);
 
