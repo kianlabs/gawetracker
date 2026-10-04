@@ -33,6 +33,8 @@ Default credentials: `kyan@gawetracker.test` / `password`
 
 ### Models
 - `JobApplication` — main model; statuses: `wishlist`, `applied`, `screening`, `interview`, `offer`, `hired`, `rejected`
+- `Company` — canonical employer registry; `Company::findOrCreateByName()` normalises spellings via `App\Support\Company\CompanyNameNormalizer` so "PT Tokopedia", "Tokopedia, PT" and "tokopedia.com" are one row
+- `JobPosting` — a job discovered from Glints/Jobstreet; distinct from `JobApplication` (advertisement vs. decision). Idempotent on `(source, external_id)`
 - `StatusHistory` — records every status transition; `from_status`, `to_status`, `note`
 - `OfferDetail` — salary, benefits, `deadline_at` (date) for offer-stage applications
 - `InterviewChecklist` — per-application checklist items
@@ -45,6 +47,17 @@ Default credentials: `kyan@gawetracker.test` / `password`
 - `AnalyticsController` — funnel, rejection analysis, time-to-response, weekly volume, 12-month heatmap
 - `OfferController` — offer comparison matrix
 - `InterviewChecklistController` — checklist CRUD
+
+### Discovery (external job boards)
+- `App\Services\Discovery\JobSource` — contract every board implements (`name()`, `search()`)
+- `GlintsSource` — Glints GraphQL. Endpoint `/api/v2-alc/graphql`, operation `searchJobs`
+  (NOT `searchJobsV3` — that one resolves but silently ignores the keyword), keyword field
+  `SearchTerm` as a **plain string**, pagination by `limit`/`offset` (NOT `page`/`pageSize`).
+  Requires browser-like headers or Glints' firewall returns HTML.
+- `JobstreetSource` — SEEK v5 REST at `id.jobstreet.com/api/jobsearch/v5/search` (`siteKey=ID-Main`)
+- `JobDiscoveryService` — runs all sources, persists via `JobPosting`; one failing board never aborts the run
+- `php artisan jobs:discover "<keyword>" --limit=30` — pull postings into the DB
+- `php artisan companies:backfill [--dry-run]` — link legacy applications to canonical companies
 
 ### Views
 - Extend `layouts.app`
