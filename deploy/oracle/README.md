@@ -129,36 +129,48 @@ re-run `release.sh` so cached config picks it up.
 
 ---
 
-## 6. Connect Gmail
+## 6. Connect Gmail (and sign in with Google)
 
-The redirect URI is derived from `APP_URL` (`${APP_URL}/gmail/callback`), so the
-same OAuth client works for local development and production — only the URI
-registered in Google differs.
+Both redirect URIs derive from `APP_URL`, so the same OAuth client works for
+local development and production — only the URIs registered in Google differ.
 
 **One OAuth client, several redirect URIs.** In Google Cloud Console → Credentials
-→ your OAuth client → *Authorized redirect URIs*, list both:
+→ your OAuth client → *Authorized redirect URIs*, list all four:
 
 ```
-http://localhost:8000/gmail/callback     ← development
-https://gawetracker.yourdomain.com/gmail/callback   ← production
+http://localhost:8000/auth/google/callback            ← dev: sign in + link mailbox
+http://localhost:8000/gmail/callback                  ← dev: reconnect mailbox
+https://gawetracker.yourdomain.com/auth/google/callback   ← prod: sign in
+https://gawetracker.yourdomain.com/gmail/callback         ← prod: reconnect
 ```
+
+> **A missing URI is the #1 cause of "Akses diblokir".** Google refuses the
+> request *before* the account picker with `redirect_uri_mismatch`. The URI must
+> match `APP_URL` exactly — `localhost` ≠ `127.0.0.1`.
 
 Then, on the server:
 
 ```bash
 cd /var/www/gawetracker
 php artisan gmail:setup          # paste the SAME Client ID + Secret
-php artisan gmail:setup --show   # confirm the redirect URI matches APP_URL
+php artisan gmail:setup --show   # confirm both redirect URIs match APP_URL
 ```
 
-Log in → **Hubungkan Gmail** → authorize.
+Set the allow-list in `.env` so only your account can sign in:
+
+```
+GAWETRACKER_ALLOWED_EMAILS=you@gmail.com
+```
+
+Log in → **Masuk dengan Google** → authorize. One step links the mailbox.
 
 > **Publish the consent screen.** While the OAuth app is in *Testing* status,
-> Google expires refresh tokens after **7 days**, silently stopping the email
-> sync. Click **Publish App** (External + Testing → In production) so the
-> refresh token lives on. The `gmail.readonly` scope is *sensitive* (not
-> *restricted*), so publishing does **not** require Google's verification
-> review for personal use.
+> Google (a) refuses sign-in for accounts not on the **Test users** list and
+> (b) expires refresh tokens after **7 days**, silently stopping the email
+> sync. Add your email to *Test users* for a quick fix, or click **Publish App**
+> (External + Testing → In production) so the refresh token lives on. The
+> `gmail.readonly` scope is *sensitive* (not *restricted*), so publishing does
+> **not** require Google's verification review for personal use.
 
 > **Secrets never leave the server.** `gmail:setup` writes the client secret to
 > the server's `.env` with a hidden prompt; do not paste secrets into chat,
