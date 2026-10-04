@@ -14,7 +14,10 @@ Internet ──HTTPS──▶ Cloudflare edge ──tunnel──▶ cloudflared 
 ```
 
 - Public URL: **https://gawetracker.kianlabs.my.id**
-- Access gate: **Cloudflare Access** — email allow-list (owner only)
+- Access gate: **Cloudflare Access** — policy `Public registration`
+  (`decision: allow`, `include: everyone`), so anyone who completes the
+  **One-time PIN** email challenge reaches the app. The owner-only policy it
+  replaced is kept at `~/backups/gawetracker-access-rollback/`.
 - App container: `gawetracker-app` (image `gawetracker:local`)
 - DB: MySQL 8.4 container `mysql8`, database `gawetracker`, user `gawetracker`
 
@@ -80,9 +83,15 @@ Apply with `systemctl --user restart cloudflared-9router`. Validate first with
 
 ## Cloudflare Access
 
-The site is gated by a self-hosted Access app (`gawetracker.kianlabs.my.id`)
-with one policy: `allow` for the owner email. Created via the Cloudflare API
+The site is gated by a self-hosted Access app (`gawetracker.kianlabs.my.id`).
+The policy is `Public registration` — `decision: allow`, `include: everyone` —
+so any visitor can sign in with a **One-time PIN** sent to their email and then
+reach the app's own `/register` + `/login` pages. Managed via the Cloudflare API
 using the token in `~/Projects/stitchweb-portfolio-kyan/.env.local`.
+
+> This replaced an owner-only policy. To restore it, PUT the JSON in
+> `~/backups/gawetracker-access-rollback/policy-owner-only.json` back to
+> `.../access/apps/<app_id>/policies/<policy_id>`.
 
 Verify the gate:
 

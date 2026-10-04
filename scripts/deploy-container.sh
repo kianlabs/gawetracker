@@ -62,6 +62,16 @@ docker run -d --name "$CONTAINER" --restart unless-stopped \
   "${ADMIN_ENV[@]}" \
   "$IMAGE" >/dev/null
 
-sleep 5
-docker exec "$CONTAINER" php artisan config:clear >/dev/null 2>&1 || true
+# Warm the production caches. Do NOT run `config:clear` here: without a cached
+# config Laravel re-parses every config file on each request, which is the
+# single biggest source of latency. Wait for MySQL first — the cached config
+# points session/cache/queue at the database, and artisan will not boot while
+# the host is unreachable.
+for _ in $(seq 1 30); do
+  docker exec "$CONTAINER" php -r 'exit(@fsockopen(getenv("DB_HOST"), (int) getenv("DB_PORT")) ? 0 : 1);' >/dev/null 2>&1 && break
+  sleep 1
+done
+docker exec "$CONTAINER" php artisan config:cache >/dev/null 2>&1 || true
+docker exec "$CONTAINER" php artisan route:cache >/dev/null 2>&1 || true
+docker exec "$CONTAINER" php artisan view:cache >/dev/null 2>&1 || true
 echo "container '$CONTAINER' restarted on $PUBLIC_URL"

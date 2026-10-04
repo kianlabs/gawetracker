@@ -18,6 +18,20 @@ RUN apk add --no-cache nginx supervisor icu-dev oniguruma-dev libzip-dev \
     && docker-php-ext-install pdo_mysql mbstring intl zip bcmath opcache \
     && rm -rf /var/cache/apk/*
 
+# Production OPcache settings. The defaults re-stat and re-validate every
+# script on every request; Laravel touches thousands of files per request, so
+# that dominates response time. The image is immutable, so timestamp
+# validation only costs syscalls and buys nothing.
+RUN { \
+      echo 'opcache.enable=1'; \
+      echo 'opcache.memory_consumption=256'; \
+      echo 'opcache.interned_strings_buffer=32'; \
+      echo 'opcache.max_accelerated_files=20000'; \
+      echo 'opcache.validate_timestamps=0'; \
+      echo 'opcache.revalidate_freq=0'; \
+      echo 'opcache.save_comments=1'; \
+    } > /usr/local/etc/php/conf.d/opcache-prod.ini
+
 WORKDIR /var/www/html
 
 COPY --from=vendor /app/vendor ./vendor
