@@ -541,7 +541,19 @@ class JobApplicationSeeder extends Seeder
         ];
 
         foreach ($applications as $data) {
-            $jobApp = JobApplication::create($data['application']);
+            $jobApp = JobApplication::firstOrCreate(
+                [
+                    'company' => $data['application']['company'],
+                    'position' => $data['application']['position'],
+                ],
+                $data['application']
+            );
+
+            // Skip the rest if this row already existed (idempotent seeding —
+            // nixpacks runs db:seed on every deploy).
+            if (! $jobApp->wasRecentlyCreated) {
+                continue;
+            }
 
             foreach ($data['histories'] as $history) {
                 $jobApp->statusHistories()->create($history);
