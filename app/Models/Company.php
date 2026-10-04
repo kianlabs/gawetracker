@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Company\CompanyNameNormalizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 /**
  * Canonical employer. Acts as the single matching target for every source
@@ -42,20 +43,31 @@ class Company extends Model
 
         $company = static::where('normalized_key', $key)->first();
 
-        if ($company !== null) {
-            // Enrich a missing domain if we now know it.
-            if ($domain !== null && $company->domain === null) {
-                $company->domain = $domain;
-                $company->save();
-            }
+        if ($company === null) {
+            try {
+                $company = static::create([
+                    'normalized_key' => $key,
+                    'name' => CompanyNameNormalizer::display($name),
+                    'domain' => $domain,
+                ]);
+            } catch (UniqueConstraintViolationException) {
+                // Another worker inserted the same employer between our SELECT
+                // and INSERT. The unique index on normalized_key makes the
+                // create fail, but the row now exists, so re-read and use it.
+                $company = static::where('normalized_key', $key)->first();
 
-            return $company;
+                if ($company === null) {
+                    throw new \RuntimeException("Company '{$key}' vanished after a unique constraint violation.");
+                }
+            }
         }
 
-        return static::create([
-            'normalized_key' => $key,
-            'name' => CompanyNameNormalizer::display($name),
-            'domain' => $domain,
-        ]);
+        // Enrich a missing domain if we now know it.
+        if ($domain !== null && $company->domain === null) {
+            $company->domain = $domain;
+            $company->save();
+        }
+
+        return $company;
     }
 }

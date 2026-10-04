@@ -4,6 +4,7 @@ namespace App\Services\Discovery;
 
 use App\Models\Company;
 use App\Models\JobPosting;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
 use App\Support\SalaryParser;
 
@@ -65,13 +66,45 @@ class JobDiscoveryService
     {
         $company = Company::findOrCreateByName($job->company);
 
-        $posting = JobPosting::firstOrNew([
+        $attributes = [
             'source' => $job->source,
             'external_id' => $job->externalId,
-        ]);
+        ];
 
+        $posting = JobPosting::firstOrNew($attributes);
         $isNew = ! $posting->exists;
 
+        $this->fillPosting($posting, $job, $company);
+
+        try {
+            $posting->save();
+        } catch (UniqueConstraintViolationException) {
+            // A concurrent search inserted the same (user, source, external_id)
+            // between our lookup and insert. The unique index rejected our
+            // write, but the row now exists: re-read it and refresh it so the
+            // caller still gets the canonical posting instead of a 500.
+            $posting = JobPosting::where($attributes)->first();
+
+            if ($posting === null) {
+                throw new \RuntimeException(
+                    "Job posting {$job->source}:{$job->externalId} vanished after a unique constraint violation."
+                );
+            }
+
+            $isNew = false;
+
+            $this->fillPosting($posting, $job, $company);
+            $posting->save();
+        }
+
+        return $isNew;
+    }
+
+    /**
+     * Copy a discovered job's fields onto a posting model.
+     */
+    private function fillPosting(JobPosting $posting, DiscoveredJob $job, ?Company $company): void
+    {
         $posting->fill([
             'title' => $job->title,
             'company' => $job->company,
@@ -92,10 +125,6 @@ class JobDiscoveryService
             'salary_currency' => null,
             'salary_period' => null,
         ]);
-
-        $posting->save();
-
-        return $isNew;
     }
 
     private function parseDate(?string $value): ?Carbon

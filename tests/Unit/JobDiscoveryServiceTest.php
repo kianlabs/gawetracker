@@ -4,10 +4,12 @@ namespace Tests\Unit;
 
 use App\Models\Company;
 use App\Models\JobPosting;
+use App\Models\User;
 use App\Services\Discovery\DiscoveredJob;
 use App\Services\Discovery\JobDiscoveryService;
 use App\Services\Discovery\JobSource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /**
@@ -160,6 +162,41 @@ class JobDiscoveryServiceTest extends TestCase
         $this->assertNull($posting->salary_currency);
         // The label accessor still shows the board's original prose.
         $this->assertSame('Kompetitif', $posting->salaryLabel());
+    }
+
+    public function test_persist_recovers_when_a_concurrent_insert_wins_the_race(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $armed = true;
+
+        // Reproduce the race window: another worker persists the same posting
+        // after our lookup but before our insert. The unique
+        // (user_id, source, external_id) index then rejects the loser.
+        JobPosting::creating(function (JobPosting $model) use (&$armed, $user): void {
+            if (! $armed || $model->source !== 'glints' || $model->external_id !== 'race-1') {
+                return;
+            }
+
+            $armed = false;
+
+            DB::table('job_postings')->insert([
+                'user_id' => $user->id,
+                'source' => 'glints',
+                'external_id' => 'race-1',
+                'title' => 'Concurrent Winner',
+                'company' => 'Tokopedia',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
+
+        $service = new JobDiscoveryService([]);
+        $isNew = $service->persist($this->job('race-1', 'Tokopedia'));
+
+        $this->assertFalse($isNew, 'A lost race means the posting already existed.');
+        $this->assertSame(1, JobPosting::where('source', 'glints')->where('external_id', 'race-1')->count());
     }
 
     public function test_posting_links_to_a_promoted_application(): void
