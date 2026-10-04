@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Weekly target persistence (per-user preference)
+    Route::post('/dashboard/target', [DashboardController::class, 'updateTarget'])->name('dashboard.target.update');
+
     // Gmail OAuth connection (read-only mailbox linking)
     Route::get('/gmail/connect', [GmailConnectionController::class, 'redirect'])->name('gmail.connect');
     Route::get('/gmail/callback', [GmailConnectionController::class, 'callback'])->name('gmail.callback');

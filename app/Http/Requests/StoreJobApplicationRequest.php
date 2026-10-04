@@ -34,6 +34,7 @@ class StoreJobApplicationRequest extends FormRequest
             'contact_name' => ['nullable', 'string', 'max:255'],
             'contact_info' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
+            'interview_result' => ['nullable', 'string'],
             'status' => ['required', 'in:wishlist,applied,screening,interview,offer,hired,rejected'],
         ];
     }

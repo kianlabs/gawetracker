@@ -230,19 +230,26 @@
                 @endif
             </p>
 
-            {{-- Target setter --}}
-            <form method="GET" action="{{ route('dashboard') }}"
+            {{-- Target setter (persisted per-user) --}}
+            <form method="POST" action="{{ route('dashboard.target.update') }}"
                   class="flex items-center gap-2 pt-3 border-t">
+                @csrf
                 <label for="weekly-target-input" class="text-xs text-muted flex-shrink-0">Atur target:</label>
                 <input type="number"
                        id="weekly-target-input"
                        name="target"
                        value="{{ $weeklyTarget }}"
                        min="1" max="100"
-                       class="input"
+                       class="input @error('target') input-error @enderror"
                        style="width:56px;height:1.75rem;font-size:0.8125rem;padding:0 0.375rem;text-align:center;">
                 <button type="submit" class="btn btn-secondary btn-sm">Simpan</button>
             </form>
+            @error('target')
+                <p class="text-xs" style="color:hsl(0 72% 51%);padding-top:0.375rem;">{{ $message }}</p>
+            @enderror
+            @if (session('status'))
+                <p class="text-xs" style="color:hsl(142 76% 28%);padding-top:0.375rem;">{{ session('status') }}</p>
+            @endif
         </div>
 
         {{-- Module navigation dock --}}

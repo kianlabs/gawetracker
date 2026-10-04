@@ -32,6 +32,7 @@ class JobApplication extends Model
         'contact_name',
         'contact_info',
         'notes',
+        'interview_result',
         'status',
         'last_status_change_at',
     ];

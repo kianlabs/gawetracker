@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JobApplication;
 use App\Models\OfferDetail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -40,7 +41,7 @@ class DashboardController extends Controller
 
         $winRate = round(($interviewReachedCount / max(1, $total)) * 100, 1);
 
-        $rawTarget = (int) $request->input('target', 8);
+        $rawTarget = (int) $request->input('target', $request->user()->weeklyTarget());
         $weeklyTarget = $rawTarget > 0 ? $rawTarget : 8;
         $weeklyCount = JobApplication::whereBetween('applied_at', [
             now()->startOfWeek(),
@@ -109,5 +110,24 @@ class DashboardController extends Controller
             'recentApplications' => $recentApplications,
             'statuses' => JobApplicationController::STATUSES,
         ]);
+    }
+
+    /**
+     * Persist the signed-in user's weekly application target.
+     *
+     * Previously the target was read from the query string only, so it reset to
+     * the default on every navigation. It now lives on the user row.
+     */
+    public function updateTarget(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'target' => ['required', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        $request->user()->update(['weekly_target' => $validated['target']]);
+
+        return redirect()
+            ->route('dashboard')
+            ->with('status', 'Target mingguan disimpan.');
     }
 }

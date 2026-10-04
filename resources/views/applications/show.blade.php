@@ -408,6 +408,18 @@
         </div>
         @endif
 
+        {{-- 4b. Hasil Interview (if exists) --}}
+        @if ($application->interview_result)
+        <div class="section-card" id="interview-result-card">
+            <div class="section-header">
+                <span class="section-title">Hasil Interview</span>
+            </div>
+            <div class="section-body" style="padding: 1.25rem;">
+                <pre class="notes-pre">{{ $application->interview_result }}</pre>
+            </div>
+        </div>
+        @endif
+
         {{-- 5. Offer details (if applicable) --}}
         @if (in_array($application->status, ['offer', 'hired']) || $application->offerDetail)
         @php $offer = $application->offerDetail; @endphp

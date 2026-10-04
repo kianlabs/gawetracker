@@ -247,6 +247,24 @@
                             <span class="field-error">{{ $message }}</span>
                         @enderror
                     </div>
+
+                    <!-- Hasil Interview -->
+                    <div class="md:col-span-2">
+                        <label for="interview_result" class="label">
+                            Hasil Interview
+                            <span style="font-weight: normal; color: hsl(var(--muted-foreground)); font-size: 0.8125rem;">(opsional)</span>
+                        </label>
+                        <textarea
+                            id="interview_result"
+                            name="interview_result"
+                            rows="3"
+                            class="textarea @error('interview_result') textarea-error @enderror"
+                            placeholder="Hasil/kesan tiap tahap wawancara — pertanyaan yang muncul, feedback pewawancara, hal yang perlu diperbaiki..."
+                        >{{ old('interview_result') }}</textarea>
+                        @error('interview_result')
+                            <span class="field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-between mt-6" style="border-top: 1px solid hsl(var(--border)); padding-top: 1.25rem;">
