@@ -131,14 +131,38 @@ re-run `release.sh` so cached config picks it up.
 
 ## 6. Connect Gmail
 
-Follow the OAuth setup in the main README, using the redirect URI:
+The redirect URI is derived from `APP_URL` (`${APP_URL}/gmail/callback`), so the
+same OAuth client works for local development and production — only the URI
+registered in Google differs.
+
+**One OAuth client, several redirect URIs.** In Google Cloud Console → Credentials
+→ your OAuth client → *Authorized redirect URIs*, list both:
 
 ```
-https://gawetracker.yourdomain.com/gmail/callback
+http://localhost:8000/gmail/callback     ← development
+https://gawetracker.yourdomain.com/gmail/callback   ← production
 ```
 
-Then log in → **Hubungkan Gmail** → authorize. Remember to **Publish App** on
-the Google consent screen so the refresh token does not expire after 7 days.
+Then, on the server:
+
+```bash
+cd /var/www/gawetracker
+php artisan gmail:setup          # paste the SAME Client ID + Secret
+php artisan gmail:setup --show   # confirm the redirect URI matches APP_URL
+```
+
+Log in → **Hubungkan Gmail** → authorize.
+
+> **Publish the consent screen.** While the OAuth app is in *Testing* status,
+> Google expires refresh tokens after **7 days**, silently stopping the email
+> sync. Click **Publish App** (External + Testing → In production) so the
+> refresh token lives on. The `gmail.readonly` scope is *sensitive* (not
+> *restricted*), so publishing does **not** require Google's verification
+> review for personal use.
+
+> **Secrets never leave the server.** `gmail:setup` writes the client secret to
+> the server's `.env` with a hidden prompt; do not paste secrets into chat,
+> tickets, or CI logs.
 
 ---
 

@@ -133,12 +133,21 @@ class GmailSetup extends Command
         $this->line('     Pastikan OAuth client bertipe "Web application".');
         $this->line('  2. Di "Authorized redirect URIs", tambahkan PERSIS:');
         $this->line('       '.$redirect);
+        $this->line('     Anda bisa menambahkan BEBERAPA URI sekaligus di satu OAuth client.');
+        $this->line('     Client ID & Secret yang sama dipakai untuk dev DAN produksi —');
+        $this->line('     yang berbeda hanya redirect URI. Contoh daftar:');
+        $this->line('       http://localhost:8000/gmail/callback   (development)');
+        $this->line('       https://domain-anda.com/gmail/callback (produksi)');
         $this->line('  3. APIs & Services → Library → aktifkan "Gmail API".');
         $this->line('  4. Jalankan aplikasi di '.config('app.url').' (harus sama dengan APP_URL):');
         $this->line('       php artisan serve');
         $this->line('  5. Login, lalu klik "Hubungkan Gmail" di halaman Dashboard.');
         $this->line('  6. Setujui consent. Setelah itu impor email:');
         $this->line('       php artisan emails:import --gmail --dry-run');
+        $this->newLine();
+        $this->warn('Produksi: APP_URL harus https, dan daftarkan URI https di Google.');
+        $this->warn('Di OAuth consent screen, klik "Publish App" — selama status "Testing",');
+        $this->warn('refresh token kedaluwarsa setelah 7 hari sehingga sync email berhenti.');
         $this->newLine();
 
         if ($hasToken) {
