@@ -2,8 +2,8 @@
 #
 # Deploy/restart the GaweTracker production container.
 #
-# Reads secrets from the project .env (never prints them), computes the public
-# redirect URIs from APP_URL, and (re)starts the gawetracker-app container on the
+# Reads the app key and (optional) admin credentials from the project .env
+# (never prints them), and (re)starts the gawetracker-app container on the
 # gawetracker-net network so it can resolve the mysql8 container by name.
 #
 # Usage:  ./scripts/deploy-container.sh
@@ -23,10 +23,17 @@ PUBLIC_URL="${GAWETRACKER_URL:-https://gawetracker.kianlabs.my.id}"
 get() { { grep -E "^$1=" "$ENV_FILE" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; } || true; }
 
 APP_KEY="$(get APP_KEY)"
-GOOGLE_CLIENT_ID="$(get GOOGLE_CLIENT_ID)"
-GOOGLE_CLIENT_SECRET="$(get GOOGLE_CLIENT_SECRET)"
-GMAIL_ACCESS_TOKEN="$(get GMAIL_ACCESS_TOKEN)"
-ALLOWED_EMAILS="$(get GAWETRACKER_ALLOWED_EMAILS)"
+ADMIN_EMAIL="$(get ADMIN_EMAIL)"
+ADMIN_NAME="$(get ADMIN_NAME)"
+ADMIN_PASSWORD="$(get ADMIN_PASSWORD)"
+
+# Only forward admin credentials when set. Passing an empty ADMIN_PASSWORD would
+# override the seeder's default with an empty string and create a passwordless
+# admin account.
+ADMIN_ENV=()
+[[ -n "$ADMIN_EMAIL" ]] && ADMIN_ENV+=(-e "ADMIN_EMAIL=$ADMIN_EMAIL")
+[[ -n "$ADMIN_NAME" ]] && ADMIN_ENV+=(-e "ADMIN_NAME=$ADMIN_NAME")
+[[ -n "$ADMIN_PASSWORD" ]] && ADMIN_ENV+=(-e "ADMIN_PASSWORD=$ADMIN_PASSWORD")
 
 DB_PW_FILE="$(ls -t "$HOME"/backups/gawetracker-deploy-*/db_app_password.txt 2>/dev/null | head -1 || true)"
 [[ -n "$DB_PW_FILE" ]] || { echo "missing db_app_password.txt under ~/backups/gawetracker-deploy-*/" >&2; exit 1; }
@@ -46,15 +53,9 @@ docker run -d --name "$CONTAINER" --restart unless-stopped \
   -e DB_CONNECTION=mysql -e DB_HOST=mysql8 -e DB_PORT=3306 \
   -e DB_DATABASE=gawetracker -e DB_USERNAME=gawetracker -e DB_PASSWORD="$DB_PASSWORD" \
   -e SESSION_DRIVER=database -e CACHE_STORE=database -e QUEUE_CONNECTION=database \
-  -e GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID" \
-  -e GOOGLE_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET" \
-  -e GOOGLE_REDIRECT_URI="$PUBLIC_URL/gmail/callback" \
-  -e GOOGLE_LOGIN_REDIRECT_URI="$PUBLIC_URL/auth/google/callback" \
-  -e GAWETRACKER_ALLOWED_EMAILS="$ALLOWED_EMAILS" \
-  -e GMAIL_ACCESS_TOKEN="$GMAIL_ACCESS_TOKEN" \
+  "${ADMIN_ENV[@]}" \
   "$IMAGE" >/dev/null
 
 sleep 5
 docker exec "$CONTAINER" php artisan config:clear >/dev/null 2>&1 || true
 echo "container '$CONTAINER' restarted on $PUBLIC_URL"
-docker exec "$CONTAINER" php artisan gmail:setup --show 2>&1 | sed -n '3,10p' || true
