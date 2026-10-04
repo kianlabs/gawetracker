@@ -1,78 +1,31 @@
-# Screenshots Guide
+# Screenshots
 
-## How to Add Screenshots to README
+Screenshots for the README live in `public/screenshots/` and are **committed**
+(they render inline on GitHub). Five views are captured:
 
-### 1. Take Screenshots (Manual)
+| File | View | URL |
+|---|---|---|
+| `dashboard.png` | Dashboard | `/` |
+| `applications.png` | Applications list | `/applications` |
+| `kanban.png` | Kanban board | `/applications/kanban` |
+| `analytics.png` | Funnel & analytics | `/analytics` |
+| `offers.png` | Offer comparison | `/offers` |
 
-With the dev server running (`php artisan serve`), take screenshots of these 5 views:
+They are embedded in `README.md` under the **## Screenshots** section.
 
-1. **Dashboard** → `http://127.0.0.1:8000/dashboard`
-   - Shows: Metrics (total, active, win rate), follow-up queue, recent applications
-   
-2. **Applications List** → `http://127.0.0.1:8000/applications`
-   - Shows: Table with company logos, filters, search, pagination
-   
-3. **Kanban Board** → `http://127.0.0.1:8000/applications/kanban`
-   - Shows: Cards across 6 stages (wishlist → hired/rejected)
-   
-4. **Analytics** → `http://127.0.0.1:8000/analytics`
-   - Shows: Funnel chart, rejection breakdown, heatmap, weekly volume
-   
-5. **Offer Comparison** → `http://127.0.0.1:8000/offers`
-   - Shows: Side-by-side matrix comparing offers
+## Regenerating
 
-### 2. Save Screenshots
+Capture from a local instance seeded with realistic data so the pages aren't
+empty. The shots were produced with headless Chromium (Puppeteer) against
+`php artisan serve`, logging in as the seeded user first.
 
-- Use browser screenshot tool (F12 → Cmd/Ctrl+Shift+P → "Capture full size screenshot")
-- Or use OS screenshot tool
-- Save as: `dashboard.png`, `applications.png`, `kanban.png`, `analytics.png`, `offers.png`
-- Place in: `public/screenshots/` directory
+Manual alternative: with `php artisan serve` running, open each URL and use the
+browser's full-page screenshot (F12 → Cmd/Ctrl+Shift+P → "Capture full size
+screenshot"), saving into `public/screenshots/` with the names above.
 
-### 3. Update README.md
+## Notes
 
-Add after the **## Features** section:
-
-```markdown
-## Screenshots
-
-### Dashboard
-![Dashboard](public/screenshots/dashboard.png)
-*Track all applications at a glance with key metrics, follow-up reminders, and recent activity.*
-
-### Applications List
-![Applications List](public/screenshots/applications.png)
-*Filter and search through all applications with company logos and status badges.*
-
-### Kanban Board
-![Kanban Board](public/screenshots/kanban.png)
-*Visual pipeline across 6 recruitment stages with drag-and-drop cards.*
-
-### Analytics & Heatmap
-![Analytics](public/screenshots/analytics.png)
-*Funnel conversion, rejection analysis, time-to-response, and 12-month activity heatmap.*
-
-### Offer Comparison
-![Offer Comparison](public/screenshots/offers.png)
-*Side-by-side matrix to compare salary, benefits, work scheme, and deadlines.*
-```
-
-### 4. Commit
-
-```bash
-git add public/screenshots/
-git add README.md
-git commit -m "Add screenshots to README"
-git push
-```
-
-## Alternative: Use GitHub Issues for Images
-
-If screenshots are large, upload to a GitHub issue and use the generated URLs:
-
-1. Go to https://github.com/kianlabs/gawetracker/issues/new
-2. Drag images into the comment box
-3. GitHub generates URLs like `https://user-images.githubusercontent.com/...`
-4. Copy URLs and use in README: `![Dashboard](https://user-images...)`
-5. Close the issue without submitting
-
-This keeps the repo size small.
+- Keep the files reasonably small; GitHub renders them inline but very large
+  PNGs slow the page. If they grow, upload to a GitHub issue and use the
+  generated `user-images.githubusercontent.com` URLs instead (keeps repo small).
+- Screenshots must reflect **real** seeded data — never mock/placeholder images.

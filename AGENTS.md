@@ -38,12 +38,14 @@ Default credentials: `kyan@gawetracker.test` / `password`
 - `StatusHistory` — records every status transition; `from_status`, `to_status`, `note`
 - `OfferDetail` — salary, benefits, `deadline_at` (date) for offer-stage applications
 - `InterviewChecklist` — per-application checklist items
+- `JobApplication::interview_result` — free-text outcome/notes per interview stage (PRD user story 5)
+- `User::weekly_target` — per-user weekly application target (default 8); read via `User::weeklyTarget()`
 - `JobApplication::logoUrl()` — nullable Attribute; returns Google Favicon URL for known companies, `null` for unknowns (views show initial-letter badge as fallback)
 
 ### Controllers
 - `JobApplicationController` — CRUD, export CSV, quick-add, quick-status
 - `KanbanController` — kanban view
-- `DashboardController` — dashboard with metrics, follow-up queue, expiring offer alerts
+- `DashboardController` — dashboard with metrics, follow-up queue, expiring offer alerts; `updateTarget()` persists the weekly target (`POST /dashboard/target`)
 - `AnalyticsController` — funnel, rejection analysis, time-to-response, weekly volume, 12-month heatmap
 - `OfferController` — offer comparison matrix
 - `InterviewChecklistController` — checklist CRUD
@@ -69,7 +71,7 @@ Default credentials: `kyan@gawetracker.test` / `password`
 ## Tests
 
 ```bash
-php artisan test          # 180 tests, 919 assertions
+php artisan test          # 183 tests, 936 assertions
 php artisan test --filter SomeTest
 ```
 

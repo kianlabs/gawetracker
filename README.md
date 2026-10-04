@@ -4,7 +4,19 @@ A personal job application tracker to log applications, monitor recruitment pipe
 
 ## Screenshots
 
-> Screenshots of dashboard, kanban board, and analytics — run locally to see it live.
+| Dashboard | Kanban Board |
+|---|---|
+| ![Dashboard](public/screenshots/dashboard.png) | ![Kanban](public/screenshots/kanban.png) |
+
+| Applications | Analytics |
+|---|---|
+| ![Applications](public/screenshots/applications.png) | ![Analytics](public/screenshots/analytics.png) |
+
+| Offer Comparison |
+|---|
+| ![Offers](public/screenshots/offers.png) |
+
+Captured from a local instance seeded with realistic Indonesian tech-company data.
 
 ## Why This Exists
 
@@ -39,7 +51,7 @@ Kyan started applying for jobs and realized applications were scattered across e
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/ridzkyan/gawetracker.git
+   git clone https://github.com/kianlabs/gawetracker.git
    cd gawetracker
    ```
 
@@ -87,13 +99,15 @@ Default login credentials (from UserSeeder):
 
 ## Deployment
 
-### Quick Deploy to Railway
+GaweTracker is Laravel + MySQL. Two deployment paths are provided:
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/gawetracker)
+- **Fly.io** (container) — `fly.toml` + `Dockerfile` + `deploy/fly/README.md`
+- **Oracle Cloud Always Free / plain Ubuntu VPS** — `deploy/oracle/` (provision,
+  release, keepalive, backup scripts + crontab)
 
-**Live Demo**: Coming soon
+**Live Demo**: not deployed yet.
 
-For detailed deployment instructions (Railway, Fly.io, or custom VPS), see [DEPLOYMENT.md](DEPLOYMENT.md).
+For Railway, Fly.io, or a custom VPS, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### Default Credentials
 - Email: `kyan@gawetracker.test`
@@ -162,7 +176,7 @@ Design notes:
 
 ## Tests
 
-180 tests, 919 assertions — run the full suite:
+183 tests, 936 assertions — run the full suite:
 
 ```bash
 php artisan test

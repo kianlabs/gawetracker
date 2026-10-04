@@ -1,0 +1,44 @@
+# fly.toml — GaweTracker on Fly.io
+#
+# Prereqs (run once, with flyctl authenticated):
+#   fly launch --no-deploy --name gawetracker --region sin
+#   fly mysql create --name gawetracker-db --region sin
+#   fly secrets set APP_KEY="$(php artisan key:generate --show)" \
+#                   APP_ENV=production APP_DEBUG=false \
+#                   APP_URL=https://gawetracker.fly.dev \
+#                   DB_CONNECTION=mysql DB_HOST=<...> DB_PORT=3306 \
+#                   DB_DATABASE=<...> DB_USERNAME=<...> DB_PASSWORD=<...>
+#   fly deploy
+#
+# See deploy/fly/README.md for the full walkthrough.
+
+app = "gawetracker"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  APP_ENV = "production"
+  APP_DEBUG = "false"
+  LOG_CHANNEL = "stderr"
+  SESSION_DRIVER = "database"
+  CACHE_STORE = "database"
+  QUEUE_CONNECTION = "database"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
