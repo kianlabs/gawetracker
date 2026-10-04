@@ -4,13 +4,15 @@
 # copied into a slim runtime with PHP-FPM + Nginx serving on port 8080.
 # MySQL is provided by Fly (flyctl mysql create) and injected as DB_* secrets.
 
-FROM composer:2 AS vendor
+FROM composer:2.8 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --no-scripts --prefer-dist --optimize-autoloader
 
 # ---- Runtime ----
-FROM php:8.3-fpm-alpine
+# Symfony 8.x (pulled in by Laravel 13) requires PHP >= 8.4.1, so the runtime
+# image must be 8.4+, not 8.3.
+FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache nginx supervisor icu-dev oniguruma-dev libzip-dev \
     && docker-php-ext-install pdo_mysql mbstring intl zip bcmath opcache \

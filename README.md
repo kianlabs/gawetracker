@@ -99,13 +99,16 @@ Default login credentials (from UserSeeder):
 
 ## Deployment
 
-GaweTracker is Laravel + MySQL. Two deployment paths are provided:
+GaweTracker is Laravel + MySQL. Deployment paths provided:
 
+- **Cloudflare Tunnel** (this deployment) — container runs locally, exposed via
+  `cloudflared` at **https://gawetracker.kianlabs.my.id**, protected by
+  **Cloudflare Access** (email allow-list, owner only).
 - **Fly.io** (container) — `fly.toml` + `Dockerfile` + `deploy/fly/README.md`
 - **Oracle Cloud Always Free / plain Ubuntu VPS** — `deploy/oracle/` (provision,
   release, keepalive, backup scripts + crontab)
 
-**Live Demo**: not deployed yet.
+**Live**: https://gawetracker.kianlabs.my.id (gated by Cloudflare Access)
 
 For Railway, Fly.io, or a custom VPS, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
