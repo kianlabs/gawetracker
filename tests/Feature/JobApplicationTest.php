@@ -6,6 +6,7 @@ use App\Models\JobApplication;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class JobApplicationTest extends TestCase
@@ -95,5 +96,23 @@ class JobApplicationTest extends TestCase
             $this->assertNotNull($app->applied_at);
             $this->assertGreaterThan(0, $app->statusHistories->count());
         }
+    }
+
+    public function test_database_seeder_is_idempotent(): void
+    {
+        // nixpacks runs db:seed on every deploy, so a second run must not
+        // duplicate rows or histories.
+        $this->seed(DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseCount('job_applications', 15);
+
+        $histories = DB::table('status_histories')->count();
+        $this->assertGreaterThan(0, $histories);
+
+        // Re-seeding once more must not change the history count either.
+        $this->seed(DatabaseSeeder::class);
+        $this->assertSame($histories, DB::table('status_histories')->count());
     }
 }

@@ -121,6 +121,7 @@ class JobApplicationCrudTest extends TestCase
             'contact_name' => 'Recruiter Team',
             'contact_info' => 'talent@gojek.com',
             'notes' => 'Referral dari teman kantor lama.',
+            'interview_result' => 'Interview teknis lancar, pertanyaan soal goroutine pools.',
             'status' => 'wishlist',
         ];
 
@@ -133,6 +134,7 @@ class JobApplicationCrudTest extends TestCase
             'company' => 'Gojek',
             'position' => 'Senior Backend Developer',
             'status' => 'wishlist',
+            'interview_result' => 'Interview teknis lancar, pertanyaan soal goroutine pools.',
         ]);
 
         $application = JobApplication::where('company', 'Gojek')->first();

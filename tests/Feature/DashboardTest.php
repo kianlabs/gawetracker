@@ -307,6 +307,44 @@ class DashboardTest extends TestCase
         $this->assertEquals('Company 7', $recent->first()->company);
     }
 
+    public function test_weekly_target_persists_across_requests(): void
+    {
+        // Default when nothing saved yet
+        $this->assertEquals(8, $this->user->weeklyTarget());
+
+        // Save a new target
+        $response = $this->actingAs($this->user)->post(route('dashboard.target.update'), [
+            'target' => 12,
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $response->assertSessionHas('status');
+        $this->assertEquals(12, $this->user->fresh()->weekly_target);
+
+        // A fresh dashboard request (no query string) must show the saved value,
+        // not the old hard-coded default.
+        $dashboard = $this->actingAs($this->user)->get('/');
+        $dashboard->assertViewHas('weeklyTarget', 12);
+    }
+
+    public function test_weekly_target_validation_rejects_out_of_range_values(): void
+    {
+        $this->actingAs($this->user)
+            ->post(route('dashboard.target.update'), ['target' => 0])
+            ->assertSessionHasErrors('target');
+
+        $this->actingAs($this->user)
+            ->post(route('dashboard.target.update'), ['target' => 101])
+            ->assertSessionHasErrors('target');
+
+        $this->actingAs($this->user)
+            ->post(route('dashboard.target.update'), [])
+            ->assertSessionHasErrors('target');
+
+        // Nothing was persisted
+        $this->assertEquals(8, $this->user->fresh()->weekly_target);
+    }
+
     public function test_quick_status_change_from_dashboard_updates_status_and_clears_follow_up(): void
     {
         $app = JobApplication::create([
