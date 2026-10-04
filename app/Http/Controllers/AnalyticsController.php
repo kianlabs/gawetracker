@@ -178,7 +178,7 @@ class AnalyticsController extends Controller
 
         $trackedStages = ['applied', 'screening', 'interview', 'offer'];
         foreach (array_keys($rejectionHistories) as $stageKey) {
-            if ($stageKey !== null && !in_array($stageKey, $trackedStages, true)) {
+            if ($stageKey !== null && ! in_array($stageKey, $trackedStages, true)) {
                 $trackedStages[] = $stageKey;
             }
         }
@@ -359,7 +359,7 @@ class AnalyticsController extends Controller
                 'end_date' => $endDateStr,
                 'label' => $label,
                 'count' => $count,
-                'date_range' => $startOfWeek->format('d M') . ' - ' . $endOfWeek->format('d M'),
+                'date_range' => $startOfWeek->format('d M').' - '.$endOfWeek->format('d M'),
                 'is_current' => $i === 0,
             ];
         }
@@ -428,9 +428,9 @@ class AnalyticsController extends Controller
                     }
 
                     $week[] = [
-                        'date'      => $dateStr,
-                        'count'     => $count,
-                        'level'     => $level,
+                        'date' => $dateStr,
+                        'count' => $count,
+                        'level' => $level,
                         'is_future' => $isFuture,
                     ];
                 }
@@ -441,8 +441,8 @@ class AnalyticsController extends Controller
 
         return [
             'counts' => $counts,
-            'max'    => $max,
-            'weeks'  => $weeks,
+            'max' => $max,
+            'weeks' => $weeks,
         ];
     }
 }

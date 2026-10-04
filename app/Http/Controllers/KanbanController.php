@@ -69,7 +69,7 @@ class KanbanController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('company', 'like', "%{$search}%")
-                  ->orWhere('position', 'like', "%{$search}%");
+                    ->orWhere('position', 'like', "%{$search}%");
             });
         }
 

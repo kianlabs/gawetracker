@@ -31,12 +31,12 @@ class JobstreetSourceTest extends TestCase
 
     public function test_it_declares_the_jobstreet_source_name(): void
     {
-        $this->assertSame('jobstreet', (new JobstreetSource())->name());
+        $this->assertSame('jobstreet', (new JobstreetSource)->name());
     }
 
     public function test_it_maps_a_v5_item_into_a_discovered_job(): void
     {
-        $job = (new JobstreetSource())->parseItem($this->item());
+        $job = (new JobstreetSource)->parseItem($this->item());
 
         $this->assertInstanceOf(DiscoveredJob::class, $job);
         $this->assertSame('jobstreet', $job->source);
@@ -52,7 +52,7 @@ class JobstreetSourceTest extends TestCase
 
     public function test_it_falls_back_to_company_name_when_advertiser_description_is_blank(): void
     {
-        $job = (new JobstreetSource())->parseItem($this->item([
+        $job = (new JobstreetSource)->parseItem($this->item([
             'advertiser' => ['id' => '1', 'description' => ''],
         ]));
 
@@ -61,7 +61,7 @@ class JobstreetSourceTest extends TestCase
 
     public function test_it_rejects_items_without_an_id_or_title(): void
     {
-        $source = new JobstreetSource();
+        $source = new JobstreetSource;
 
         $this->assertNull($source->parseItem($this->item(['id' => ''])));
         $this->assertNull($source->parseItem($this->item(['title' => '  '])));
@@ -69,7 +69,7 @@ class JobstreetSourceTest extends TestCase
 
     public function test_it_tolerates_missing_optional_fields(): void
     {
-        $job = (new JobstreetSource())->parseItem([
+        $job = (new JobstreetSource)->parseItem([
             'id' => '42',
             'title' => 'Data Analyst',
         ]);
@@ -109,7 +109,7 @@ class JobstreetSourceTest extends TestCase
             '*' => Http::response(['data' => [$this->item()], 'totalCount' => 1], 200),
         ]);
 
-        $jobs = (new JobstreetSource())->search('backend', 10);
+        $jobs = (new JobstreetSource)->search('backend', 10);
 
         $this->assertCount(1, $jobs);
         $this->assertInstanceOf(DiscoveredJob::class, $jobs[0]);
@@ -137,14 +137,14 @@ class JobstreetSourceTest extends TestCase
     {
         Http::fake(['*' => Http::response(['data' => [], 'totalCount' => 0], 200)]);
 
-        $this->assertSame([], (new JobstreetSource())->search('nonexistent-role-xyz', 10));
+        $this->assertSame([], (new JobstreetSource)->search('nonexistent-role-xyz', 10));
     }
 
     public function test_it_caps_a_single_request_at_the_seek_page_size(): void
     {
         Http::fake(['*' => Http::response(['data' => [], 'totalCount' => 0], 200)]);
 
-        (new JobstreetSource())->search('engineer', 100);
+        (new JobstreetSource)->search('engineer', 100);
 
         Http::assertSent(fn ($request) => (int) $request['pageSize'] === 30);
     }
@@ -166,7 +166,7 @@ class JobstreetSourceTest extends TestCase
             ], 200),
         ]);
 
-        $jobs = (new JobstreetSource())->search('engineer', 35);
+        $jobs = (new JobstreetSource)->search('engineer', 35);
 
         $this->assertCount(35, $jobs);
         $this->assertSame('1', $jobs[0]->externalId);
@@ -180,6 +180,6 @@ class JobstreetSourceTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Jobstreet API request failed (HTTP 403)');
 
-        (new JobstreetSource())->search('backend', 10);
+        (new JobstreetSource)->search('backend', 10);
     }
 }

@@ -21,8 +21,8 @@ class DiscoverJobs extends Command
         $limit = (int) $this->option('limit');
 
         $service = new JobDiscoveryService([
-            new GlintsSource(),
-            new JobstreetSource(),
+            new GlintsSource,
+            new JobstreetSource,
         ]);
 
         $this->info("Mencari \"{$keyword}\" di Glints & Jobstreet...");

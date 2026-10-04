@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Services\GoogleOAuthService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
@@ -58,7 +59,7 @@ class GmailSetupCommandTest extends TestCase
 
     public function test_is_configured_requires_all_three_values(): void
     {
-        $oauth = app(\App\Services\GoogleOAuthService::class);
+        $oauth = app(GoogleOAuthService::class);
 
         config([
             'services.gmail.client_id' => 'id',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -79,8 +80,8 @@ class JobApplication extends Model
      * rejected). Use this everywhere "Aktif Diproses" is shown so the metric has
      * a single, consistent definition.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<JobApplication>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<JobApplication>
+     * @param  Builder<JobApplication>  $query
+     * @return Builder<JobApplication>
      */
     public function scopeActive($query)
     {
@@ -137,7 +138,6 @@ class JobApplication extends Model
         return $this->hasOne(OfferDetail::class);
     }
 
-
     /**
      * Returns a Google Favicon URL when the company domain is known
      * (either from source_url or the built-in map), null otherwise.
@@ -148,6 +148,7 @@ class JobApplication extends Model
         return Attribute::make(
             get: function (): ?string {
                 $domain = $this->resolveDomain();
+
                 return $domain
                     ? "https://www.google.com/s2/favicons?domain={$domain}&sz=64"
                     : null;
@@ -162,8 +163,8 @@ class JobApplication extends Model
             $host = parse_url($this->source_url, PHP_URL_HOST);
             if ($host) {
                 $jobBoards = ['linkedin.com', 'jobstreet.co.id', 'glints.com', 'kalibrr.com', 'indeed.com'];
-                $isJobBoard = collect($jobBoards)->contains(fn($b) => str_contains($host, $b));
-                if (!$isJobBoard) {
+                $isJobBoard = collect($jobBoards)->contains(fn ($b) => str_contains($host, $b));
+                if (! $isJobBoard) {
                     return preg_replace('/^www\./', '', $host);
                 }
             }
@@ -171,27 +172,27 @@ class JobApplication extends Model
 
         // Known Indonesian tech companies
         $map = [
-            'tokopedia'  => 'tokopedia.com',
-            'goto'       => 'gotogroup.com',
-            'gojek'      => 'gojek.com',
-            'traveloka'  => 'traveloka.com',
-            'shopee'     => 'shopee.co.id',
-            'blibli'     => 'blibli.com',
-            'bukalapak'  => 'bukalapak.com',
-            'tiket'      => 'tiket.com',
-            'dana'       => 'dana.id',
-            'ovo'        => 'ovo.id',
-            'xendit'     => 'xendit.co',
-            'midtrans'   => 'midtrans.com',
-            'koinworks'  => 'koinworks.com',
-            'kredivo'    => 'kredivo.com',
-            'ajaib'      => 'ajaib.co.id',
-            'stockbit'   => 'stockbit.com',
-            'ruangguru'  => 'ruangguru.com',
-            'zenius'     => 'zenius.net',
-            'vidio'      => 'vidio.com',
-            'grab'       => 'grab.com',
-            'sea'        => 'sea.com',
+            'tokopedia' => 'tokopedia.com',
+            'goto' => 'gotogroup.com',
+            'gojek' => 'gojek.com',
+            'traveloka' => 'traveloka.com',
+            'shopee' => 'shopee.co.id',
+            'blibli' => 'blibli.com',
+            'bukalapak' => 'bukalapak.com',
+            'tiket' => 'tiket.com',
+            'dana' => 'dana.id',
+            'ovo' => 'ovo.id',
+            'xendit' => 'xendit.co',
+            'midtrans' => 'midtrans.com',
+            'koinworks' => 'koinworks.com',
+            'kredivo' => 'kredivo.com',
+            'ajaib' => 'ajaib.co.id',
+            'stockbit' => 'stockbit.com',
+            'ruangguru' => 'ruangguru.com',
+            'zenius' => 'zenius.net',
+            'vidio' => 'vidio.com',
+            'grab' => 'grab.com',
+            'sea' => 'sea.com',
         ];
 
         $nameLower = strtolower($this->company);

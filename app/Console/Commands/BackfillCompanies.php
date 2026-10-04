@@ -25,12 +25,14 @@ class BackfillCompanies extends Command
 
             if ($key === '') {
                 $skipped++;
+
                 continue;
             }
 
             if ($this->option('dry-run')) {
                 $this->line(sprintf('  [dry-run] #%d %s → %s', $app->id, $app->company, $key));
                 $linked++;
+
                 continue;
             }
 

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use App\Services\GoogleOAuthService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -109,7 +110,7 @@ class GmailSetup extends Command
     {
         $configured = $oauth->isConfigured();
         $redirect = $oauth->redirectUri();
-        $hasToken = \App\Models\User::whereNotNull('gmail_refresh_token')->exists();
+        $hasToken = User::whereNotNull('gmail_refresh_token')->exists();
 
         $this->newLine();
         $this->line('  Status Koneksi Gmail');

@@ -101,7 +101,6 @@ class JobApplicationController extends Controller
             ->with('success', 'Lamaran pekerjaan berhasil ditambahkan.');
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -117,6 +116,7 @@ class JobApplicationController extends Controller
             'workTypes' => self::WORK_TYPES,
         ]);
     }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -145,7 +145,7 @@ class JobApplicationController extends Controller
             $application->statusHistories()->create([
                 'from_status' => $oldStatus,
                 'to_status' => $newStatus,
-                'note' => $statusNote !== '' ? $statusNote : 'Status diperbarui dari ' . (self::STATUSES[$oldStatus]['label'] ?? $oldStatus) . ' ke ' . (self::STATUSES[$newStatus]['label'] ?? $newStatus) . '.',
+                'note' => $statusNote !== '' ? $statusNote : 'Status diperbarui dari '.(self::STATUSES[$oldStatus]['label'] ?? $oldStatus).' ke '.(self::STATUSES[$newStatus]['label'] ?? $newStatus).'.',
                 'created_at' => now(),
             ]);
         }
@@ -179,7 +179,7 @@ class JobApplicationController extends Controller
     public function quickStatus(Request $request, JobApplication $application): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', 'in:' . implode(',', array_keys(self::STATUSES))],
+            'status' => ['required', 'in:'.implode(',', array_keys(self::STATUSES))],
             'note' => ['nullable', 'string', 'max:1000'],
         ], [
             'status.required' => 'Status wajib dipilih.',
@@ -198,7 +198,7 @@ class JobApplicationController extends Controller
             $application->statusHistories()->create([
                 'from_status' => $oldStatus,
                 'to_status' => $newStatus,
-                'note' => $note !== '' ? $note : 'Status diubah ke ' . (self::STATUSES[$newStatus]['label'] ?? $newStatus) . '.',
+                'note' => $note !== '' ? $note : 'Status diubah ke '.(self::STATUSES[$newStatus]['label'] ?? $newStatus).'.',
                 'created_at' => now(),
             ]);
         }
@@ -250,8 +250,8 @@ class JobApplicationController extends Controller
             'status.in' => 'Status tidak valid.',
         ]);
 
-        $appliedAt = !empty($validated['applied_at']) ? $validated['applied_at'] : now()->toDateString();
-        $status = !empty($validated['status']) ? $validated['status'] : 'wishlist';
+        $appliedAt = ! empty($validated['applied_at']) ? $validated['applied_at'] : now()->toDateString();
+        $status = ! empty($validated['status']) ? $validated['status'] : 'wishlist';
 
         $application = JobApplication::create([
             'company' => $validated['company'],
@@ -280,7 +280,7 @@ class JobApplicationController extends Controller
     {
         $query = $this->applyFilters(JobApplication::query(), $request);
 
-        $fileName = 'lamaran_pekerjaan_' . now()->format('Ymd_His') . '.csv';
+        $fileName = 'lamaran_pekerjaan_'.now()->format('Ymd_His').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -343,9 +343,9 @@ class JobApplicationController extends Controller
         if ($search = trim((string) $request->input('search'))) {
             $query->where(function ($q) use ($search) {
                 $q->where('company', 'like', "%{$search}%")
-                  ->orWhere('position', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%")
-                  ->orWhere('contact_name', 'like', "%{$search}%");
+                    ->orWhere('position', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('contact_name', 'like', "%{$search}%");
             });
         }
 

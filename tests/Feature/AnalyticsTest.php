@@ -271,7 +271,7 @@ class AnalyticsTest extends TestCase
         $this->assertEquals(25.0, $breakdown['interview']['percentage']);
 
         // Assert actionable advice is geared towards applied/CV ATS
-        $this->assertStringContainsString('ATS', $rejectionAnalysis['advice']['title'] . ' ' . $rejectionAnalysis['advice']['description']);
+        $this->assertStringContainsString('ATS', $rejectionAnalysis['advice']['title'].' '.$rejectionAnalysis['advice']['description']);
     }
 
     public function test_weekly_application_volume_for_past_eight_weeks(): void

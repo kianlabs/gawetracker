@@ -6,6 +6,7 @@ use App\Models\JobApplication;
 use App\Models\OfferDetail;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+
 class DashboardController extends Controller
 {
     /**
@@ -72,7 +73,7 @@ class DashboardController extends Controller
 
         $expiringOffers = OfferDetail::with('jobApplication')
             ->whereNotNull('deadline_at')
-            ->whereHas('jobApplication', fn($q) => $q->where('status', 'offer'))
+            ->whereHas('jobApplication', fn ($q) => $q->where('status', 'offer'))
             ->where('deadline_at', '>=', now()->toDateString())
             ->where('deadline_at', '<=', now()->addDays(3)->toDateString())
             ->orderBy('deadline_at', 'asc')

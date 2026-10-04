@@ -39,6 +39,7 @@ class JobDiscoveryService
             } catch (\Throwable $e) {
                 // A single board failing must never abort the whole run.
                 $errors[] = $source->name().': '.$e->getMessage();
+
                 continue;
             }
 

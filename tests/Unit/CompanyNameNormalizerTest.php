@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Company;
+use App\Models\JobApplication;
 use App\Support\Company\CompanyNameNormalizer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -86,7 +87,7 @@ class CompanyNameNormalizerTest extends TestCase
     {
         $company = Company::findOrCreateByName('PT Infomedia Nusantara');
 
-        $application = \App\Models\JobApplication::create([
+        $application = JobApplication::create([
             'company' => 'Infomedia Nusantara',
             'company_id' => $company->id,
             'position' => 'Back End Developer',

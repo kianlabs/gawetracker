@@ -97,8 +97,8 @@ class JobDiscoveryController extends Controller
         $limit = (int) ($validated['limit'] ?? 30);
 
         $service = new JobDiscoveryService([
-            new GlintsSource(),
-            new JobstreetSource(),
+            new GlintsSource,
+            new JobstreetSource,
         ]);
 
         $result = $service->discover($keyword, $limit);
