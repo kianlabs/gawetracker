@@ -2,6 +2,7 @@
 
 namespace App\Services\Discovery;
 
+use App\Support\Http\TransientHttpRetry;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -160,6 +161,14 @@ class GlintsSource implements JobSource
         ])
             ->acceptJson()
             ->timeout(30)
+            // Retry transient faults (5xx / 429 / dropped connection); a 4xx is
+            // left alone. throw:false keeps the "never throws" contract below.
+            ->retry(
+                TransientHttpRetry::TIMES,
+                TransientHttpRetry::DELAY_MS,
+                when: TransientHttpRetry::when(),
+                throw: false,
+            )
             ->post($endpoint, [
                 'operationName' => self::OPERATION,
                 'query' => self::QUERY,

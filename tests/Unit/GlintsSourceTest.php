@@ -187,6 +187,27 @@ class GlintsSourceTest extends TestCase
         $this->assertSame([], (new GlintsSource)->search('backend'));
     }
 
+    public function test_it_retries_a_transient_server_error_and_recovers(): void
+    {
+        Http::fake(['glints.com/*' => Http::sequence()
+            ->pushStatus(503)
+            ->push($this->payload([$this->item()]))]);
+
+        $jobs = (new GlintsSource)->search('backend');
+
+        $this->assertCount(1, $jobs);
+        $this->assertSame('Backend Engineer', $jobs[0]->title);
+        Http::assertSentCount(2);
+    }
+
+    public function test_it_does_not_retry_a_client_error(): void
+    {
+        Http::fake(['glints.com/*' => Http::response('forbidden', 403)]);
+
+        $this->assertSame([], (new GlintsSource)->search('backend'));
+        Http::assertSentCount(1);
+    }
+
     public function test_a_malformed_payload_returns_an_empty_array(): void
     {
         Http::fake(['glints.com/*' => Http::response(['unexpected' => 'shape'])]);

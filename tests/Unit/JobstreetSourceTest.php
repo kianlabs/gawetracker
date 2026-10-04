@@ -185,4 +185,31 @@ class JobstreetSourceTest extends TestCase
 
         (new JobstreetSource)->search('backend', 10);
     }
+
+    public function test_it_retries_a_transient_server_error_and_recovers(): void
+    {
+        Http::fake(['*' => Http::sequence()
+            ->pushStatus(503)
+            ->push(['data' => [$this->item()]], 200)]);
+
+        $jobs = (new JobstreetSource)->search('backend', 10);
+
+        $this->assertCount(1, $jobs);
+        $this->assertSame('Backend Engineer', $jobs[0]->title);
+        Http::assertSentCount(2);
+    }
+
+    public function test_it_does_not_retry_a_client_error(): void
+    {
+        Http::fake(['*' => Http::response('Forbidden', 403)]);
+
+        try {
+            (new JobstreetSource)->search('backend', 10);
+            $this->fail('Expected a RuntimeException for the 403 response.');
+        } catch (\RuntimeException $e) {
+            $this->assertStringContainsString('HTTP 403', $e->getMessage());
+        }
+
+        Http::assertSentCount(1);
+    }
 }

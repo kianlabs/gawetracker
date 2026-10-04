@@ -2,6 +2,8 @@
 
 namespace App\Services\Discovery;
 
+use App\Support\Http\TransientHttpRetry;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -149,15 +151,33 @@ class JobstreetSource implements JobSource
      */
     private function fetchPage(string $keyword, int $page, int $pageSize): array
     {
-        $response = Http::withHeaders(['User-Agent' => self::USER_AGENT])
-            ->acceptJson()
-            ->timeout(self::TIMEOUT)
-            ->get($this->endpoint, [
-                'siteKey' => $this->siteKey,
-                'keywords' => $keyword,
-                'page' => $page,
-                'pageSize' => $pageSize,
-            ]);
+        try {
+            $response = Http::withHeaders(['User-Agent' => self::USER_AGENT])
+                ->acceptJson()
+                ->timeout(self::TIMEOUT)
+                // Retry transient faults (5xx / 429 / dropped connection); a 4xx
+                // is deterministic so we let it fail fast. throw:false lets us
+                // surface our own message below.
+                ->retry(
+                    TransientHttpRetry::TIMES,
+                    TransientHttpRetry::DELAY_MS,
+                    when: TransientHttpRetry::when(),
+                    throw: false,
+                )
+                ->get($this->endpoint, [
+                    'siteKey' => $this->siteKey,
+                    'keywords' => $keyword,
+                    'page' => $page,
+                    'pageSize' => $pageSize,
+                ]);
+        } catch (ConnectionException $e) {
+            // The board stayed unreachable through every retry.
+            throw new \RuntimeException(sprintf(
+                'Jobstreet API unreachable for "%s": %s',
+                $keyword,
+                $e->getMessage(),
+            ), 0, $e);
+        }
 
         if ($response->failed()) {
             // The orchestrator catches Throwable per source and records it, so a
