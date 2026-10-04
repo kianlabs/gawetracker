@@ -26,7 +26,22 @@ BIND_ADDR="${GAWETRACKER_BIND:-127.0.0.1}"
 
 # Load only the keys we need; do not export the whole .env into the shell.
 # Tolerate a missing key (grep exits 1) so `set -e` does not abort the script.
-get() { { grep -E "^$1=" "$ENV_FILE" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; } || true; }
+env_raw() { { grep -E "^$1=" "$ENV_FILE" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; } || true; }
+
+# .env values may reference other keys (e.g. MAIL_FROM_NAME="${APP_NAME}"). Docker
+# does NOT expand those — it would pass the literal string "${APP_NAME}" — so
+# resolve them here the way dotenv does. The loop is bounded, which also keeps a
+# self-referential value (A="${A}") from spinning forever.
+get() {
+  local value ref
+  value="$(env_raw "$1")"
+  for _ in 1 2 3 4 5; do
+    [[ "$value" =~ \$\{([A-Za-z_][A-Za-z0-9_]*)\} ]] || break
+    ref="${BASH_REMATCH[1]}"
+    value="${value//\$\{$ref\}/$(env_raw "$ref")}"
+  done
+  printf '%s' "$value"
+}
 
 APP_KEY="$(get APP_KEY)"
 ADMIN_EMAIL="$(get ADMIN_EMAIL)"
