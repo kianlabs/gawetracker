@@ -3,7 +3,6 @@
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GmailConnectionController;
 use App\Http\Controllers\InterviewChecklistController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobDiscoveryController;
@@ -14,10 +13,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
-
-    // "Sign in with Google" — also links the Gmail mailbox in one step.
-    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
-    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
 Route::middleware('auth')->group(function () {
@@ -26,11 +21,6 @@ Route::middleware('auth')->group(function () {
 
     // Weekly target persistence (per-user preference)
     Route::post('/dashboard/target', [DashboardController::class, 'updateTarget'])->name('dashboard.target.update');
-
-    // Gmail OAuth connection (read-only mailbox linking)
-    Route::get('/gmail/connect', [GmailConnectionController::class, 'redirect'])->name('gmail.connect');
-    Route::get('/gmail/callback', [GmailConnectionController::class, 'callback'])->name('gmail.callback');
-    Route::delete('/gmail/disconnect', [GmailConnectionController::class, 'destroy'])->name('gmail.disconnect');
 
     // Job discovery from external boards (Glints, Jobstreet)
     Route::get('/discovery', [JobDiscoveryController::class, 'index'])->name('discovery.index');

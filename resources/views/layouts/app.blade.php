@@ -50,20 +50,7 @@
                 </nav>
             </div>
 
-            <div class="user-nav">
                 <span class="user-label">{{ Auth::user()->name }}</span>
-                @if (Auth::user()->hasGmailConnected())
-                    <form method="POST" action="{{ route('gmail.disconnect') }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline btn-sm"
-                                title="Gmail: {{ Auth::user()->gmail_email ?? 'terhubung' }}">
-                            Gmail terhubung
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('gmail.connect') }}" class="btn btn-outline btn-sm">Hubungkan Gmail</a>
-                @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="btn btn-outline btn-sm">Keluar</button>

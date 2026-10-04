@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['name', 'email', 'password', 'weekly_target'])]
-#[Hidden(['password', 'remember_token', 'gmail_access_token', 'gmail_refresh_token'])]
+#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -30,10 +30,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'gmail_access_token' => 'encrypted',
-            'gmail_refresh_token' => 'encrypted',
-            'gmail_token_expires_at' => 'datetime',
-            'gmail_connected_at' => 'datetime',
             'weekly_target' => 'integer',
         ];
     }
@@ -45,13 +41,5 @@ class User extends Authenticatable
     public function weeklyTarget(): int
     {
         return $this->weekly_target > 0 ? (int) $this->weekly_target : 8;
-    }
-
-    /**
-     * Whether this user has linked a Gmail account for email ingestion.
-     */
-    public function hasGmailConnected(): bool
-    {
-        return ! empty($this->gmail_refresh_token);
     }
 }

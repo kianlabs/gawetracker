@@ -121,9 +121,7 @@ For Railway, Fly.io, or a custom VPS, see [DEPLOYMENT.md](DEPLOYMENT.md).
 ⚠️ **Change default password immediately after first login in production.**
 ## Email ingestion (JobStreet & Glints)
 
-GaweTracker can read your JobStreet/Glints application emails and keep your
-pipeline in sync automatically — confirmations create applications, and later
-emails (interview, offer, rejection) update their status.
+GaweTracker can parse JobStreet and Glints application emails saved as `.eml` files and automatically create or update applications — confirmations create new entries, and later emails (interview, offer, rejection) update their status.
 
 Parse and inspect a folder of `.eml` files without touching the database:
 
@@ -137,46 +135,7 @@ Ingest them for real:
 php artisan emails:import storage/app/emails
 ```
 
-Pull directly from Gmail (read-only) — see the OAuth setup below:
-
-```bash
-php artisan emails:import --gmail --max=100
-```
-
-### Connect Gmail (OAuth)
-
-The Gmail connection is a standard OAuth2 authorization-code flow with
-`access_type=offline`, so a **refresh token** is stored and the 1-hour access
-token is renewed automatically — no re-consent needed.
-
-1. In the [Google Cloud Console](https://console.cloud.google.com/), create a
-   project and enable the **Gmail API**.
-2. Configure the OAuth consent screen (External, add yourself as a test user).
-3. Create an **OAuth client ID** (type: Web application) and add the redirect
-   URI: `{APP_URL}/gmail/callback`.
-4. Put the credentials in `.env`:
-
-   ```dotenv
-   GOOGLE_CLIENT_ID=...apps.googleusercontent.com
-   GOOGLE_CLIENT_SECRET=...
-   GOOGLE_REDIRECT_URI="${APP_URL}/gmail/callback"
-   ```
-
-5. Log in to GaweTracker and click **Hubungkan Gmail** in the header, then grant
-   read-only access. The button switches to **Gmail terhubung** once linked
-   (click it to disconnect).
-
-Tokens are **encrypted at rest** (see `User::$casts`); the refresh token is never
-stored in plaintext.
-
-Design notes:
-- **Idempotent** — every email's `Message-ID` is recorded in `ingested_emails`,
-  so re-running never double-counts.
-- **Forward-only** — a status is only applied when it moves an application
-  *forward*; a stale email can't downgrade an advanced one, and terminal
-  (`hired`/`rejected`) states are never overwritten.
-- **Digests ignored** — job-alert emails ("new jobs for you") never create
-  applications.
+The parser is **idempotent** — every email's `Message-ID` is recorded in `ingested_emails`, so re-running never creates duplicates. Status updates are **forward-only**: a status is only applied when it moves an application forward in the pipeline; a stale email cannot downgrade an advanced one, and terminal states (`hired`/`rejected`) are never overwritten. Job-alert digest emails are ignored and never create applications.
 
 
 ## Tests
