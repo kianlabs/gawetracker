@@ -96,6 +96,8 @@ Default login credentials (from UserSeeder):
 - Email: kyan@gawetracker.test
 - Password: password
 
+Override via `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` in `.env` *before* running `php artisan migrate --seed`. The seeder uses `firstOrCreate`, so these only apply on a fresh seed; editing them later does not update an existing user.
+
 
 ## Deployment
 
