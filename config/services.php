@@ -35,6 +35,22 @@ return [
         ],
     ],
 
+    'glints' => [
+        // No-auth GraphQL endpoint powering Glints' own job search. Overridable
+        // so tests can point the source at a fake.
+        'endpoint' => env('GLINTS_ENDPOINT', 'https://glints.com/api/v2-alc/graphql'),
+
+        // Two-letter country code; "ID" scopes results to Indonesia.
+        'country' => env('GLINTS_COUNTRY', 'ID'),
+    ],
+
+    'jobstreet' => [
+        // SEEK v5 JobSearch API. Jobstreet/SEEK/JobsDB share this platform; the
+        // site key selects the market (ID-Main, SG-Main, MY-Main, HK-Main…).
+        'endpoint' => env('JOBSTREET_ENDPOINT', 'https://id.jobstreet.com/api/jobsearch/v5/search'),
+        'site_key' => env('JOBSTREET_SITE_KEY', 'ID-Main'),
+    ],
+
     'gmail' => [
         // OAuth2 access token with the gmail.readonly scope. Used by
         // `php artisan emails:import --gmail` to pull JobStreet/Glints mail.

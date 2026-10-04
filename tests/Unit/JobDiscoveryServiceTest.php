@@ -1,0 +1,141 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Models\Company;
+use App\Models\JobPosting;
+use App\Services\Discovery\DiscoveredJob;
+use App\Services\Discovery\JobDiscoveryService;
+use App\Services\Discovery\JobSource;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+/**
+ * A controllable in-memory source so the discovery pipeline is tested without
+ * touching any real board.
+ */
+class FakeJobSource implements JobSource
+{
+    /** @param array<int, DiscoveredJob> $jobs */
+    public function __construct(
+        private readonly string $label,
+        private readonly array $jobs = [],
+        private readonly ?string $failWith = null,
+    ) {}
+
+    public function name(): string
+    {
+        return $this->label;
+    }
+
+    public function search(string $keyword, int $limit = 30): array
+    {
+        if ($this->failWith !== null) {
+            throw new \RuntimeException($this->failWith);
+        }
+
+        return array_slice($this->jobs, 0, $limit);
+    }
+}
+
+class JobDiscoveryServiceTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private function job(string $id, string $company, string $title = 'Backend Engineer'): DiscoveredJob
+    {
+        return new DiscoveredJob(
+            source: 'glints',
+            externalId: $id,
+            title: $title,
+            company: $company,
+            location: 'Jakarta',
+            sourceUrl: "https://glints.com/id/opportunities/jobs/{$id}",
+            postedAt: '2026-09-30T10:12:39Z',
+        );
+    }
+
+    public function test_it_persists_discovered_postings(): void
+    {
+        $service = new JobDiscoveryService([
+            new FakeJobSource('glints', [$this->job('1', 'Tokopedia')]),
+            new FakeJobSource('jobstreet', [
+                new DiscoveredJob('jobstreet', '99', 'Data Analyst', 'Traveloka', 'Bandung'),
+            ]),
+        ]);
+
+        $result = $service->discover('engineer');
+
+        $this->assertSame(2, $result['created']);
+        $this->assertSame(2, $result['seen']);
+        $this->assertSame(0, $result['updated']);
+        $this->assertSame(2, JobPosting::count());
+    }
+
+    public function test_re_running_is_idempotent(): void
+    {
+        $source = new FakeJobSource('glints', [$this->job('1', 'Tokopedia')]);
+
+        (new JobDiscoveryService([$source]))->discover('engineer');
+        $second = (new JobDiscoveryService([$source]))->discover('engineer');
+
+        $this->assertSame(0, $second['created']);
+        $this->assertSame(1, $second['updated']);
+        $this->assertSame(1, JobPosting::count());
+    }
+
+    public function test_company_spellings_share_one_canonical_row(): void
+    {
+        $service = new JobDiscoveryService([
+            new FakeJobSource('glints', [$this->job('1', 'PT Tokopedia')]),
+            new FakeJobSource('jobstreet', [$this->job('2', 'Tokopedia, PT')]),
+        ]);
+
+        $service->discover('engineer');
+
+        $this->assertSame(2, JobPosting::count());
+        $this->assertSame(1, Company::count());
+        $this->assertSame(
+            JobPosting::first()->company_id,
+            JobPosting::latest('id')->first()->company_id,
+        );
+    }
+
+    public function test_one_failing_source_does_not_abort_the_others(): void
+    {
+        $service = new JobDiscoveryService([
+            new FakeJobSource('glints', failWith: 'firewall blocked'),
+            new FakeJobSource('jobstreet', [$this->job('5', 'Bukalapak')]),
+        ]);
+
+        $result = $service->discover('engineer');
+
+        $this->assertSame(1, $result['created']);
+        $this->assertCount(1, $result['errors']);
+        $this->assertStringContainsString('glints', $result['errors'][0]);
+        $this->assertSame(1, JobPosting::count());
+    }
+
+    public function test_posting_links_to_a_promoted_application(): void
+    {
+        $service = new JobDiscoveryService([new FakeJobSource('glints', [$this->job('7', 'Gojek')])]);
+        $service->discover('engineer');
+
+        $posting = JobPosting::first();
+
+        $this->assertFalse($posting->isPromoted());
+
+        $app = $posting->companyRecord->jobApplications()->create([
+            'company' => $posting->company,
+            'company_id' => $posting->company_id,
+            'position' => $posting->title,
+            'applied_at' => now()->toDateString(),
+            'status' => 'applied',
+        ]);
+
+        $posting->update(['job_application_id' => $app->id]);
+
+        $this->assertTrue($posting->fresh()->isPromoted());
+        $this->assertSame($app->id, $posting->fresh()->jobApplication->id);
+    }
+}

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -19,6 +20,7 @@ class JobApplication extends Model
      */
     protected $fillable = [
         'company',
+        'company_id',
         'position',
         'location',
         'work_type',
@@ -96,6 +98,17 @@ class JobApplication extends Model
             'applied_at' => 'date',
             'last_status_change_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the canonical company this application belongs to.
+     *
+     * Named `companyRecord` (not `company`) because `company` is already a
+     * free-text column on this table that views read directly.
+     */
+    public function companyRecord(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**
