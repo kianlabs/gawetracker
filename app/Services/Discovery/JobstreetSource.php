@@ -140,6 +140,7 @@ class JobstreetSource implements JobSource
             sourceUrl: $this->jobUrl($id),
             salaryNote: $this->string($item['salaryLabel'] ?? null),
             postedAt: $this->string($item['listingDate'] ?? null),
+            description: $this->string($item['teaser'] ?? null),
         );
     }
 

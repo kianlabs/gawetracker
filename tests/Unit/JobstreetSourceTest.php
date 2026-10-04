@@ -25,6 +25,7 @@ class JobstreetSourceTest extends TestCase
             'locations' => [['label' => 'South Jakarta, Jakarta', 'countryCode' => 'ID']],
             'listingDate' => '2026-09-23T09:17:16Z',
             'salaryLabel' => 'Rp 6.000.000 – Rp 7.500.000 per month',
+            'teaser' => 'Backend engineer to design and build services in Go with PostgreSQL and Docker.',
             'workTypes' => ['Full time'],
         ], $overrides);
     }
@@ -47,6 +48,7 @@ class JobstreetSourceTest extends TestCase
         $this->assertSame('https://id.jobstreet.com/id/job/94704774', $job->sourceUrl);
         $this->assertSame('Rp 6.000.000 – Rp 7.500.000 per month', $job->salaryNote);
         $this->assertSame('2026-09-23T09:17:16Z', $job->postedAt);
+        $this->assertSame('Backend engineer to design and build services in Go with PostgreSQL and Docker.', $job->description);
         $this->assertSame('jobstreet:94704774', $job->dedupKey());
     }
 
@@ -79,6 +81,7 @@ class JobstreetSourceTest extends TestCase
         $this->assertNull($job->location);
         $this->assertNull($job->salaryNote);
         $this->assertNull($job->postedAt);
+        $this->assertNull($job->description);
         $this->assertSame('https://id.jobstreet.com/id/job/42', $job->sourceUrl);
     }
 

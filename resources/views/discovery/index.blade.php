@@ -148,6 +148,11 @@
                                     @if ($postedLabel)
                                         <div class="text-xs text-muted" style="margin-top:0.125rem;">Diposting {{ $postedLabel }}</div>
                                     @endif
+                                    @if ($posting->description)
+                                        <div class="text-xs text-muted" style="margin-top:0.25rem;max-width:32rem;">
+                                            {{ \Illuminate\Support\Str::limit($posting->description, 160) }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-2">

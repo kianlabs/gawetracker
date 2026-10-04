@@ -77,6 +77,7 @@ class JobDiscoveryService
             'company' => $job->company,
             'company_id' => $company?->id,
             'location' => $job->location,
+            'description' => $job->description,
             'source_url' => $job->sourceUrl,
             'salary_note' => $job->salaryNote,
             'posted_at' => $this->parseDate($job->postedAt),

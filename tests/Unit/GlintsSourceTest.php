@@ -45,6 +45,17 @@ class GlintsSourceTest extends TestCase
                 'CurrencyCode' => 'IDR',
             ]],
             'createdAt' => '2026-09-30T10:12:39Z',
+            'descriptionJsonString' => json_encode([
+                'type' => 'doc',
+                'content' => [
+                    ['type' => 'paragraph', 'content' => [
+                        ['type' => 'text', 'text' => 'Build and maintain backend services.'],
+                    ]],
+                    ['type' => 'paragraph', 'content' => [
+                        ['type' => 'text', 'text' => 'Work with Go and PostgreSQL.'],
+                    ]],
+                ],
+            ]),
         ], $overrides);
     }
 
@@ -88,6 +99,25 @@ class GlintsSourceTest extends TestCase
         $this->assertSame('Jakarta', $job->location);
         $this->assertSame('IDR 10,000,000 - 15,000,000', $job->salaryNote);
         $this->assertSame('2026-09-30T10:12:39Z', $job->postedAt);
+        $this->assertSame('Build and maintain backend services. Work with Go and PostgreSQL.', $job->description);
+    }
+
+    public function test_a_null_description_becomes_null(): void
+    {
+        Http::fake(['glints.com/*' => Http::response($this->payload([
+            $this->item(['descriptionJsonString' => null]),
+        ]))]);
+
+        $this->assertNull((new GlintsSource)->search('backend')[0]->description);
+    }
+
+    public function test_a_plain_string_description_is_kept_as_is(): void
+    {
+        Http::fake(['glints.com/*' => Http::response($this->payload([
+            $this->item(['descriptionJsonString' => 'Ringkasan singkat peran ini.']),
+        ]))]);
+
+        $this->assertSame('Ringkasan singkat peran ini.', (new GlintsSource)->search('backend')[0]->description);
     }
 
     public function test_it_builds_an_absolute_glints_url_from_the_job_id(): void

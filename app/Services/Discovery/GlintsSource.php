@@ -63,6 +63,7 @@ class GlintsSource implements JobSource
             CurrencyCode
           }
           createdAt
+          descriptionJsonString
         }
         totalJobs
       }
@@ -214,7 +215,50 @@ class GlintsSource implements JobSource
             sourceUrl: $this->baseUrl($endpoint).'/id/opportunities/jobs/'.$id,
             salaryNote: $this->formatSalary($item['salaries'] ?? null),
             postedAt: $this->firstString([$item['createdAt'] ?? null]),
+            description: $this->plainText($item['descriptionJsonString'] ?? null),
         );
+    }
+
+    /**
+     * Glints ships the job description as a JSON string (rich-text nodes). Flatten
+     * it to readable text; fall back to the raw value when it is not JSON. Null
+     * when the board did not include a description in the search payload.
+     */
+    private function plainText(mixed $value): ?string
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        $decoded = json_decode($value, true);
+        if (! is_array($decoded)) {
+            return trim($value);
+        }
+
+        $text = $this->collectText($decoded);
+
+        return $text === '' ? null : $text;
+    }
+
+    /**
+     * Recursively pull `text` leaves out of a rich-text node tree.
+     */
+    private function collectText(mixed $node): string
+    {
+        if (! is_array($node)) {
+            return '';
+        }
+
+        $parts = [];
+        foreach ($node as $key => $value) {
+            if ($key === 'text' && is_string($value)) {
+                $parts[] = $value;
+            } elseif (is_array($value)) {
+                $parts[] = $this->collectText($value);
+            }
+        }
+
+        return trim(preg_replace('/\s+/', ' ', implode(' ', array_filter($parts))) ?? '');
     }
 
     /**

@@ -18,6 +18,7 @@ final class DiscoveredJob
         public readonly ?string $sourceUrl = null,
         public readonly ?string $salaryNote = null,
         public readonly ?string $postedAt = null,   // ISO-8601 string, nullable
+        public readonly ?string $description = null, // board's teaser/summary text
     ) {}
 
     /**
@@ -42,6 +43,7 @@ final class DiscoveredJob
             'source_url' => $this->sourceUrl,
             'salary_note' => $this->salaryNote,
             'posted_at' => $this->postedAt,
+            'description' => $this->description,
         ];
     }
 }

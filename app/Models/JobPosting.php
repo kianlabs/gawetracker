@@ -27,6 +27,7 @@ class JobPosting extends Model
         'company',
         'company_id',
         'location',
+        'description',
         'source_url',
         'salary_note',
         'salary_min',
