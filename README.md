@@ -162,7 +162,7 @@ Design notes:
 
 ## Tests
 
-97 tests, 659 assertions — run the full suite:
+180 tests, 919 assertions — run the full suite:
 
 ```bash
 php artisan test

@@ -69,7 +69,7 @@ Default credentials: `kyan@gawetracker.test` / `password`
 ## Tests
 
 ```bash
-php artisan test          # 162 tests, 845 assertions
+php artisan test          # 180 tests, 919 assertions
 php artisan test --filter SomeTest
 ```
 
