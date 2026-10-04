@@ -69,11 +69,19 @@ Default credentials: `kyan@gawetracker.test` / `password`
 ## Tests
 
 ```bash
-php artisan test          # 77 tests, 598 assertions
+php artisan test          # 162 tests, 845 assertions
 php artisan test --filter SomeTest
 ```
 
-Tests live in `tests/Feature/JobApplicationTest.php`. Do not break existing assertions. Run the suite after any change.
+Tests live in `tests/Feature/` and `tests/Unit/`. Do not break existing assertions. Run the suite after any change.
+Tests run on in-memory SQLite (`phpunit.xml`), the local app runs on MySQL.
+
+## Environment Pitfall
+
+A leaked `DB_CONNECTION=sqlite` / `DB_DATABASE=/tmp/gt_smoke_*.sqlite` in the shell **silently overrides `.env`**:
+`php artisan migrate` then reports success while writing to a throwaway SQLite file, and the real MySQL DB
+stays empty (the app 500s with "table doesn't exist"). Before trusting artisan output run
+`unset DB_CONNECTION DB_DATABASE DB_URL`, or check `DB::connection()->getDriverName()` is `mysql`.
 
 ## What Not to Do
 
