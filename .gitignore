@@ -31,3 +31,4 @@ Thumbs.db
 DESIGN.md
 /tmp/
 *.bak
+.env.bak*
