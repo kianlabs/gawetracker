@@ -44,7 +44,7 @@ Kyan started applying for jobs and realized applications were scattered across e
 | Frontend | Blade templates | Server-rendered HTML, no build step complexity |
 | CSS | Pure CSS (public/css/shadcn.css) | No Vite/Node toolchain — reduces setup for solo project |
 | Database | MySQL | Standard relational DB, works with Laravel migrations |
-| Auth | Single-user login | v1 scope is personal use only, no public registration |
+| Auth | Multi-user login + open registration | Each account sees only its own applications; `REGISTRATION_ENABLED=false` closes sign-up |
 | Testing | PHPUnit | Laravel's default test framework |
 
 ## Local Setup
@@ -95,6 +95,8 @@ Kyan started applying for jobs and realized applications were scattered across e
 Default login credentials (from UserSeeder):
 - Email: kyan@gawetracker.test
 - Password: password
+
+This seeded account is a bootstrap admin. Visitors can also create their own account at `/register` (disable with `REGISTRATION_ENABLED=false`); every account only sees its own applications.
 
 Override via `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` in `.env` *before* running `php artisan migrate --seed`. The seeder uses `firstOrCreate`, so these only apply on a fresh seed; editing them later does not update an existing user.
 

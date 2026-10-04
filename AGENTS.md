@@ -71,7 +71,7 @@ Default credentials: `kyan@gawetracker.test` / `password`
 ## Tests
 
 ```bash
-php artisan test          # 183 tests, 936 assertions
+php artisan test          # 204 tests, 1020 assertions
 php artisan test --filter SomeTest
 ```
 
@@ -84,6 +84,29 @@ A leaked `DB_CONNECTION=sqlite` / `DB_DATABASE=/tmp/gt_smoke_*.sqlite` in the sh
 `php artisan migrate` then reports success while writing to a throwaway SQLite file, and the real MySQL DB
 stays empty (the app 500s with "table doesn't exist"). Before trusting artisan output run
 `unset DB_CONNECTION DB_DATABASE DB_URL`, or check `DB::connection()->getDriverName()` is `mysql`.
+
+### The shared-MySQL trap (read before any destructive command)
+
+The local `.env` points `DB_DATABASE=gawetracker` at `127.0.0.1:3306` — **the same database the production
+container `gawetracker-app` uses** (it reaches it as host `mysql8`). Running artisan from the host with the
+ambient `.env` therefore operates on production data. A `migrate:fresh --force` run this way once wiped
+every table in production.
+
+Rules:
+
+- **Never** run `migrate:fresh`, `migrate:refresh`, `db:wipe`, or any destructive DB command from the host.
+- Prefix every artisan call that touches the real DB with `unset DB_CONNECTION DB_DATABASE DB_URL`.
+- For production writes, run artisan **inside the container** (`docker exec gawetracker-app php artisan …`);
+  its env already points at the correct database and never at a dev override.
+- Read-only `migrate --force` / `migrate:status` are safe, but still verify the target first.
+- Tests are unaffected: `phpunit.xml` forces in-memory SQLite.
+- To exercise destructive migrations, use an explicitly isolated database (a throwaway container), never the
+  shared one.
+
+A safety net backs this up: `AppServiceProvider` calls `DB::prohibitDestructiveCommands()` whenever the
+default MySQL connection points at the shared `gawetracker` database, so `db:wipe`,
+`migrate:fresh|refresh|reset|rollback` refuse to run. Set `GAWETRACKER_ALLOW_DESTRUCTIVE_DB=true` only for a
+deliberately isolated rebuild.
 
 ## What Not to Do
 
