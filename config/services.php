@@ -61,6 +61,18 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+
+        // Separate callback for "Sign in with Google". It requests the same
+        // gmail.readonly scope, so signing in also links the mailbox — one step
+        // instead of "log in" then "connect Gmail". Register BOTH URIs on the
+        // OAuth client.
+        'login_redirect_uri' => env('GOOGLE_LOGIN_REDIRECT_URI'),
+
+        // Comma-separated allow-list for "Sign in with Google". Without it,
+        // any Google account could sign in and link a mailbox (open
+        // registration). Existing users and the first-ever user are always
+        // allowed, so a fresh install can bootstrap.
+        'allowed_emails' => env('GAWETRACKER_ALLOWED_EMAILS'),
     ],
 
 ];

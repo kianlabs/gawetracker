@@ -42,14 +42,37 @@ class GoogleOAuthService
     }
 
     /**
+     * Callback URI for the "Sign in with Google" flow. Distinct from the
+     * connect-Gmail callback so the two flows are easy to tell apart in logs;
+     * both must be registered on the same OAuth client.
+     */
+    public function loginRedirectUri(): string
+    {
+        return (string) (config('services.gmail.login_redirect_uri') ?: route('auth.google.callback'));
+    }
+
+    /**
      * Build the Google consent URL. `state` is stored in the session by the
      * caller and verified on callback to prevent CSRF.
      */
     public function authorizationUrl(string $state): string
     {
+        return $this->buildAuthorizationUrl($state, $this->redirectUri());
+    }
+
+    /**
+     * Consent URL for the sign-in flow (same scopes, login callback).
+     */
+    public function loginAuthorizationUrl(string $state): string
+    {
+        return $this->buildAuthorizationUrl($state, $this->loginRedirectUri());
+    }
+
+    private function buildAuthorizationUrl(string $state, string $redirectUri): string
+    {
         return self::AUTH_ENDPOINT.'?'.http_build_query([
             'client_id' => config('services.gmail.client_id'),
-            'redirect_uri' => $this->redirectUri(),
+            'redirect_uri' => $redirectUri,
             'response_type' => 'code',
             'scope' => implode(' ', self::SCOPES),
             'access_type' => 'offline',   // required to receive a refresh token
@@ -67,24 +90,49 @@ class GoogleOAuthService
     /**
      * Exchange an authorization code for tokens and persist them on the user.
      * Returns true on success.
+     *
+     * $redirectUri must match the one used to obtain the code — Google rejects
+     * the exchange otherwise. Defaults to the connect-Gmail callback.
      */
-    public function connect(User $user, string $code): bool
+    public function connect(User $user, string $code, ?string $redirectUri = null): bool
+    {
+        $payload = $this->exchangeCode($code, $redirectUri);
+
+        if ($payload === null) {
+            return false;
+        }
+
+        $this->storeTokens($user, $payload);
+
+        return true;
+    }
+
+    /**
+     * Exchange an authorization code for a token payload, without touching any
+     * user. Returns null when Google rejects the exchange.
+     *
+     * Exposed so the sign-in flow can read the id_token (email/name) before it
+     * decides whether to create or update the user.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function exchangeCode(string $code, ?string $redirectUri = null): ?array
     {
         $response = Http::asForm()->timeout(30)->post(self::TOKEN_ENDPOINT, [
             'code' => $code,
             'client_id' => config('services.gmail.client_id'),
             'client_secret' => config('services.gmail.client_secret'),
-            'redirect_uri' => $this->redirectUri(),
+            'redirect_uri' => $redirectUri ?? $this->redirectUri(),
             'grant_type' => 'authorization_code',
         ]);
 
         if (! $response->successful()) {
-            return false;
+            return null;
         }
 
-        $this->storeTokens($user, $response->json());
+        $payload = $response->json();
 
-        return true;
+        return is_array($payload) ? $payload : null;
     }
 
     /**
@@ -131,9 +179,12 @@ class GoogleOAuthService
     /**
      * Persist the token payload on the user.
      *
+     * Public so the sign-in flow can apply tokens through the same code path as
+     * the connect-Gmail flow.
+     *
      * @param  array<string, mixed>  $payload
      */
-    private function storeTokens(User $user, array $payload, bool $keepRefreshToken = false): void
+    public function storeTokens(User $user, array $payload, bool $keepRefreshToken = false): void
     {
         $accessToken = $payload['access_token'] ?? null;
         if ($accessToken === null) {
@@ -169,7 +220,20 @@ class GoogleOAuthService
      * Pull the email claim out of a JWT id_token (no signature check needed —
      * it comes straight from Google over TLS).
      */
-    private function emailFromIdToken(string $idToken): ?string
+    public function emailFromIdToken(string $idToken): ?string
+    {
+        return $this->claimFromIdToken($idToken, 'email');
+    }
+
+    /**
+     * Pull the display name out of a JWT id_token, when Google provides one.
+     */
+    public function nameFromIdToken(string $idToken): ?string
+    {
+        return $this->claimFromIdToken($idToken, 'name');
+    }
+
+    private function claimFromIdToken(string $idToken, string $claim): ?string
     {
         $parts = explode('.', $idToken);
         if (count($parts) < 2) {
@@ -178,6 +242,10 @@ class GoogleOAuthService
 
         $payload = json_decode((string) base64_decode(strtr($parts[1], '-_', '+/')), true);
 
-        return is_array($payload) ? ($payload['email'] ?? null) : null;
+        if (! is_array($payload) || empty($payload[$claim]) || ! is_string($payload[$claim])) {
+            return null;
+        }
+
+        return $payload[$claim];
     }
 }

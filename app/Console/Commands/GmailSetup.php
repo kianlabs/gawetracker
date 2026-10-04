@@ -131,23 +131,25 @@ class GmailSetup extends Command
         $this->newLine();
         $this->line('  1. Google Cloud Console → APIs & Services → Credentials');
         $this->line('     Pastikan OAuth client bertipe "Web application".');
-        $this->line('  2. Di "Authorized redirect URIs", tambahkan PERSIS:');
-        $this->line('       '.$redirect);
-        $this->line('     Anda bisa menambahkan BEBERAPA URI sekaligus di satu OAuth client.');
-        $this->line('     Client ID & Secret yang sama dipakai untuk dev DAN produksi —');
-        $this->line('     yang berbeda hanya redirect URI. Contoh daftar:');
-        $this->line('       http://localhost:8000/gmail/callback   (development)');
-        $this->line('       https://domain-anda.com/gmail/callback (produksi)');
+        $this->line('  2. Di "Authorized redirect URIs", daftarkan KEDUANYA:');
+        $this->line('       '.$redirect.'   (hubungkan Gmail)');
+        $this->line('       '.$oauth->loginRedirectUri().'   (masuk dengan Google)');
+        $this->line('     Anda bisa menambahkan beberapa URI di satu OAuth client —');
+        $this->line('     client yang sama dipakai untuk dev DAN produksi.');
         $this->line('  3. APIs & Services → Library → aktifkan "Gmail API".');
         $this->line('  4. Jalankan aplikasi di '.config('app.url').' (harus sama dengan APP_URL):');
         $this->line('       php artisan serve');
-        $this->line('  5. Login, lalu klik "Hubungkan Gmail" di halaman Dashboard.');
-        $this->line('  6. Setujui consent. Setelah itu impor email:');
+        $this->line('  5. Di halaman login, klik "Masuk dengan Google".');
+        $this->line('     Satu langkah ini sekaligus menghubungkan Gmail — tidak perlu');
+        $this->line('     klik "Hubungkan Gmail" terpisah.');
+        $this->line('  6. Setelah masuk, impor email:');
         $this->line('       php artisan emails:import --gmail --dry-run');
         $this->newLine();
         $this->warn('Produksi: APP_URL harus https, dan daftarkan URI https di Google.');
         $this->warn('Di OAuth consent screen, klik "Publish App" — selama status "Testing",');
         $this->warn('refresh token kedaluwarsa setelah 7 hari sehingga sync email berhenti.');
+        $this->warn('Tambahkan email Anda di "Test users" selama app masih Testing,');
+        $this->warn('atau login Google akan ditolak dengan "Akses diblokir".');
         $this->newLine();
 
         if ($hasToken) {
