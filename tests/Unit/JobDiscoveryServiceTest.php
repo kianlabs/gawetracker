@@ -116,6 +116,52 @@ class JobDiscoveryServiceTest extends TestCase
         $this->assertSame(1, JobPosting::count());
     }
 
+    public function test_it_parses_salary_note_into_structured_columns(): void
+    {
+        $job = new DiscoveredJob(
+            source: 'jobstreet',
+            externalId: '42',
+            title: 'Backend Engineer',
+            company: 'Tokopedia',
+            location: 'Jakarta',
+            sourceUrl: 'https://id.jobstreet.com/id/job/42',
+            salaryNote: 'Rp 6.000.000 – Rp 7.500.000 per month',
+            postedAt: '2026-09-30T10:12:39Z',
+        );
+
+        (new JobDiscoveryService([new FakeJobSource('jobstreet', [$job])]))->discover('engineer');
+
+        $posting = JobPosting::first();
+
+        $this->assertSame(6_000_000, $posting->salary_min);
+        $this->assertSame(7_500_000, $posting->salary_max);
+        $this->assertSame('IDR', $posting->salary_currency);
+        $this->assertSame('monthly', $posting->salary_period);
+        $this->assertSame('Rp 6.000.000 – Rp 7.500.000 per month', $posting->salary_note);
+        $this->assertSame('IDR 6.000.000 – 7.500.000 /bulan', $posting->salaryLabel());
+    }
+
+    public function test_unparseable_salary_note_leaves_columns_null(): void
+    {
+        $job = new DiscoveredJob(
+            source: 'glints',
+            externalId: '43',
+            title: 'Designer',
+            company: 'Tokopedia',
+            salaryNote: 'Kompetitif',
+        );
+
+        (new JobDiscoveryService([new FakeJobSource('glints', [$job])]))->discover('designer');
+
+        $posting = JobPosting::first();
+
+        $this->assertNull($posting->salary_min);
+        $this->assertNull($posting->salary_max);
+        $this->assertNull($posting->salary_currency);
+        // The label accessor still shows the board's original prose.
+        $this->assertSame('Kompetitif', $posting->salaryLabel());
+    }
+
     public function test_posting_links_to_a_promoted_application(): void
     {
         $service = new JobDiscoveryService([new FakeJobSource('glints', [$this->job('7', 'Gojek')])]);

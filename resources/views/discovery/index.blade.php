@@ -159,8 +159,12 @@
                                     <span class="text-sm text-muted">{{ $posting->location ?: '—' }}</span>
                                 </td>
                                 <td>
-                                    @if ($posting->salary_note)
-                                        <span class="text-sm tabular-nums">{{ $posting->salary_note }}</span>
+                                    @php($salaryLabel = $posting->salaryLabel())
+                                    @if ($salaryLabel)
+                                        <span class="text-sm tabular-nums">{{ $salaryLabel }}</span>
+                                        @if ($posting->salary_min !== null && $posting->salary_note && $posting->salary_note !== $salaryLabel)
+                                            <div class="text-xs text-muted" style="margin-top:0.125rem;">{{ $posting->salary_note }}</div>
+                                        @endif
                                     @else
                                         <span class="text-xs text-muted">—</span>
                                     @endif

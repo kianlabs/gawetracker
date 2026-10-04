@@ -5,6 +5,7 @@ namespace App\Services\Discovery;
 use App\Models\Company;
 use App\Models\JobPosting;
 use Illuminate\Support\Carbon;
+use App\Support\SalaryParser;
 
 /**
  * Orchestrates discovery across every registered JobSource and persists the
@@ -79,6 +80,16 @@ class JobDiscoveryService
             'source_url' => $job->sourceUrl,
             'salary_note' => $job->salaryNote,
             'posted_at' => $this->parseDate($job->postedAt),
+        ]);
+
+        // Keep the board's prose in salary_note, but store the numbers we can
+        // read from it so the list can sort/filter by pay.
+        $salary = SalaryParser::parse($job->salaryNote);
+        $posting->fill($salary?->toColumns() ?? [
+            'salary_min' => null,
+            'salary_max' => null,
+            'salary_currency' => null,
+            'salary_period' => null,
         ]);
 
         $posting->save();
