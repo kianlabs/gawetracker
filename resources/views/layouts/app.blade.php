@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'GaweTracker') — GaweTracker</title>
+    {{-- Warm the Google Fonts connections early: shadcn.css @imports the font
+         stylesheet, so without this the browser only starts the font TLS
+         handshakes after the main stylesheet has been parsed. --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="{{ asset('css/shadcn.css') }}">
     @yield('styles')
 </head>
