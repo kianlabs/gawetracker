@@ -95,6 +95,15 @@ class JobApplicationTest extends TestCase
             $this->assertNotEmpty($app->position);
             $this->assertNotNull($app->applied_at);
             $this->assertGreaterThan(0, $app->statusHistories->count());
+
+            // Seeding happens from the CLI with no session, so the owner must
+            // be stamped explicitly. Orphaned rows would be invisible to the
+            // account that logs in afterwards.
+            $this->assertSame($user->id, $app->user_id);
+
+            foreach ($app->statusHistories as $history) {
+                $this->assertSame($user->id, $history->user_id);
+            }
         }
     }
 

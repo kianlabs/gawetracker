@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\JobApplication;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class JobApplicationSeeder extends Seeder
@@ -540,13 +541,22 @@ class JobApplicationSeeder extends Seeder
             ],
         ];
 
+        // Seeding runs from the CLI with no authenticated session, so the
+        // BelongsToUser global scope is dormant and its create-time stamping
+        // never fires. The owner must therefore be set explicitly, otherwise
+        // every seeded row would be orphaned (user_id = NULL) and invisible to
+        // the account that logs in afterwards.
+        $owner = User::query()->orderBy('id')->first();
+        $ownerId = $owner?->id;
+
         foreach ($applications as $data) {
             $jobApp = JobApplication::firstOrCreate(
                 [
+                    'user_id' => $ownerId,
                     'company' => $data['application']['company'],
                     'position' => $data['application']['position'],
                 ],
-                $data['application']
+                ['user_id' => $ownerId] + $data['application']
             );
 
             // Skip the rest if this row already existed (idempotent seeding —
@@ -556,20 +566,20 @@ class JobApplicationSeeder extends Seeder
             }
 
             foreach ($data['histories'] as $history) {
-                $jobApp->statusHistories()->create($history);
+                $jobApp->statusHistories()->create(['user_id' => $ownerId] + $history);
             }
 
             if ($jobApp->status === 'interview') {
                 $jobApp->interviewChecklists()->createMany([
-                    ['title' => 'Riset engineering culture & arsitektur sistem', 'is_completed' => true, 'completed_at' => now()->subDays(5)],
-                    ['title' => 'Review microservices concurrency Go & goroutine pools', 'is_completed' => true, 'completed_at' => now()->subDays(3)],
-                    ['title' => 'Latihan studi kasus STAR behavioral question', 'is_completed' => false],
-                    ['title' => 'Siapkan pertanyaan balik untuk hiring manager', 'is_completed' => false],
+                    ['user_id' => $ownerId, 'title' => 'Riset engineering culture & arsitektur sistem', 'is_completed' => true, 'completed_at' => now()->subDays(5)],
+                    ['user_id' => $ownerId, 'title' => 'Review microservices concurrency Go & goroutine pools', 'is_completed' => true, 'completed_at' => now()->subDays(3)],
+                    ['user_id' => $ownerId, 'title' => 'Latihan studi kasus STAR behavioral question', 'is_completed' => false],
+                    ['user_id' => $ownerId, 'title' => 'Siapkan pertanyaan balik untuk hiring manager', 'is_completed' => false],
                 ]);
             }
 
             if ($jobApp->status === 'offer') {
-                $jobApp->offerDetail()->create([
+                $jobApp->offerDetail()->create(['user_id' => $ownerId] + [
                     'base_salary' => 28000000,
                     'salary_period' => 'monthly',
                     'thr' => '1 Bulan Gaji Pokok',
