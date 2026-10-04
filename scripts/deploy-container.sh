@@ -16,6 +16,12 @@ IMAGE="${GAWETRACKER_IMAGE:-gawetracker:local}"
 CONTAINER="${GAWETRACKER_CONTAINER:-gawetracker-app}"
 PUBLIC_URL="${GAWETRACKER_URL:-https://gawetracker.kianlabs.my.id}"
 
+# Which host interface the app port binds to. Default is loopback only: the
+# public path goes through the Cloudflare tunnel, so nothing else needs to reach
+# the port directly. Set GAWETRACKER_BIND=0.0.0.0 to also serve devices on the
+# same LAN (e.g. a phone on the same Wi-Fi) without going out to Cloudflare.
+BIND_ADDR="${GAWETRACKER_BIND:-127.0.0.1}"
+
 [[ -f "$ENV_FILE" ]] || { echo "missing $ENV_FILE" >&2; exit 1; }
 
 # Load only the keys we need; do not export the whole .env into the shell.
@@ -46,7 +52,7 @@ docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
 
 docker run -d --name "$CONTAINER" --restart unless-stopped \
   --network gawetracker-net \
-  -p 127.0.0.1:8080:8080 \
+  -p "$BIND_ADDR:8080:8080" \
   -e APP_NAME="GaweTracker" -e APP_ENV=production -e APP_DEBUG=false \
   -e APP_KEY="$APP_KEY" -e APP_URL="$PUBLIC_URL" \
   -e LOG_CHANNEL=stderr \
