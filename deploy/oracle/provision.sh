@@ -3,7 +3,7 @@
 # GaweTracker — one-shot server provisioning for Ubuntu 22.04/24.04 on
 # Oracle Cloud (or any plain Ubuntu VPS).
 #
-# Installs PHP 8.3 + extensions, Nginx, MySQL, Composer, then wires the app,
+# Installs PHP 8.4 + extensions, Nginx, MySQL, Composer, then wires the app,
 # database, cron scheduler and queue worker.
 #
 # Idempotent: safe to re-run. Run as root:  sudo bash provision.sh
@@ -29,14 +29,14 @@ log "Installing base packages"
 apt-get update -y
 apt-get install -y software-properties-common curl unzip git ca-certificates ufw
 
-log "Adding PHP 8.3 PPA"
+log "Adding PHP 8.4 PPA"
 add-apt-repository -y ppa:ondrej/php
 apt-get update -y
 
-log "Installing PHP 8.3 + extensions"
+log "Installing PHP 8.4 + extensions"
 apt-get install -y \
-  php8.3-fpm php8.3-cli php8.3-mysql php8.3-mbstring php8.3-xml \
-  php8.3-curl php8.3-zip php8.3-bcmath php8.3-intl php8.3-gd php8.3-opcache
+  php8.4-fpm php8.4-cli php8.4-mysql php8.4-mbstring php8.4-xml \
+  php8.4-curl php8.4-zip php8.4-bcmath php8.4-intl php8.4-gd php8.4-opcache
 
 log "Installing Nginx + MySQL"
 apt-get install -y nginx mysql-server
@@ -79,7 +79,7 @@ server {
 
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
     }
 
@@ -96,7 +96,7 @@ ufw allow 'Nginx Full' || true
 yes | ufw enable || true
 
 log "Enabling services"
-systemctl enable --now php8.3-fpm nginx mysql
+systemctl enable --now php8.4-fpm nginx mysql
 
 log "Done. Next steps (run inside ${APP_DIR}):"
 cat <<'NEXT'

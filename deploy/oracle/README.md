@@ -62,7 +62,7 @@ cd /var/www/gawetracker
 sudo bash deploy/oracle/provision.sh
 ```
 
-`provision.sh` installs PHP 8.3, Nginx, MySQL, Composer, creates the database and
+`provision.sh` installs PHP 8.4, Nginx, MySQL, Composer, creates the database and
 user, and configures the Nginx vhost. **Copy the `DB_PASS` it prints.**
 
 ---

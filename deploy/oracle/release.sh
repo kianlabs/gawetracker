@@ -36,7 +36,7 @@ log "Restarting queue workers"
 $PHP artisan queue:restart || true
 
 log "Reloading PHP-FPM"
-systemctl reload php8.3-fpm || true
+systemctl reload php8.4-fpm || true
 
 log "Maintenance mode OFF"
 $PHP artisan up
