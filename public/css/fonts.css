@@ -3,6 +3,18 @@
  * declared once per weight so every weight the UI uses resolves locally
  * instead of making a cross-origin request to fonts.gstatic.com. */
 
+/* JetBrains Mono — self-hosted (SIL Open Font License 1.1).
+ * Single variable woff2 covering weights 100–800 (latin subset), so one file
+ * serves every weight the UI asks for. Self-hosting keeps the app offline and
+ * avoids third-party font requests, mirroring the Plus Jakarta Sans setup. */
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+}
+
 @font-face {
     font-family: 'Plus Jakarta Sans';
     font-style: italic;
