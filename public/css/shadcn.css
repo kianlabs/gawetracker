@@ -737,6 +737,26 @@ header.site-header {
   color: hsl(var(--foreground));
 }
 
+/* Pin the trailing action column to the right edge of the scroll container so
+   its buttons stay reachable on narrow screens instead of scrolling out of
+   view. The opaque background is required: without it the pinned cell would
+   show the columns scrolling underneath it. */
+.table-wrapper--actions .table th:last-child,
+.table-wrapper--actions .table td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 10;
+  background-color: hsl(var(--card));
+  box-shadow: -8px 0 8px -8px hsl(var(--border));
+}
+.table-wrapper--actions .table thead th:last-child {
+  background-color: hsl(var(--muted));
+  z-index: 20;
+}
+.table-wrapper--actions .table tbody tr:hover td:last-child {
+  background-color: hsl(240 4.8% 97%);
+}
+
 /* ─── Alert ──────────────────────────────────────────────────────────────── */
 .alert {
   position: relative;

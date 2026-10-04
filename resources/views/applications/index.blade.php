@@ -103,7 +103,7 @@
             </span>
         </div>
         <div class="section-body">
-            <div class="table-wrapper">
+            <div class="table-wrapper table-wrapper--actions">
                 <table class="table">
                     <thead>
                         <tr>

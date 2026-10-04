@@ -68,7 +68,7 @@
     </div>
     <div class="section-body">
         @if ($savedSearches->count() > 0)
-            <div class="table-wrapper mb-3">
+            <div class="table-wrapper table-wrapper--actions mb-3">
                 <table class="table">
                     <thead>
                         <tr>
@@ -190,7 +190,7 @@
             </span>
         </div>
         <div class="section-body">
-            <div class="table-wrapper">
+            <div class="table-wrapper table-wrapper--actions">
                 <table class="table">
                     <thead>
                         <tr>

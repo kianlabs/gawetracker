@@ -290,7 +290,7 @@
             <a href="{{ route('applications.create') }}" class="btn btn-default btn-sm">+ Tambah Lamaran</a>
         </div>
     @else
-        <div class="table-wrapper">
+        <div class="table-wrapper table-wrapper--actions">
             <table class="table">
                 <thead>
                     <tr>

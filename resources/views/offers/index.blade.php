@@ -99,7 +99,7 @@
                 <span class="section-title">Tabel Komparasi</span>
             </div>
             <div class="section-body" style="padding: 0;">
-                <div class="table-wrapper">
+                <div class="table-wrapper table-wrapper--actions">
                     <table class="table">
                         <thead>
                             <tr>
