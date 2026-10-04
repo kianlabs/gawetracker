@@ -1,0 +1,91 @@
+# render.yaml — GaweTracker on Render (free web service) + Aiven MySQL.
+#
+# Apply with: Render Dashboard → New → Blueprint → pick this repo.
+# Render will create the web service and prompt for every `sync: false` value.
+#
+# Why Aiven and not Render Postgres: Render's free Postgres expires after 30
+# days, while Aiven's free MySQL does not expire (it does power off when idle).
+# Both providers are free and need no credit card.
+#
+# Read deploy/render/README.md for the full, click-by-click walkthrough.
+
+services:
+  - type: web
+    name: gawetracker
+    runtime: docker
+    # Aiven's free MySQL is available in the Singapore region, and Singapore is
+    # Render's closest region to it. The region cannot be changed later.
+    region: singapore
+    plan: free
+    # Deploy this branch. After merging to main, change to `main` (or delete
+    # the line to follow the repo's default branch).
+    branch: feat/public-multiuser
+    autoDeployTrigger: commit
+    dockerfilePath: ./Dockerfile
+    # Render's free tier has no pre-deploy command and no shell, so the
+    # entrypoint performs migrations, seeding and port binding itself.
+    dockerCommand: /bin/sh -c "/var/www/html/deploy/render/entrypoint.sh"
+    healthCheckPath: /up
+    numInstances: 1
+    envVars:
+      - key: APP_NAME
+        value: GaweTracker
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      # Must be a base64:... key. Generate with `php artisan key:generate --show`
+      # and paste it in the dashboard. (Render's generateValue produces a raw
+      # base64 string without the required `base64:` prefix, which Laravel
+      # rejects.)
+      - key: APP_KEY
+        sync: false
+      # The public https URL, e.g. https://gawetracker.onrender.com. Set it
+      # after the first deploy, once Render has assigned the subdomain.
+      - key: APP_URL
+        sync: false
+
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: warning
+
+      # Aiven MySQL credentials (Aiven Console → your service → Connection info).
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      # Render mounts Secret Files at /etc/secrets/<filename>. Upload Aiven's
+      # ca.pem there (Environment → Secret Files) so the connection is verified
+      # against Aiven's CA over TLS.
+      - key: MYSQL_ATTR_SSL_CA
+        value: /etc/secrets/ca.pem
+
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+
+      # Public instance: anyone may create an account.
+      - key: REGISTRATION_ENABLED
+        value: "true"
+
+      # The admin account created by the entrypoint on first boot.
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_NAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

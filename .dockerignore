@@ -13,8 +13,15 @@ bootstrap/cache/*.php
 tests
 .phpunit.cache
 .phpunit.result.cache
+# Render copies Secret Files (e.g. Aiven's ca.pem) into the build context root.
+# They are mounted at runtime under /etc/secrets and must never be baked into
+# the image.
+*.pem
+*.crt
+*.key
 *.md
 !deploy/fly/README.md
+!deploy/render/README.md
 deploy/oracle
 Dockerfile
 .dockerignore
