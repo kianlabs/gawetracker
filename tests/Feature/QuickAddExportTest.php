@@ -17,10 +17,12 @@ class QuickAddExportTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_unauthenticated_user_blocked_from_quick_store_and_export(): void
     {
+        $this->app['auth']->logout();
         $this->post('/applications/quick', [
             'company' => 'Bukalapak',
             'position' => 'Backend Engineer',

@@ -19,10 +19,12 @@ class OfferChecklistTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_unauthenticated_user_cannot_access_checklist_or_offer_routes(): void
     {
+        $this->app['auth']->logout();
         $application = JobApplication::create([
             'company' => 'PT Toko Sejahtera',
             'position' => 'Senior Backend Engineer',

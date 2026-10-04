@@ -17,10 +17,12 @@ class DashboardTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_guest_is_redirected_to_login(): void
     {
+        $this->app['auth']->logout();
         $response = $this->get('/');
 
         $response->assertRedirect('/login');

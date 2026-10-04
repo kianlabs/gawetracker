@@ -21,6 +21,12 @@ return [
     ],
 
     /*
+     * Open registration. Flip the env flag to lock the instance back down
+     * without touching the code.
+     */
+    'registration_enabled' => env('REGISTRATION_ENABLED', true),
+
+    /*
     |--------------------------------------------------------------------------
     | Authentication Guards
     |--------------------------------------------------------------------------

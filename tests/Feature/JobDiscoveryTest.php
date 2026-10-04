@@ -19,6 +19,7 @@ class JobDiscoveryTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     private function posting(array $overrides = []): JobPosting
@@ -37,6 +38,7 @@ class JobDiscoveryTest extends TestCase
 
     public function test_guests_are_redirected_to_login(): void
     {
+        $this->app['auth']->logout();
         $this->get(route('discovery.index'))->assertRedirect('/login');
         $this->post(route('discovery.search'), ['keyword' => 'backend'])->assertRedirect('/login');
     }

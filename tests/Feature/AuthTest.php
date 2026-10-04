@@ -27,11 +27,73 @@ class AuthTest extends TestCase
         $response->assertSee('Kata Sandi');
     }
 
-    public function test_public_registration_is_not_available(): void
+    public function test_registration_page_can_be_rendered(): void
     {
         $response = $this->get('/register');
 
-        $response->assertStatus(404);
+        $response->assertStatus(200);
+        $response->assertSee('GaweTracker');
+        $response->assertSee('Konfirmasi Kata Sandi');
+    }
+
+    public function test_new_user_can_register_and_is_logged_in(): void
+    {
+        $response = $this->post('/register', [
+            'name' => 'Pengguna Baru',
+            'email' => 'baru@gawetracker.test',
+            'password' => 'rahasia123',
+            'password_confirmation' => 'rahasia123',
+        ]);
+
+        $this->assertAuthenticated();
+        $this->assertDatabaseHas('users', ['email' => 'baru@gawetracker.test']);
+        $response->assertRedirect(route('dashboard'));
+    }
+
+    public function test_registration_rejects_duplicate_email(): void
+    {
+        User::factory()->create(['email' => 'sudah@ada.test']);
+
+        $response = $this->from('/register')->post('/register', [
+            'name' => 'Pengguna Baru',
+            'email' => 'sudah@ada.test',
+            'password' => 'rahasia123',
+            'password_confirmation' => 'rahasia123',
+        ]);
+
+        $this->assertGuest();
+        $response->assertRedirect('/register');
+        $response->assertSessionHasErrors(['email' => 'Email ini sudah terdaftar.']);
+    }
+
+    public function test_registration_rejects_mismatched_password_confirmation(): void
+    {
+        $response = $this->from('/register')->post('/register', [
+            'name' => 'Pengguna Baru',
+            'email' => 'baru@gawetracker.test',
+            'password' => 'rahasia123',
+            'password_confirmation' => 'beda456',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['password' => 'Konfirmasi kata sandi tidak cocok.']);
+    }
+
+    public function test_registration_is_unavailable_when_flag_is_disabled(): void
+    {
+        config(['auth.registration_enabled' => false]);
+
+        $this->get('/register')->assertStatus(404);
+
+        $this->post('/register', [
+            'name' => 'Pengguna Baru',
+            'email' => 'baru@gawetracker.test',
+            'password' => 'rahasia123',
+            'password_confirmation' => 'rahasia123',
+        ])->assertStatus(404);
+
+        $this->assertGuest();
+        $this->assertDatabaseMissing('users', ['email' => 'baru@gawetracker.test']);
     }
 
     public function test_single_user_can_authenticate_with_valid_credentials(): void

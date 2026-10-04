@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,53 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard'));
+    }
+
+    /**
+     * Display the registration form.
+     *
+     * Registration can be closed instance-wide with REGISTRATION_ENABLED=false;
+     * a closed instance answers 404 rather than advertising a form nobody may use.
+     */
+    public function showRegisterForm(): View
+    {
+        abort_unless(config('auth.registration_enabled'), 404);
+
+        return view('auth.register');
+    }
+
+    /**
+     * Create a new account and sign the user in.
+     *
+     * The new account starts empty — every record it owns is stamped with its
+     * user id by the BelongsToUser hook.
+     *
+     * @throws ValidationException
+     */
+    public function register(Request $request): RedirectResponse
+    {
+        abort_unless(config('auth.registration_enabled'), 404);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+        ]);
+
+        $user = User::create($validated);
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard');
     }
 
     /**

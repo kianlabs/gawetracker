@@ -17,10 +17,12 @@ class JobApplicationDetailTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_unauthenticated_user_cannot_access_detail_or_actions(): void
     {
+        $this->app['auth']->logout();
         $application = JobApplication::create([
             'company' => 'Tokopedia',
             'position' => 'Software Engineer',
