@@ -53,6 +53,8 @@ MAIL_FROM_NAME="$(get MAIL_FROM_NAME)"
 RESEND_API_KEY="$(get RESEND_API_KEY)"
 EMAIL_VERIFICATION_ENABLED="$(get EMAIL_VERIFICATION_ENABLED)"
 REGISTRATION_ENABLED="$(get REGISTRATION_ENABLED)"
+GOOGLE_CLIENT_ID="$(get GOOGLE_CLIENT_ID)"
+GOOGLE_CLIENT_SECRET="$(get GOOGLE_CLIENT_SECRET)"
 
 # Only forward admin credentials when set. Passing an empty ADMIN_PASSWORD would
 # override the seeder's default with an empty string and create a passwordless
@@ -77,6 +79,15 @@ MAIL_ENV=()
 # app. Leave it unset to keep the built-in default (config/auth.php: true).
 [[ -n "$REGISTRATION_ENABLED" ]] && MAIL_ENV+=(-e "REGISTRATION_ENABLED=$REGISTRATION_ENABLED")
 
+# Google OAuth client for the per-user "Connect Gmail" flow. The redirect URI is
+# deliberately NOT forwarded: the host .env sets it to "${APP_URL}/gmail/callback"
+# which the get() helper would expand against the local APP_URL, sending Google a
+# wrong redirect_uri. Leaving it unset makes GoogleOAuthService fall back to
+# route('gmail.callback'), which is the real public URL.
+GOOGLE_ENV=()
+[[ -n "$GOOGLE_CLIENT_ID" ]] && GOOGLE_ENV+=(-e "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID")
+[[ -n "$GOOGLE_CLIENT_SECRET" ]] && GOOGLE_ENV+=(-e "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET")
+
 DB_PW_FILE="$(ls -t "$HOME"/backups/gawetracker-deploy-*/db_app_password.txt 2>/dev/null | head -1 || true)"
 [[ -n "$DB_PW_FILE" ]] || { echo "missing db_app_password.txt under ~/backups/gawetracker-deploy-*/" >&2; exit 1; }
 DB_PASSWORD="$(cat "$DB_PW_FILE")"
@@ -95,6 +106,7 @@ docker run -d --name "$CONTAINER" --restart unless-stopped \
   -e DB_CONNECTION=mysql -e DB_HOST=mysql8 -e DB_PORT=3306 \
   -e DB_DATABASE=gawetracker -e DB_USERNAME=gawetracker -e DB_PASSWORD="$DB_PASSWORD" \
   -e SESSION_DRIVER=database -e CACHE_STORE=database -e QUEUE_CONNECTION=database \
+  "${GOOGLE_ENV[@]}" \
   "${ADMIN_ENV[@]}" \
   "${MAIL_ENV[@]}" \
   "$IMAGE" >/dev/null
@@ -114,6 +126,11 @@ done
 docker exec -u www-data "$CONTAINER" php artisan config:cache
 docker exec -u www-data "$CONTAINER" php artisan route:cache
 docker exec -u www-data "$CONTAINER" php artisan view:cache
+
+# Apply any pending migrations. Safe to run on every deploy: this is a plain
+# `migrate` (never fresh/refresh, which the AppServiceProvider guard blocks
+# against the shared MySQL). A no-op when the schema is already current.
+docker exec -u www-data "$CONTAINER" php artisan migrate --force
 
 # Fail loudly if the app is not actually serving. The warm-up above runs while
 # FPM is already up, so a broken deploy could otherwise report success and then

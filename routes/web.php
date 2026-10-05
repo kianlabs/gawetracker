@@ -4,6 +4,7 @@ use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\GmailConnectionController;
 use App\Http\Controllers\InterviewChecklistController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobDiscoveryController;
@@ -31,6 +32,12 @@ Route::middleware('auth')->group(function () {
         ->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
     Route::post('/email/verification-notification', [EmailVerificationController::class, 'send'])
         ->middleware('throttle:6,1')->name('verification.send');
+
+    // Gmail mailbox linking (read-only). Kept outside the verified group so a
+    // user can connect their mailbox even before confirming their email.
+    Route::get('/gmail/connect', [GmailConnectionController::class, 'redirect'])->name('gmail.connect');
+    Route::get('/gmail/callback', [GmailConnectionController::class, 'callback'])->name('gmail.callback');
+    Route::delete('/gmail/disconnect', [GmailConnectionController::class, 'destroy'])->name('gmail.disconnect');
 
     // The actual app. `verified.when-enabled` is a no-op while verification is
     // switched off and enforces a verified email once it is switched on.

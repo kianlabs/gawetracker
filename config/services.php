@@ -51,4 +51,17 @@ return [
         'site_key' => env('JOBSTREET_SITE_KEY', 'ID-Main'),
     ],
 
+    'gmail' => [
+        // Static access token, handy for a one-off manual run of
+        // `php artisan emails:import --gmail`. Normal operation uses the
+        // per-user OAuth tokens stored on the users table instead.
+        'access_token' => env('GMAIL_ACCESS_TOKEN'),
+
+        // OAuth client used by the "Connect Gmail" flow. Create these in the
+        // Google Cloud Console and register the redirect URI on the client.
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 ];
