@@ -205,4 +205,21 @@ class JobDiscoveryController extends Controller
             ->route('discovery.index')
             ->with('success', 'Lowongan dihapus dari daftar temuan.');
     }
+
+    /**
+     * Clear every discovered posting for the current user.
+     *
+     * Only the postings are removed; applications already promoted from them
+     * stay untouched. The relation is `nullOnDelete`, so a linked application
+     * simply loses the back-reference instead of being deleted. The global
+     * user scope keeps this from touching another account's rows.
+     */
+    public function destroyAll(): RedirectResponse
+    {
+        $deleted = JobPosting::query()->delete();
+
+        return redirect()
+            ->route('discovery.index')
+            ->with('success', "Semua {$deleted} lowongan dihapus dari daftar temuan.");
+    }
 }

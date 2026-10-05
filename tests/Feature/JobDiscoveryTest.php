@@ -180,4 +180,74 @@ class JobDiscoveryTest extends TestCase
         $response->assertRedirect(route('discovery.index'));
         $this->assertDatabaseMissing('job_postings', ['id' => $posting->id]);
     }
+
+    public function test_index_shows_the_clear_all_button_only_when_postings_exist(): void
+    {
+        $this->actingAs($this->user)->get(route('discovery.index'))
+            ->assertOk()
+            ->assertDontSee('Hapus Semua');
+
+        $this->posting();
+
+        $this->actingAs($this->user)->get(route('discovery.index'))
+            ->assertOk()
+            ->assertSee('Hapus Semua');
+    }
+
+    public function test_destroy_all_removes_every_posting_of_the_user(): void
+    {
+        $this->posting(['title' => 'Backend Engineer']);
+        $this->posting(['title' => 'Data Analyst', 'source' => 'jobstreet']);
+        $this->posting(['title' => 'UI Designer']);
+
+        $response = $this->actingAs($this->user)->delete(route('discovery.destroy-all'));
+
+        $response->assertRedirect(route('discovery.index'));
+        $response->assertSessionHas('success');
+        $this->assertSame(0, JobPosting::count());
+    }
+
+    public function test_destroy_all_keeps_applications_promoted_from_postings(): void
+    {
+        $posting = $this->posting();
+        $this->actingAs($this->user)->post(route('discovery.promote', $posting));
+
+        $application = JobApplication::firstOrFail();
+        $this->posting(['title' => 'Unrelated Role']);
+
+        $this->actingAs($this->user)->delete(route('discovery.destroy-all'));
+
+        // The postings are gone, but the real application they produced stays.
+        $this->assertSame(0, JobPosting::count());
+        $this->assertDatabaseHas('job_applications', ['id' => $application->id]);
+    }
+
+    public function test_destroy_all_only_touches_the_current_users_postings(): void
+    {
+        $other = User::factory()->create();
+        $mine = $this->posting(['title' => 'Mine']);
+        $theirs = JobPosting::withoutGlobalScopes()->create([
+            'user_id' => $other->id,
+            'source' => 'glints',
+            'external_id' => 'ext-theirs',
+            'title' => 'Theirs',
+            'company' => 'Other Co',
+        ]);
+
+        $this->actingAs($this->user)->delete(route('discovery.destroy-all'));
+
+        $this->assertDatabaseMissing('job_postings', ['id' => $mine->id]);
+        $this->assertDatabaseHas('job_postings', ['id' => $theirs->id]);
+    }
+
+    public function test_guests_cannot_destroy_all_postings(): void
+    {
+        $posting = $this->posting();
+
+        $this->app['auth']->logout();
+        $response = $this->delete(route('discovery.destroy-all'));
+
+        $response->assertRedirect('/login');
+        $this->assertDatabaseHas('job_postings', ['id' => $posting->id]);
+    }
 }

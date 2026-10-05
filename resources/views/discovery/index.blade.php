@@ -9,6 +9,16 @@
         <h1 class="page-title">Cari Kerja</h1>
         <p class="page-subtitle">Telusuri lowongan langsung dari Glints &amp; JobStreet, lalu pindahkan yang menarik ke daftar lamaran</p>
     </div>
+    @if ($totalPostings > 0)
+        <div class="page-actions">
+            <form method="POST" action="{{ route('discovery.destroy-all') }}"
+                  onsubmit="return confirm('Hapus semua {{ $totalPostings }} lowongan dari daftar temuan? Lamaran yang sudah dibuat tetap aman.')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-destructive">Hapus Semua</button>
+            </form>
+        </div>
+    @endif
 </div>
 
 {{-- Live search form --}}

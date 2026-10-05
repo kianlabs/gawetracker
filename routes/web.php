@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/discovery/saved', [JobDiscoveryController::class, 'storeSavedSearch'])->name('discovery.saved.store');
         Route::delete('/discovery/saved/{savedSearch}', [JobDiscoveryController::class, 'destroySavedSearch'])->name('discovery.saved.destroy');
         Route::post('/discovery/{posting}/promote', [JobDiscoveryController::class, 'promote'])->name('discovery.promote');
+        Route::delete('/discovery', [JobDiscoveryController::class, 'destroyAll'])->name('discovery.destroy-all');
         Route::delete('/discovery/{posting}', [JobDiscoveryController::class, 'destroy'])->name('discovery.destroy');
 
         // Applications specialized routes (must be defined before resource route)
