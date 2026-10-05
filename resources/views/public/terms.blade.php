@@ -2,7 +2,7 @@
 
 @section('title', 'Ketentuan Layanan')
 @section('heading', 'Ketentuan Layanan')
-@section('subtitle', 'Terakhir diperbarui: ' . date('d F Y'))
+@section('subtitle', 'Terakhir diperbarui: ' . now()->locale('id')->translatedFormat('d F Y'))
 
 @section('meta_description', 'Ketentuan Layanan penggunaan GaweTracker, pelacak lamaran kerja pribadi.')
 
@@ -71,6 +71,6 @@
     <h2>9. Kontak</h2>
     <p>
         Pertanyaan mengenai ketentuan ini dapat dikirim ke
-        <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a>.
+        <a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>.
     </p>
 @endsection

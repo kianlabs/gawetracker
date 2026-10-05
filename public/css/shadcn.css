@@ -339,6 +339,21 @@ header.site-header {
   flex-shrink: 0;
 }
 
+/* Real brand mark (the "GT" logo) used in place of the lettered placeholder. */
+.brand-logo-img {
+  display: block;
+  width: 1.625rem;
+  height: 1.625rem;
+  object-fit: contain;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.brand-logo-img.brand-logo-lg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
 .main-nav {
   display: flex;
   align-items: center;

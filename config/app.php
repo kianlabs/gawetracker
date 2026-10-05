@@ -4,6 +4,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Public Contact Address
+    |--------------------------------------------------------------------------
+    |
+    | Shown on the public pages (home, privacy policy, terms of service) that
+    | Google reviews during OAuth brand verification. It must be an address a
+    | human actually monitors, unlike the no-reply sender used for mail.
+    |
+    */
+
+    'contact_email' => env('APP_CONTACT_EMAIL', 'noreply@kianlabs.my.id'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Source Code Repository
+    |--------------------------------------------------------------------------
+    |
+    | Public repository URL, linked from the public pages so reviewers can see
+    | how Google user data is handled.
+    |
+    */
+
+    'source_url' => env('APP_SOURCE_URL'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Name
     |--------------------------------------------------------------------------
     |

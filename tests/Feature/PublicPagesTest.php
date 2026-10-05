@@ -44,6 +44,24 @@ class PublicPagesTest extends TestCase
         $response->assertSee('Google API Services User Data Policy');
     }
 
+    public function test_privacy_page_shows_the_update_date_in_indonesian(): void
+    {
+        $response = $this->get('/privacy');
+
+        $response->assertOk();
+        // Locale is `id`, so the month must be localised, not English.
+        $response->assertSee(now()->locale('id')->translatedFormat('d F Y'));
+    }
+
+    public function test_privacy_page_links_to_the_public_repository_when_configured(): void
+    {
+        config(['app.source_url' => 'https://example.test/repo']);
+
+        $this->get('/privacy')
+            ->assertOk()
+            ->assertSee('https://example.test/repo');
+    }
+
     public function test_terms_page_is_reachable_without_a_session(): void
     {
         $response = $this->get('/terms');

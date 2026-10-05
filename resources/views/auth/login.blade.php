@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - GaweTracker</title>
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    @include('partials.favicons')
     <link rel="stylesheet" href="{{ asset('css/shadcn.css') }}?v={{ filemtime(public_path('css/shadcn.css')) }}">
 </head>
 <body class="flex items-center justify-center min-h-screen" style="padding: 1.5rem; background-color: hsl(240 4.8% 97.5%);">
     <main class="card" style="width: 100%; max-width: 24rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);">
         <header class="card-header" style="text-align: center; align-items: center; padding-bottom: 1.25rem;">
             <div class="flex items-center gap-2 mb-2">
-                <span class="brand-logo-badge" style="width: 2rem; height: 2rem; font-size: 1rem;">G</span>
+                <img src="{{ asset('img/gawetracker-mark.png') }}" alt="" class="brand-logo-img brand-logo-lg" width="36" height="36">
                 <h1 class="card-title" style="font-size: 1.375rem; margin-bottom: 0;">GaweTracker</h1>
             </div>
             <p class="card-description">Masuk ke akun tracker lamaran kerja Anda</p>

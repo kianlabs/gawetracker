@@ -7,6 +7,7 @@
     {{-- Self-hosted font stylesheet. Loaded alongside the main stylesheet so
          the @font-face rules and the CSS that uses them arrive together. --}}
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    @include('partials.favicons')
     {{-- The stylesheet is served with a one-day Cache-Control and Cloudflare
          caches it at the edge, so a plain URL keeps serving the previous
          build. Key the URL on the file mtime to invalidate both caches the
@@ -20,7 +21,7 @@
         <div class="nav-container">
             <div class="brand-group">
                 <a href="{{ route('dashboard') }}" class="brand-link">
-                    <span class="brand-logo-badge">G</span>
+                    <img src="{{ asset('img/gawetracker-mark.png') }}" alt="" class="brand-logo-img" width="26" height="26">
                     <span>GaweTracker</span>
                 </a>
                 <nav class="main-nav" aria-label="Navigasi utama">

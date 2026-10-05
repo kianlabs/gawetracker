@@ -6,6 +6,7 @@
     <title>@yield('title', 'GaweTracker') — GaweTracker</title>
     <meta name="description" content="@yield('meta_description', 'GaweTracker — pelacak lamaran kerja pribadi untuk mencatat, mengelola, dan memantau status lamaran Anda.')">
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    @include('partials.favicons')
     <link rel="stylesheet" href="{{ asset('css/shadcn.css') }}?v={{ filemtime(public_path('css/shadcn.css')) }}">
     @yield('styles')
 </head>
@@ -15,7 +16,7 @@
         <div class="nav-container">
             <div class="brand-group">
                 <a href="{{ route('about') }}" class="brand-link">
-                    <span class="brand-logo-badge">G</span>
+                    <img src="{{ asset('img/gawetracker-mark.png') }}" alt="" class="brand-logo-img" width="26" height="26">
                     <span>GaweTracker</span>
                 </a>
                 <nav class="main-nav" aria-label="Navigasi utama">

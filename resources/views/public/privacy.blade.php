@@ -2,7 +2,7 @@
 
 @section('title', 'Kebijakan Privasi')
 @section('heading', 'Kebijakan Privasi')
-@section('subtitle', 'Terakhir diperbarui: ' . date('d F Y'))
+@section('subtitle', 'Terakhir diperbarui: ' . now()->locale('id')->translatedFormat('d F Y'))
 
 @section('meta_description', 'Kebijakan Privasi GaweTracker: bagaimana kami mengakses, menggunakan, menyimpan, dan melindungi data Anda, termasuk data dari Gmail.')
 
@@ -73,9 +73,20 @@
         halaman ini beserta tanggal pembaruan terbaru.
     </p>
 
-    <h2>8. Kontak</h2>
+    <h2>8. Keterbukaan implementasi</h2>
+    <p>
+        Untuk keterbukaan, kode sumber GaweTracker tersedia untuk ditinjau sehingga Anda dapat
+        memverifikasi bagaimana data Google Anda diakses dan diproses:
+        @if (config('app.source_url'))
+            <a href="{{ config('app.source_url') }}" target="_blank" rel="noopener">{{ config('app.source_url') }}</a>.
+        @else
+            tersedia atas permintaan melalui alamat kontak di bawah.
+        @endif
+    </p>
+
+    <h2>9. Kontak</h2>
     <p>
         Pertanyaan mengenai privasi atau permintaan penghapusan data dapat dikirim ke
-        <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a>.
+        <a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>.
     </p>
 @endsection

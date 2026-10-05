@@ -41,6 +41,6 @@
     <h2>Kontak</h2>
     <p>
         Ada pertanyaan atau masukan? Hubungi kami di
-        <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a>.
+        <a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>.
     </p>
 @endsection
