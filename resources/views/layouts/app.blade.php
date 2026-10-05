@@ -7,7 +7,11 @@
     {{-- Self-hosted font stylesheet. Loaded alongside the main stylesheet so
          the @font-face rules and the CSS that uses them arrive together. --}}
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/shadcn.css') }}">
+    {{-- The stylesheet is served with a one-day Cache-Control and Cloudflare
+         caches it at the edge, so a plain URL keeps serving the previous
+         build. Key the URL on the file mtime to invalidate both caches the
+         moment the file changes. --}}
+    <link rel="stylesheet" href="{{ asset('css/shadcn.css') }}?v={{ filemtime(public_path('css/shadcn.css')) }}">
     @yield('styles')
 </head>
 <body>
@@ -53,6 +57,7 @@
                 </nav>
             </div>
 
+            <div class="user-nav">
                 <span class="user-label">{{ Auth::user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

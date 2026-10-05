@@ -383,6 +383,41 @@ header.site-header {
   color: hsl(var(--muted-foreground));
 }
 
+/* ─── Header: narrow screens ─────────────────────────────────────────────── */
+/* Reason: the six-item primary nav is wider than a phone viewport; without a
+   narrow-screen rule it stretches the document and every page scrolls
+   sideways. Below 768px the header becomes two rows — brand + account on
+   top, the nav as its own horizontally scrollable row. Desktop is untouched
+   because this block is max-width only. */
+@media (max-width: 767px) {
+  .nav-container {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0 0.75rem;
+    gap: 0;
+  }
+  /* Flatten the wrapper so brand and nav become direct flex children and the
+     nav can claim its own full-width row. */
+  .brand-group { display: contents; }
+  .brand-link { height: 3rem; }
+  .user-label { display: none; }
+  .user-nav { margin-left: auto; }
+  .main-nav {
+    order: 3;
+    flex: 1 1 100%;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-top: 1px solid hsl(var(--border));
+  }
+  .main-nav::-webkit-scrollbar { display: none; }
+  .nav-item {
+    height: 2.75rem;
+    padding: 0 0.75rem;
+  }
+}
+
 /* ─── Card component ─────────────────────────────────────────────────────── */
 /* Reason: 1px border + no shadow = "crisp boundary" system; shadow only
    at dialog elevation (z-index contract). Cards are flat data surfaces. */
@@ -936,6 +971,15 @@ header.site-header {
 
 /* ─── Kanban ─────────────────────────────────────────────────────────────── */
 .kanban-board-container {
+  /* Reason: this is a horizontal scroll container. Cards contain
+     position:absolute descendants (the .sr-only labels for the status
+     selects). Without a positioned ancestor here their containing block is
+     the viewport, so they escape this overflow-x clip and their static
+     position — deep in the last column — stretches the document, making the
+     whole page scroll sideways on phones. position:relative makes the board
+     their containing block so they stay inside the clipped scroll area.
+     (.table-wrapper already does this for the same reason.) */
+  position: relative;
   display: flex;
   gap: 0.75rem;
   overflow-x: auto;
@@ -1081,6 +1125,13 @@ header.site-header {
   font-size: 0.6875rem;
   color: hsl(var(--muted-foreground));
   white-space: nowrap;
+}
+
+/* Narrow screens: metric captions are nowrap on desktop to keep cards
+   uniform, but on phones that forces the card (and page) wider than the
+   viewport, so let them wrap. */
+@media (max-width: 767px) {
+  .metric-footer { white-space: normal; }
 }
 
 /* ─── Split workspace grid ───────────────────────────────────────────────── */
