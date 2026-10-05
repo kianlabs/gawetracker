@@ -52,6 +52,7 @@ MAIL_FROM_ADDRESS="$(get MAIL_FROM_ADDRESS)"
 MAIL_FROM_NAME="$(get MAIL_FROM_NAME)"
 RESEND_API_KEY="$(get RESEND_API_KEY)"
 EMAIL_VERIFICATION_ENABLED="$(get EMAIL_VERIFICATION_ENABLED)"
+REGISTRATION_ENABLED="$(get REGISTRATION_ENABLED)"
 
 # Only forward admin credentials when set. Passing an empty ADMIN_PASSWORD would
 # override the seeder's default with an empty string and create a passwordless
@@ -70,6 +71,11 @@ MAIL_ENV=()
 [[ -n "$MAIL_FROM_NAME" ]] && MAIL_ENV+=(-e "MAIL_FROM_NAME=$MAIL_FROM_NAME")
 [[ -n "$RESEND_API_KEY" ]] && MAIL_ENV+=(-e "RESEND_API_KEY=$RESEND_API_KEY")
 [[ -n "$EMAIL_VERIFICATION_ENABLED" ]] && MAIL_ENV+=(-e "EMAIL_VERIFICATION_ENABLED=$EMAIL_VERIFICATION_ENABLED")
+
+# Forward the registration gate too. config:cache inside the container reads the
+# process env, so a value that lives only in the host .env would never reach the
+# app. Leave it unset to keep the built-in default (config/auth.php: true).
+[[ -n "$REGISTRATION_ENABLED" ]] && MAIL_ENV+=(-e "REGISTRATION_ENABLED=$REGISTRATION_ENABLED")
 
 DB_PW_FILE="$(ls -t "$HOME"/backups/gawetracker-deploy-*/db_app_password.txt 2>/dev/null | head -1 || true)"
 [[ -n "$DB_PW_FILE" ]] || { echo "missing db_app_password.txt under ~/backups/gawetracker-deploy-*/" >&2; exit 1; }

@@ -86,10 +86,12 @@
                 </button>
             </form>
 
+            @if (config('auth.registration_enabled'))
             <p class="text-sm text-muted" style="text-align: center; margin-top: 1.25rem; margin-bottom: 0;">
                 Belum punya akun?
                 <a href="{{ route('register') }}" style="color: hsl(var(--primary)); font-weight: 500;">Daftar sekarang</a>
             </p>
+            @endif
         </div>
 
     </main>
