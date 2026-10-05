@@ -108,7 +108,29 @@ for _ in $(seq 1 30); do
   docker exec "$CONTAINER" php -r 'exit(@fsockopen(getenv("DB_HOST"), (int) getenv("DB_PORT")) ? 0 : 1);' >/dev/null 2>&1 && break
   sleep 1
 done
-docker exec "$CONTAINER" php artisan config:cache >/dev/null 2>&1 || true
-docker exec "$CONTAINER" php artisan route:cache >/dev/null 2>&1 || true
-docker exec "$CONTAINER" php artisan view:cache >/dev/null 2>&1 || true
+# Run the warm-up as www-data, not root: the files it writes (bootstrap/cache/*,
+# storage/framework/views/*) must stay owned by the FPM user, and a root-owned
+# cache file would be rewritten as root on every deploy.
+docker exec -u www-data "$CONTAINER" php artisan config:cache
+docker exec -u www-data "$CONTAINER" php artisan route:cache
+docker exec -u www-data "$CONTAINER" php artisan view:cache
+
+# Fail loudly if the app is not actually serving. The warm-up above runs while
+# FPM is already up, so a broken deploy could otherwise report success and then
+# 502 for every visitor. Restarting FPM once clears any stale OPcache entry
+# (validate_timestamps=0 means a script cached at the wrong moment is never
+# re-read), then retry the health probe before giving up.
+probe() { docker exec "$CONTAINER" php -r '$h=@get_headers("http://127.0.0.1:8080/up"); exit(($h && str_contains($h[0], "200")) ? 0 : 1);' >/dev/null 2>&1; }
+
+if ! probe; then
+  echo "health probe failed after warm-up; restarting php-fpm and retrying" >&2
+  docker restart "$CONTAINER" >/dev/null
+  for _ in $(seq 1 20); do probe && break; sleep 1; done
+fi
+
+if ! probe; then
+  echo "deploy FAILED: $CONTAINER is not answering /up — check 'docker logs $CONTAINER'" >&2
+  exit 1
+fi
+
 echo "container '$CONTAINER' restarted on $PUBLIC_URL"
