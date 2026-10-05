@@ -183,8 +183,8 @@
                             </label>
                             <select id="status-followup-{{ $app->id }}"
                                     name="status"
-                                    class="select"
-                                    style="height:1.75rem;font-size:0.75rem;padding:0 1.5rem 0 0.5rem;width:auto;">
+                                    class="select select-compact"
+                                    style="height:1.75rem;padding:0 1.5rem 0 0.5rem;width:auto;">
                                 @foreach ($statuses as $code => $info)
                                     <option value="{{ $code }}" {{ $app->status === $code ? 'selected' : '' }}>
                                         {{ $info['label'] }}
@@ -240,8 +240,8 @@
                        name="target"
                        value="{{ $weeklyTarget }}"
                        min="1" max="100"
-                       class="input @error('target') input-error @enderror"
-                       style="width:56px;height:1.75rem;font-size:0.8125rem;padding:0 0.375rem;text-align:center;">
+                       class="input input-compact @error('target') input-error @enderror"
+                       style="width:56px;height:1.75rem;padding:0 0.375rem;text-align:center;">
                 <button type="submit" class="btn btn-secondary btn-sm">Simpan</button>
             </form>
             @error('target')
@@ -352,8 +352,8 @@
                                         </label>
                                         <select id="status-recent-{{ $app->id }}"
                                                 name="status"
-                                                class="select"
-                                                style="height:1.75rem;font-size:0.75rem;padding:0 1.5rem 0 0.5rem;width:auto;">
+                                                class="select select-compact"
+                                                style="height:1.75rem;padding:0 1.5rem 0 0.5rem;width:auto;">
                                             @foreach ($statuses as $code => $info)
                                                 <option value="{{ $code }}" {{ $app->status === $code ? 'selected' : '' }}>
                                                     {{ $info['label'] }}

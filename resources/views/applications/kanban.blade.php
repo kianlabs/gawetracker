@@ -159,8 +159,8 @@
                                     <div class="flex items-center gap-1">
                                         <select id="status-changer-{{ $app->id }}"
                                                 name="status"
-                                                class="select"
-                                                style="height:1.75rem;font-size:0.75rem;padding:0 1.75rem 0 0.5rem;flex:1;"
+                                                class="select select-compact"
+                                                style="height:1.75rem;padding:0 1.75rem 0 0.5rem;flex:1;"
                                                 onchange="this.form.submit()">
                                             @foreach ($columns as $sKey => $sMeta)
                                                 <option value="{{ $sKey }}" {{ $app->status === $sKey ? 'selected' : '' }}>

@@ -727,6 +727,12 @@ header.site-header {
 .input-text:focus, .input-select:focus, .input-textarea:focus { outline: none; border-color: hsl(var(--ring)); box-shadow: 0 0 0 1px hsl(var(--ring) / 0.3); }
 .btn-danger { background-color: hsl(var(--destructive)); color: hsl(var(--destructive-foreground)); }
 
+/* Compact inline controls (status selectors, weekly-target input). The
+   small size lives here rather than in a style="" attribute so the phone
+   block below can raise it to 16px and keep iOS from zooming on focus. */
+.select-compact { font-size: 0.75rem; }
+.input-compact  { font-size: 0.8125rem; }
+
 /* ─── Table ──────────────────────────────────────────────────────────────── */
 .table-wrapper {
   position: relative;
@@ -1370,5 +1376,6 @@ header.site-header {
   .field-error { font-size: 0.8125rem; }
   .pagination-info { font-size: 0.8125rem; }
   .pagination-links a, .pagination-links span { font-size: 0.8125rem; }
+  .select-compact, .input-compact { font-size: 1rem; }
   .heatmap-month-label, .heatmap-day-label { font-size: 0.75rem; }
 }
