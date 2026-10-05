@@ -154,4 +154,30 @@ class AuthTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/login');
     }
+
+    public function test_spoofed_forwarded_for_cannot_bypass_the_login_throttle(): void
+    {
+        // Behind the Cloudflare Tunnel every request reaches the app from the
+        // docker gateway, so that private address is the only trusted proxy.
+        // cloudflared appends the real client IP on the right of
+        // X-Forwarded-For; a client may prepend arbitrary entries on the left.
+        // Those forged entries must never become the rate-limit key, or an
+        // attacker could brute force passwords by rotating them.
+        for ($i = 1; $i <= 8; $i++) {
+            $response = $this
+                ->withServerVariables(['REMOTE_ADDR' => '172.20.0.1'])
+                ->withHeaders(['X-Forwarded-For' => "10.9.9.{$i},182.9.1.39"])
+                ->from('/login')
+                ->post('/login', [
+                    'email' => 'kyan@gawetracker.test',
+                    'password' => 'wrong-password',
+                ]);
+
+            if ($i <= 5) {
+                $response->assertRedirect('/login');
+            } else {
+                $response->assertStatus(429);
+            }
+        }
+    }
 }

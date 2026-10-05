@@ -22,8 +22,16 @@ return Application::configure(basePath: dirname(__DIR__))
         // Behind Cloudflare Tunnel the app is served over plain HTTP from the
         // tunnel origin but the public request is HTTPS. Trust the forwarded
         // headers so Laravel generates https:// URLs and secure cookies.
+        //
+        // Only private addresses may act as proxies: cloudflared runs on this
+        // host and connects over the docker network, so the request always
+        // arrives from 172.16.0.0/12. Trusting '*' instead let a client forge
+        // X-Forwarded-For and rotate the rate-limit key, bypassing the login
+        // throttle. With the proxy list narrowed, forged entries on the left of
+        // the header are discarded and the real client IP (which cloudflared
+        // appends on the right) is used.
         $middleware->trustProxies(
-            at: '*',
+            at: '172.16.0.0/12',
             headers: Request::HEADER_X_FORWARDED_FOR
                 | Request::HEADER_X_FORWARDED_HOST
                 | Request::HEADER_X_FORWARDED_PORT
