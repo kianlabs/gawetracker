@@ -117,13 +117,22 @@ docker exec -u www-data "$CONTAINER" php artisan view:cache
 
 # Fail loudly if the app is not actually serving. The warm-up above runs while
 # FPM is already up, so a broken deploy could otherwise report success and then
-# 502 for every visitor. Restarting FPM once clears any stale OPcache entry
+# 502 for every visitor.
+#
+# The probe talks to nginx inside the container (127.0.0.1:8080), which is
+# independent of GAWETRACKER_BIND — that only controls the host-side bind.
+#
+# Give FPM a grace period first: on a fresh container its children can still be
+# warming up, and a restart there would be pure downtime. Only if the app never
+# comes up do we restart once — which also clears any stale OPcache entry
 # (validate_timestamps=0 means a script cached at the wrong moment is never
-# re-read), then retry the health probe before giving up.
+# re-read) — and fail the deploy if it is still not serving.
 probe() { docker exec "$CONTAINER" php -r '$h=@get_headers("http://127.0.0.1:8080/up"); exit(($h && str_contains($h[0], "200")) ? 0 : 1);' >/dev/null 2>&1; }
 
+for _ in $(seq 1 20); do probe && break; sleep 1; done
+
 if ! probe; then
-  echo "health probe failed after warm-up; restarting php-fpm and retrying" >&2
+  echo "health probe still failing; restarting php-fpm and retrying" >&2
   docker restart "$CONTAINER" >/dev/null
   for _ in $(seq 1 20); do probe && break; sleep 1; done
 fi
