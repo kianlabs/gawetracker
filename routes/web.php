@@ -10,7 +10,14 @@ use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobDiscoveryController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\PublicPageController;
 use Illuminate\Support\Facades\Route;
+
+// Publicly reachable pages. Google's OAuth brand verification requires a public
+// home page, privacy policy and terms on the OAuth client's domain.
+Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/privacy', [PublicPageController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [PublicPageController::class, 'terms'])->name('terms');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
