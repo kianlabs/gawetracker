@@ -16,7 +16,7 @@
     .info-item-full { grid-column: 1 / -1; }
 
     .info-label {
-        font-size: 0.6875rem;
+        font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
@@ -67,7 +67,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.6875rem;
+        font-size: 0.75rem;
         font-weight: 700;
         color: hsl(var(--primary-foreground));
         cursor: pointer;

@@ -36,7 +36,7 @@
 
     /* Conversion rate label coloring */
     .conv-high  { color: hsl(142 76% 30%); font-weight: 600; }
-    .conv-mid   { color: hsl(38 92% 40%); font-weight: 600; }
+    .conv-mid   { color: hsl(38 92% 32%); font-weight: 600; }
     .conv-low   { color: hsl(0 84.2% 45%); font-weight: 600; }
 </style>
 @endsection
@@ -158,7 +158,7 @@
                         @if($idx > 0)
                             @php $prevKey = $stageKeys[$idx - 1]; $prevCount = $funnel[$prevKey]['count'] ?? 0; @endphp
                             <div class="flex items-center gap-2" style="padding: 0.125rem 1rem;">
-                                <span class="text-muted" style="font-size:0.7rem; line-height:1">&#9660;</span>
+                                <span class="text-muted" style="font-size:0.75rem; line-height:1">&#9660;</span>
                                 @if($prevCount > 0)
                                     <span class="text-xs {{ $convClass }}">Konversi {{ $item['conversion_rate'] }}%</span>
                                     @if($rejAtStage > 0)
@@ -401,7 +401,7 @@
             </div>
 
             {{-- Legend --}}
-            <div style="display:flex; align-items:center; gap:6px; margin-top:0.75rem; font-size:0.65rem; color:hsl(var(--muted-foreground));">
+            <div style="display:flex; align-items:center; gap:6px; margin-top:0.75rem; font-size:0.75rem; color:hsl(var(--muted-foreground));">
                 <span>Kurang</span>
                 <div class="heatmap-cell level-0"></div>
                 <div class="heatmap-cell level-1"></div>

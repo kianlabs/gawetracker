@@ -1323,3 +1323,52 @@ header.site-header {
 .heatmap-month-label { font-size:0.65rem; color:hsl(var(--muted-foreground)); width:13px; overflow:visible; white-space:nowrap; }
 .heatmap-day-labels { display:flex; flex-direction:column; gap:3px; margin-right:4px; padding-top:0; }
 .heatmap-day-label { height:13px; font-size:0.65rem; color:hsl(var(--muted-foreground)); line-height:13px; }
+
+/* ─── Phone readability pass ─────────────────────────────────────────────
+   Phones used to get the desktop type scale verbatim, so captions, table
+   headers and badges rendered at 11px while every glyph was monospace —
+   tiring to read and easy to misread. This block only applies at ≤767px:
+   - iOS Safari zooms the whole page when a focused field is under 16px,
+     so form fields step up to 16px with slightly taller targets.
+   - Prose, labels and controls use the proportional face that is already
+     self-hosted; numbers, keyboard hints and code stay monospace.
+   - The smallest type moves up one notch and muted text is darkened past
+     the 4.5:1 contrast threshold.
+   Desktop is untouched. */
+@media (max-width: 767px) {
+  :root {
+    --muted-foreground: 240 4% 40%;   /* zinc-600 — ≥5.5:1 on muted surfaces */
+    --destructive:      0 72% 45%;    /* white on red — ≥5.8:1 */
+  }
+
+  /* Proportional face for reading; keep the mono grid for data */
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  .metric-value, .metric-value.small, .kbd, code, pre {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  /* Form fields: 16px stops iOS auto-zoom on focus */
+  .input, .select, .textarea,
+  .input-text, .input-select, .input-textarea { font-size: 1rem; }
+  .input, .select, .input-text, .input-select { height: 2.375rem; }
+
+  /* Step the smallest type up one notch */
+  .text-xs { font-size: 0.8125rem; line-height: 1.15rem; }
+  .badge { font-size: 0.75rem; }
+  .table th { font-size: 0.75rem; }
+  .metric-label, .metric-footer { font-size: 0.75rem; }
+  .metric-label {
+    letter-spacing: 0.02em;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .btn-sm { font-size: 0.8125rem; }
+  .kbd { font-size: 0.75rem; }
+  .field-error { font-size: 0.8125rem; }
+  .pagination-info { font-size: 0.8125rem; }
+  .pagination-links a, .pagination-links span { font-size: 0.8125rem; }
+  .heatmap-month-label, .heatmap-day-label { font-size: 0.75rem; }
+}

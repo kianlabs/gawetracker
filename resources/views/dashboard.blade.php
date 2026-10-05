@@ -254,7 +254,7 @@
 
         {{-- Module navigation dock --}}
         <div style="border-top:1px solid hsl(var(--border));padding:0.625rem 0.75rem;">
-            <p class="text-xs font-semibold text-muted uppercase tracking-wider" style="padding:0 0.25rem;margin-bottom:0.25rem;font-size:0.625rem;">Modul</p>
+            <p class="text-xs font-semibold text-muted uppercase tracking-wider" style="padding:0 0.25rem;margin-bottom:0.25rem;">Modul</p>
             <a href="{{ route('applications.kanban') }}"  class="nav-quick-link">Papan Kanban<span class="chevron">›</span></a>
             <a href="{{ route('analytics.index') }}"      class="nav-quick-link">Funnel &amp; Analisis<span class="chevron">›</span></a>
             <a href="{{ route('offers.index') }}"         class="nav-quick-link">Komparasi Offer<span class="chevron">›</span></a>
