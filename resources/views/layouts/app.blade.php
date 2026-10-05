@@ -59,6 +59,9 @@
 
             <div class="user-nav">
                 <span class="user-label">{{ Auth::user()->name }}</span>
+                {{-- Linking is only offered when the server has an OAuth client
+                     configured; an already-connected mailbox can always be
+                     disconnected. --}}
                 @if (Auth::user()->hasGmailConnected())
                     <form method="POST" action="{{ route('gmail.disconnect') }}">
                         @csrf
@@ -68,7 +71,7 @@
                             Gmail terhubung
                         </button>
                     </form>
-                @else
+                @elseif (app(App\Services\GoogleOAuthService::class)->isConfigured())
                     <a href="{{ route('gmail.connect') }}" class="btn btn-outline btn-sm">Hubungkan Gmail</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">

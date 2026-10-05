@@ -230,4 +230,41 @@ class GmailConnectionTest extends TestCase
         $this->assertNull(app(GoogleOAuthService::class)->freshAccessToken($user));
         Http::assertNothingSent();
     }
+
+    public function test_the_connect_button_is_hidden_when_the_client_is_not_configured(): void
+    {
+        config()->set('services.gmail.client_id', null);
+        config()->set('services.gmail.client_secret', null);
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertDontSee('Hubungkan Gmail');
+    }
+
+    public function test_the_connect_button_is_shown_when_configured(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Hubungkan Gmail');
+    }
+
+    public function test_a_connected_user_sees_the_disconnect_button(): void
+    {
+        $user = User::factory()->create();
+        $user->forceFill([
+            'gmail_refresh_token' => 'refresh',
+            'gmail_email' => 'kyan@gmail.com',
+        ])->save();
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Gmail terhubung')
+            ->assertDontSee('Hubungkan Gmail');
+    }
 }
