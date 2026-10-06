@@ -12,7 +12,7 @@
     <main class="card" style="width: 100%; max-width: 24rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);">
         <header class="card-header" style="text-align: center; align-items: center; padding-bottom: 1.25rem;">
             <div class="flex items-center gap-2 mb-2">
-                <img src="{{ asset('img/gawetracker-mark.png') }}" alt="" class="brand-logo-img brand-logo-lg" width="36" height="36">
+                <img src="{{ asset('img/gawetracker-mark.png') }}?v={{ filemtime(public_path('img/gawetracker-mark.png')) }}" alt="" class="brand-logo-img brand-logo-lg" width="36" height="36">
                 <h1 class="card-title" style="font-size: 1.375rem; margin-bottom: 0;">GaweTracker</h1>
             </div>
             <p class="card-description">Satu langkah lagi sebelum mulai melacak lamaran Anda</p>

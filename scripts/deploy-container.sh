@@ -88,6 +88,17 @@ GOOGLE_ENV=()
 [[ -n "$GOOGLE_CLIENT_ID" ]] && GOOGLE_ENV+=(-e "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID")
 [[ -n "$GOOGLE_CLIENT_SECRET" ]] && GOOGLE_ENV+=(-e "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET")
 
+# Public contact details shown on the about/privacy/terms pages that Google
+# reviews during OAuth brand verification. Same reason as REGISTRATION_ENABLED
+# above: config:cache reads the container process env, so a value that lives only
+# in the host .env would never reach the app. Left unset, config/app.php keeps
+# its built-in defaults (no-reply contact address, no repository link).
+APP_CONTACT_EMAIL="$(get APP_CONTACT_EMAIL)"
+APP_SOURCE_URL="$(get APP_SOURCE_URL)"
+PUBLIC_ENV=()
+[[ -n "$APP_CONTACT_EMAIL" ]] && PUBLIC_ENV+=(-e "APP_CONTACT_EMAIL=$APP_CONTACT_EMAIL")
+[[ -n "$APP_SOURCE_URL" ]] && PUBLIC_ENV+=(-e "APP_SOURCE_URL=$APP_SOURCE_URL")
+
 DB_PW_FILE="$(ls -t "$HOME"/backups/gawetracker-deploy-*/db_app_password.txt 2>/dev/null | head -1 || true)"
 [[ -n "$DB_PW_FILE" ]] || { echo "missing db_app_password.txt under ~/backups/gawetracker-deploy-*/" >&2; exit 1; }
 DB_PASSWORD="$(cat "$DB_PW_FILE")"
@@ -109,6 +120,7 @@ docker run -d --name "$CONTAINER" --restart unless-stopped \
   "${GOOGLE_ENV[@]}" \
   "${ADMIN_ENV[@]}" \
   "${MAIL_ENV[@]}" \
+  "${PUBLIC_ENV[@]}" \
   "$IMAGE" >/dev/null
 
 # Warm the production caches. Do NOT run `config:clear` here: without a cached

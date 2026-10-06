@@ -21,7 +21,7 @@
         <div class="nav-container">
             <div class="brand-group">
                 <a href="{{ route('dashboard') }}" class="brand-link">
-                    <img src="{{ asset('img/gawetracker-mark.png') }}" alt="" class="brand-logo-img" width="26" height="26">
+                    <img src="{{ asset('img/gawetracker-mark.png') }}?v={{ filemtime(public_path('img/gawetracker-mark.png')) }}" alt="" class="brand-logo-img" width="26" height="26">
                     <span>GaweTracker</span>
                 </a>
                 <nav class="main-nav" aria-label="Navigasi utama">
