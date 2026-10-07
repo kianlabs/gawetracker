@@ -35,6 +35,7 @@ Kyan started applying for jobs and realized applications were scattered across e
 - **Filter and search** — by company, position, status, work type; state persisted in URL
 - **Company logos** — auto-resolved via Google Favicon API with initial-letter fallback
 - **CSV export** — export filtered application data
+- **Job discovery (Glints & JobStreet)** — search live postings from both boards inside the app and promote a posting into an application in one click
 
 ## Tech Stack
 
@@ -119,6 +120,49 @@ For Railway, Fly.io, or a custom VPS, see [DEPLOYMENT.md](DEPLOYMENT.md).
 - Password: `password`
 
 ⚠️ **Change default password immediately after first login in production.**
+## Job discovery (Glints & JobStreet)
+
+GaweTracker can pull live job postings straight from **Glints** and **JobStreet** so you can browse openings and promote the interesting ones into your pipeline without leaving the app. Open **Cari Kerja** (`/discovery`), type a keyword (for example `backend developer` or `data analyst`) and pick how many results to pull per board; postings are deduplicated and refreshed idempotently.
+
+### From the UI
+
+1. Go to **Cari Kerja** (`/discovery`).
+2. Enter a keyword and a per-source limit, then click **Cari Sekarang**.
+3. Filter the results by source or by whether they are already promoted.
+4. Click **+ Lamar** on a posting to turn it into a real application (created as `wishlist`, linked back to the posting). Already-promoted postings show a link to their application instead.
+
+Results are deduplicated on `(source, external_id)`, so re-running the same search refreshes existing postings instead of creating duplicates.
+
+### From the CLI
+
+Run a one-off search:
+
+```bash
+php artisan jobs:discover "backend developer" --limit=30
+```
+
+The command prints how many postings it saw, how many were new and how many were refreshed, and reports each board's failure as a warning without aborting the run.
+
+### How it works
+
+Both boards are queried through a shared `JobSource` contract, so adding a third board needs no change to the controller or commands:
+
+- **`GlintsSource`** — Glints' own no-auth GraphQL endpoint (`/api/v2-alc/graphql`, operation `searchJobs`). Requests send browser-like headers or Glints' firewall returns HTML; pagination is by `limit`/`offset`.
+- **`JobstreetSource`** — the SEEK v5 JSON API (`id.jobstreet.com/api/jobsearch/v5/search`, `siteKey=ID-Main`). The same platform powers Jobstreet, SEEK and JobsDB, so the endpoint/site key are overridable per market.
+- **`JobDiscoveryService`** — runs every source, normalises results into `JobPosting` rows, and persists them idempotently on `(source, external_id)`. One board failing never aborts the run; the failure is reported as a warning instead.
+- **Company normalisation** — discovered companies are linked to the canonical `Company` registry, so "PT Tokopedia", "Tokopedia, PT" and "tokopedia.com" collapse into one row.
+
+Configuration is optional — both boards have sensible defaults and can be repointed per market through environment variables:
+
+```dotenv
+GLINTS_ENDPOINT=https://glints.com/api/v2-alc/graphql
+GLINTS_COUNTRY=ID
+JOBSTREET_ENDPOINT=https://id.jobstreet.com/api/jobsearch/v5/search
+JOBSTREET_SITE_KEY=ID-Main
+```
+
+> Both endpoints are unofficial and reverse-engineered, so their schemas may drift. Parsing is deliberately defensive: a malformed item is skipped rather than aborting the whole search.
+
 ## Email ingestion (JobStreet & Glints)
 
 GaweTracker can read your JobStreet/Glints application emails and keep your
