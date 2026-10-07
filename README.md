@@ -145,7 +145,7 @@ The command prints how many postings it saw, how many were new and how many were
 
 ### How it works
 
-Both boards are queried through a shared `JobSource` contract, so adding a third board needs no change to the controller or commands:
+Both boards implement the same `JobSource` contract, so each one normalises its own response shape into a `DiscoveredJob` before the service sees it:
 
 - **`GlintsSource`** — Glints' own no-auth GraphQL endpoint (`/api/v2-alc/graphql`, operation `searchJobs`). Requests send browser-like headers or Glints' firewall returns HTML; pagination is by `limit`/`offset`.
 - **`JobstreetSource`** — the SEEK v5 JSON API (`id.jobstreet.com/api/jobsearch/v5/search`, `siteKey=ID-Main`). The same platform powers Jobstreet, SEEK and JobsDB, so the endpoint/site key are overridable per market.

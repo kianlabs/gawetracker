@@ -16,9 +16,8 @@ use Illuminate\View\View;
  * The discovery UI: search Glints/Jobstreet from the browser, review what came
  * back, and promote a posting into a real JobApplication.
  *
- * The controller stays thin — all board-specific logic lives in the
- * JobDiscoveryService / JobSource implementations, so adding a third board
- * needs no change here.
+ * Board-specific parsing lives in the JobSource implementations, so the
+ * controller only has to register the sources it wants to search.
  */
 class JobDiscoveryController extends Controller
 {
