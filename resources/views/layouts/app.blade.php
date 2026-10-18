@@ -47,6 +47,11 @@
                        aria-current="{{ request()->routeIs('offers.*') ? 'page' : 'false' }}">
                         Offer
                     </a>
+                    <a href="{{ route('integrations.index') }}"
+                       class="nav-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}"
+                       aria-current="{{ request()->routeIs('integrations.*') ? 'page' : 'false' }}">
+                        Integrasi Bot
+                    </a>
                 </nav>
             </div>
 

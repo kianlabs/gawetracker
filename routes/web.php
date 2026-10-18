@@ -4,6 +4,7 @@ use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GmailConnectionController;
+use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\InterviewChecklistController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobDiscoveryController;
@@ -62,6 +63,10 @@ Route::middleware('auth')->group(function () {
 
     // Analytics routes
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+    // Bot & API integrations
+    Route::get('/integrations', [IntegrationController::class, 'index'])->name('integrations.index');
+    Route::post('/integrations/token/regenerate', [IntegrationController::class, 'regenerateToken'])->name('integrations.token.regenerate');
 
     // Core applications resource
     Route::resource('applications', JobApplicationController::class);

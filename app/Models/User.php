@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'weekly_target'])]
+#[Fillable(['name', 'email', 'password', 'weekly_target', 'api_token'])]
 #[Hidden(['password', 'remember_token', 'gmail_access_token', 'gmail_refresh_token'])]
 class User extends Authenticatable
 {
@@ -53,5 +53,28 @@ class User extends Authenticatable
     public function hasGmailConnected(): bool
     {
         return ! empty($this->gmail_refresh_token);
+    }
+
+    /**
+     * Generate or regenerate a fresh API token for external bots and extensions.
+     */
+    public function generateApiToken(): string
+    {
+        $token = 'gt_'.bin2hex(random_bytes(24));
+        $this->forceFill(['api_token' => $token])->save();
+
+        return $token;
+    }
+
+    /**
+     * Ensure this user has an API token, generating one if absent.
+     */
+    public function ensureApiToken(): string
+    {
+        if (empty($this->api_token)) {
+            return $this->generateApiToken();
+        }
+
+        return $this->api_token;
     }
 }

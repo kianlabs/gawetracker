@@ -203,7 +203,13 @@
                     </div>
                     <div>
                         <div class="info-label">Sumber Lowongan</div>
-                        <div class="info-value">{{ $application->source ?: '—' }}</div>
+                        <div class="info-value">
+                            @if ($application->source && (str_contains(strtolower($application->source), 'bot') || str_contains(strtolower($application->source), 'lempar jaring')))
+                                <span class="badge badge-purple" style="font-size:0.75rem;">🤖 {{ $application->source }}</span>
+                            @else
+                                {{ $application->source ?: '—' }}
+                            @endif
+                        </div>
                     </div>
                     @if ($application->source_url)
                     <div class="info-item-full">

@@ -258,6 +258,7 @@
             <a href="{{ route('applications.kanban') }}"  class="nav-quick-link">Papan Kanban<span class="chevron">›</span></a>
             <a href="{{ route('analytics.index') }}"      class="nav-quick-link">Funnel &amp; Analisis<span class="chevron">›</span></a>
             <a href="{{ route('offers.index') }}"         class="nav-quick-link">Komparasi Offer<span class="chevron">›</span></a>
+            <a href="{{ route('integrations.index') }}"   class="nav-quick-link" style="color:hsl(262 83% 55%);">🤖 Integrasi Bot &amp; Webhook<span class="chevron">›</span></a>
             <a href="{{ route('applications.export') }}"  class="nav-quick-link">Ekspor CSV<span class="chevron">↓</span></a>
         </div>
     </div>
@@ -317,9 +318,14 @@
                                     @else
                                         <span class="co-badge" aria-hidden="true">{{ strtoupper(substr($app->company,0,1)) }}</span>
                                     @endif
-                                    <a href="{{ route('applications.show', $app) }}"
-                                       class="text-sm font-medium text-foreground"
-                                       style="text-decoration:none;">{{ $app->company }}</a>
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <a href="{{ route('applications.show', $app) }}"
+                                           class="text-sm font-medium text-foreground"
+                                           style="text-decoration:none;">{{ $app->company }}</a>
+                                        @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
+                                            <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">🤖 Bot</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </td>
                             <td><span class="text-sm text-muted">{{ $app->position }}</span></td>

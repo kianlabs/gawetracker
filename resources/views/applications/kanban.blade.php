@@ -141,6 +141,11 @@
                                 <span class="badge {{ $app->days_waiting > 14 ? 'badge-destructive' : ($app->days_waiting > 7 ? 'badge-warning' : 'badge-muted') }}">
                                     Menunggu {{ $app->days_waiting }} hari
                                 </span>
+                                @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
+                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">
+                                        🤖 Bot
+                                    </span>
+                                @endif
                                 @if ($app->match_score !== null)
                                     <span class="badge {{ $app->match_score >= 75 ? 'badge-success' : ($app->match_score >= 50 ? 'badge-warning' : 'badge-destructive') }}"
                                           title="ATS Match Score: {{ $app->match_score }}%">

@@ -20,6 +20,7 @@ class JobApplication extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'user_id',
         'company',
         'company_id',
         'position',
