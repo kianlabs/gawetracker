@@ -7,6 +7,7 @@ use App\Http\Controllers\GmailConnectionController;
 use App\Http\Controllers\InterviewChecklistController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobDiscoveryController;
+use App\Http\Controllers\JobMatchController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\OfferController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/applications/{application}/checklists', [InterviewChecklistController::class, 'store'])->name('applications.checklists.store');
     Route::patch('/checklists/{checklist}/toggle', [InterviewChecklistController::class, 'toggle'])->name('checklists.toggle');
     Route::delete('/checklists/{checklist}', [InterviewChecklistController::class, 'destroy'])->name('checklists.destroy');
+
+    // AI Match Score & ATS Keyword Gap Analysis routes
+    Route::post('/applications/{application}/match', [JobMatchController::class, 'matchApplication'])->name('applications.match');
+    Route::post('/jobs/match-score', [JobMatchController::class, 'matchGeneral'])->name('jobs.match-score');
 
     // Offer comparison routes
     Route::get('/offers', [OfferController::class, 'index'])->name('offers.index');

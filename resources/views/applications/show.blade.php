@@ -318,6 +318,122 @@
     {{-- RIGHT COLUMN --}}
     <div style="display: flex; flex-direction: column; gap: 1.25rem;">
 
+        {{-- AI Match Score & ATS Keyword Gap Analysis --}}
+        @php
+            $analysis = session('match_result') ?? $application->match_analysis;
+            $matchScore = $analysis['match_percentage'] ?? $application->match_score;
+            $matchedKeywords = $analysis['matched_keywords'] ?? [];
+            $missingKeywords = $analysis['missing_keywords'] ?? [];
+            $recommendation = $analysis['recommendation'] ?? null;
+        @endphp
+        <div class="section-card" id="match-score-card">
+            <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1.1rem;">🎯</span>
+                    <span class="section-title">AI Match Score &amp; ATS Keyword</span>
+                </div>
+                @if ($matchScore !== null)
+                    <span class="badge {{ $matchScore >= 75 ? 'badge-success' : ($matchScore >= 50 ? 'badge-warning' : 'badge-destructive') }}">
+                        {{ $matchScore }}% Cocok
+                    </span>
+                @endif
+            </div>
+
+            <div class="section-body" style="padding: 1.25rem;">
+                @if ($matchScore !== null)
+                    {{-- Indicator Card --}}
+                    @php
+                        $isHigh = $matchScore >= 75;
+                        $isMedium = $matchScore >= 50 && $matchScore < 75;
+                        $cardBorderColor = $isHigh ? 'hsl(142 76% 36%)' : ($isMedium ? 'hsl(38 92% 50%)' : 'hsl(0 84.2% 60%)');
+                        $cardBg = $isHigh ? 'hsl(142 76% 96% / 0.5)' : ($isMedium ? 'hsl(48 96% 95% / 0.5)' : 'hsl(0 84% 96% / 0.5)');
+                        $cardTextColor = $isHigh ? 'hsl(142 76% 25%)' : ($isMedium ? 'hsl(38 92% 30%)' : 'hsl(0 84% 40%)');
+                        $cardStatusText = $isHigh ? 'Sangat Sesuai (High Match)' : ($isMedium ? 'Cukup Sesuai (Moderate Match)' : 'Perlu Penyesuaian (Low Match)');
+                    @endphp
+                    <div style="border-radius:var(--radius);border:1px solid {{ $cardBorderColor }};background-color:{{ $cardBg }};padding:1rem 1.25rem;margin-bottom:1.25rem;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+                            <div>
+                                <span style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:{{ $cardTextColor }};">Skor Kesesuaian Profil</span>
+                                <div style="font-size:0.875rem;font-weight:600;color:hsl(var(--foreground));margin-top:0.125rem;">{{ $cardStatusText }}</div>
+                            </div>
+                            <div style="font-size:2rem;font-weight:800;line-height:1;color:{{ $cardTextColor }};">
+                                {{ $matchScore }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Matched Keywords --}}
+                    <div style="margin-bottom:1rem;">
+                        <div class="info-label" style="display:flex;align-items:center;gap:0.375rem;color:hsl(142 76% 36%);">
+                            <span>✓</span> Kata Kunci Cocok (Matched Keywords)
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.375rem;">
+                            @forelse ($matchedKeywords as $keyword)
+                                <span class="badge badge-success" style="font-size:0.75rem;">✓ {{ $keyword }}</span>
+                            @empty
+                                <span class="text-xs text-muted">Tidak ada kata kunci yang cocok secara spesifik.</span>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    {{-- Missing Keywords --}}
+                    <div style="margin-bottom:1rem;">
+                        <div class="info-label" style="display:flex;align-items:center;gap:0.375rem;color:hsl(38 92% 40%);">
+                            <span>!</span> Kata Kunci ATS yang Perlu Ditambahkan (Keyword Gap)
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.375rem;">
+                            @forelse ($missingKeywords as $keyword)
+                                <span class="badge badge-warning" style="font-size:0.75rem;">! {{ $keyword }}</span>
+                            @empty
+                                <span class="badge badge-secondary" style="font-size:0.75rem;">Semua kata kunci utama telah terpenuhi</span>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    {{-- Recommendation --}}
+                    @if ($recommendation)
+                    <div style="padding:0.875rem 1rem;background-color:hsl(var(--muted)/0.4);border-radius:calc(var(--radius) - 2px);border-left:3px solid hsl(var(--primary));">
+                        <div class="info-label" style="margin-bottom:0.25rem;">Rekomendasi AI (Tips CV &amp; Interview)</div>
+                        <p style="font-size:0.8125rem;line-height:1.55;color:hsl(var(--foreground));margin:0;">
+                            {{ $recommendation }}
+                        </p>
+                    </div>
+                    @endif
+                @else
+                    <div class="empty-state" style="padding:1.25rem 0.75rem;">
+                        <div class="empty-state-title" style="font-size:0.9375rem;">Belum Dianalisis</div>
+                        <div class="empty-state-desc" style="font-size:0.8125rem;">
+                            Bandingkan deskripsi lowongan ini dengan profil keahlian Anda (Fullstack Web Developer, Laravel, React, Next.js, MySQL, TypeScript, API, Docker) untuk mengidentifikasi gap kata kunci ATS.
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Form Footer --}}
+            <div class="section-footer">
+                <form method="POST" action="{{ route('applications.match', $application) }}">
+                    @csrf
+                    <div style="margin-bottom:0.625rem;">
+                        <label for="match_job_description" class="info-label" style="display:block;margin-bottom:0.25rem;">
+                            Teks Deskripsi / Persyaratan Lowongan
+                        </label>
+                        <textarea
+                            id="match_job_description"
+                            name="job_description"
+                            rows="3"
+                            class="textarea"
+                            placeholder="Tempel deskripsi atau kualifikasi lowongan di sini untuk analisis ATS yang lebih presisi..."
+                            style="font-size:0.8125rem;"
+                        >{{ old('job_description', $application->job_description ?? $application->notes) }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default btn-sm w-full" style="display:flex;align-items:center;justify-content:center;gap:0.375rem;">
+                        <span>🎯</span>
+                        <span>Analisis Kesesuaian (Match Score)</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
         {{-- 3. Interview Checklist --}}
         <div class="section-card" id="interview-checklist-card">
             <div class="section-header">

@@ -33,6 +33,9 @@ class JobApplication extends Model
         'contact_info',
         'notes',
         'interview_result',
+        'match_score',
+        'match_analysis',
+        'job_description',
         'status',
         'last_status_change_at',
     ];
@@ -99,6 +102,8 @@ class JobApplication extends Model
         return [
             'applied_at' => 'date',
             'last_status_change_at' => 'datetime',
+            'match_score' => 'integer',
+            'match_analysis' => 'array',
         ];
     }
 
