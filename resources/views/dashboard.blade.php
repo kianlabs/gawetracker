@@ -328,10 +328,9 @@
                                         <a href="{{ route('applications.show', $app) }}"
                                            class="text-sm font-medium text-foreground"
                                            style="text-decoration:none;">{{ $app->company }}</a>
-                                        @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
-                                            <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;gap:0.1875rem;" title="Di-submit otomatis via {{ $app->source }}">
-                                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
-                                                Bot
+                                        @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar')))
+                                            <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">
+                                                {{ str_contains(strtolower($app->source), 'lempar') ? '🤖 LemparGawe' : 'Bot' }}
                                             </span>
                                         @endif
                                     </div>

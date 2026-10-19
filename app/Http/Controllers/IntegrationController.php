@@ -22,8 +22,9 @@ class IntegrationController extends Controller
             ->where('user_id', $user->id)
             ->where(function ($q) {
                 $q->where('source', 'LIKE', '%bot%')
-                    ->orWhere('source', 'LIKE', '%lempar jaring%')
-                    ->orWhere('notes', 'LIKE', '%bot%');
+                    ->orWhere('source', 'LIKE', '%lempar%')
+                    ->orWhere('notes', 'LIKE', '%bot%')
+                    ->orWhere('notes', 'LIKE', '%lempar%');
             });
 
         $totalBot = (clone $botQuery)->count();
@@ -86,7 +87,7 @@ class IntegrationController extends Controller
             if ($res->successful()) {
                 return redirect()
                     ->route('integrations.index')
-                    ->with('success', 'Target dan kriteria GaweTracker Bot berhasil disimpan.');
+                    ->with('success', 'Target dan kriteria LemparGawe Bot berhasil disimpan.');
             }
             return redirect()
                 ->route('integrations.index')

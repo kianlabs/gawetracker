@@ -68,10 +68,10 @@
 <div class="page-header">
     <div class="page-header-meta">
         <div style="display:flex;align-items:center;gap:0.5rem;">
-            <span class="badge badge-purple" style="font-size:0.75rem;">API &amp; Automation</span>
+            <span class="badge badge-purple" style="font-size:0.75rem;">LemparGawe Bot</span>
             <h1 class="page-title">Integrasi Bot &amp; Webhook</h1>
         </div>
-        <p class="page-subtitle">Hubungkan bot otomatis seperti Bot Lempar Jaring Loker atau Chrome Extension langsung ke pipeline GaweTracker</p>
+        <p class="page-subtitle">Pusat kendali bot pelamar otomatis LemparGawe dan webhook langsung ke pipeline GaweTracker</p>
     </div>
     <div class="page-actions">
         <a href="{{ route('applications.kanban') }}" class="btn btn-outline">Lihat Kanban</a>
@@ -107,13 +107,13 @@
     </div>
 </div>
 
-{{-- ── Auto-Hunter Engine Command Center ─────────────────────────────── --}}
+{{-- ── LemparGawe — Auto-Apply Engine Command Center ─────────────────────────────── --}}
 <div class="section-card" style="margin-bottom:1.5rem;">
     <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
         <div style="display:flex;align-items:center;gap:0.625rem;">
             <span class="brand-logo-badge" style="width:1.625rem;height:1.625rem;font-size:0.8125rem;">G</span>
             <div>
-                <span class="section-title" style="font-size:0.9375rem;">GaweTracker Auto-Hunter Engine</span>
+                <span class="section-title" style="font-size:0.9375rem;">LemparGawe — Auto-Apply Engine</span>
                 <span class="text-xs text-muted" style="display:block;">Pusat kendali robot pelamar otomatis multi-portal</span>
             </div>
         </div>
@@ -217,7 +217,7 @@
                 </div>
                 <div id="botTerminalLogs"
                      style="height:210px;background:#09090b;color:#a1a1aa;border:1px solid hsl(var(--border));border-radius:var(--radius);padding:0.75rem;font-family:var(--font-mono);font-size:0.6875rem;line-height:1.45;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">
-[SISTEM] GaweTracker Auto-Hunter Engine siap.
+[SISTEM] LemparGawe Auto-Apply Engine siap.
 [INFO] Klik "Jalankan Auto-Apply" atau "Uji Mode Simulasi" untuk memulai sesi automasi.
                 </div>
             </div>
@@ -294,7 +294,7 @@
             </div>
         </div>
 
-        {{-- 2. Panduan Integrasi Bot Lempar Jaring --}}
+        {{-- 2. Panduan Integrasi Bot LemparGawe --}}
         <div class="section-card">
             <div class="section-header">
                 <span class="section-title">Contoh Konfigurasi &amp; Penggunaan</span>
@@ -302,7 +302,7 @@
             <div class="section-body" style="padding:1.25rem;display:flex;flex-direction:column;gap:1.25rem;">
                 <div>
                     <h3 class="text-sm font-semibold mb-1" style="color:hsl(var(--foreground));">1. Format JSON Payload (Fleksibel &amp; Kompatibel)</h3>
-                    <p class="text-xs text-muted mb-2">Endpoint ini otomatis memahami key dari <code>Bot-Lempar-Jaring-Loker</code> (title, company, platform, url, salary) maupun format standar GaweTracker.</p>
+                    <p class="text-xs text-muted mb-2">Endpoint ini otomatis memahami key dari <code>LemparGawe Bot</code> (title, company, platform, url, salary) maupun format standar GaweTracker.</p>
                     <div class="code-block">{
   "company": "PT GoTo Gojek Tokopedia",
   "position": "Senior Backend Engineer",
@@ -329,7 +329,7 @@
     "url": "https://jobstreet.co.id/job/123",
     "salary": "Rp 15.000.000",
     "status": "applied",
-    "notes": "Di-apply otomatis oleh Bot Lempar Jaring"
+    "notes": "Di-apply otomatis oleh LemparGawe Bot"
   }'</div>
                     <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="copySnippet('curl-sample', this)">
                         Salin cURL Script
@@ -337,7 +337,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-semibold mb-1" style="color:hsl(var(--foreground));">3. Skrip Hook Otomatis di Node.js / Bot Lempar Jaring</h3>
+                    <h3 class="text-sm font-semibold mb-1" style="color:hsl(var(--foreground));">3. Skrip Hook Otomatis di Node.js / LemparGawe Engine</h3>
                     <p class="text-xs text-muted mb-2">Tambahkan fungsi ini pada file bot saat lamaran berhasil di-submit:</p>
                     <div class="code-block">// Panggil fungsi ini setelah bot selesai submit lamaran
 async function pushToGaweTracker(jobData) {
@@ -351,12 +351,12 @@ async function pushToGaweTracker(jobData) {
       body: JSON.stringify({
         company: jobData.company,
         position: jobData.title,
-        platform: jobData.platform || 'Lempar Jaring',
+        platform: jobData.platform || 'LemparGawe',
         url: jobData.url,
         location: jobData.location,
         salary: jobData.salary,
         status: 'applied',
-        notes: 'Otomatis di-apply oleh bot: ' + (jobData.notes || '')
+        notes: 'Otomatis di-apply oleh LemparGawe: ' + (jobData.notes || '')
       })
     });
     const result = await res.json();

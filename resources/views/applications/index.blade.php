@@ -149,8 +149,8 @@
                                                 <a href="{{ route('applications.show', $app) }}" class="font-semibold" style="color:hsl(var(--foreground));text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                                                     {{ $app->company }}
                                                 </a>
-                                                @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
-                                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">Bot</span>
+                                                @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar')))
+                                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">{{ str_contains(strtolower($app->source), 'lempar') ? '🤖 LemparGawe' : 'Bot' }}</span>
                                                 @endif
                                             </div>
                                             @if ($app->source || $app->source_url)

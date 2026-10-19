@@ -24,8 +24,9 @@ class BotApplicationController extends Controller
             ->where('user_id', $user?->id)
             ->where(function ($q) {
                 $q->where('source', 'LIKE', '%bot%')
-                    ->orWhere('source', 'LIKE', '%lempar jaring%')
-                    ->orWhere('notes', 'LIKE', '%bot%');
+                    ->orWhere('source', 'LIKE', '%lempar%')
+                    ->orWhere('notes', 'LIKE', '%bot%')
+                    ->orWhere('notes', 'LIKE', '%lempar%');
             })
             ->count();
 
@@ -70,7 +71,7 @@ class BotApplicationController extends Controller
             ], 422);
         }
 
-        $botName = trim((string) ($request->input('bot_name') ?? $request->header('X-Bot-Name') ?? 'Bot Lempar Jaring Loker'));
+        $botName = trim((string) ($request->input('bot_name') ?? $request->header('X-Bot-Name') ?? 'LemparGawe Bot'));
         $results = [];
         $insertedCount = 0;
         $skippedCount = 0;
@@ -228,7 +229,7 @@ class BotApplicationController extends Controller
 
     /**
      * Map flexible keys from different bot implementations into GaweTracker fields.
-     * Compatible with Bot-Lempar-Jaring-Loker, Indeed, Glints, Jobstreet, & Chrome Extensions.
+     * Compatible with LemparGawe Bot, Bot-Lempar-Jaring-Loker, Indeed, Glints, Jobstreet, & Chrome Extensions.
      *
      * @param  array<string, mixed>  $raw
      * @return array<string, mixed>
@@ -261,7 +262,7 @@ class BotApplicationController extends Controller
         // 5. Source / Platform
         $platform = $raw['platform'] ?? $raw['source'] ?? null;
         if (! empty($platform)) {
-            // E.g. "Glints", "JobStreet", "LinkedIn", "Indeed" -> "Bot Lempar Jaring (Glints)"
+            // E.g. "Glints", "JobStreet", "LinkedIn", "Indeed" -> "LemparGawe Bot (Glints)"
             if (! str_contains(strtolower((string) $platform), 'bot')) {
                 $source = "{$botName} ({$platform})";
             } else {

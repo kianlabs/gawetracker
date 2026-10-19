@@ -75,7 +75,7 @@ class BotApiTest extends TestCase
             'company' => 'PT Tokopedia',
             'position' => 'Software Engineer - Backend',
             'work_type' => 'hybrid',
-            'source' => 'Bot Lempar Jaring Loker (Glints)',
+            'source' => 'LemparGawe Bot (Glints)',
             'source_url' => 'https://glints.com/id/opportunities/jobs/se-backend',
             'salary_note' => 'Rp 15.000.000 - Rp 20.000.000',
             'status' => 'applied',
@@ -84,7 +84,7 @@ class BotApiTest extends TestCase
         $app = JobApplication::where('company', 'PT Tokopedia')->first();
         $this->assertNotNull($app);
         $this->assertCount(1, $app->statusHistories);
-        $this->assertStringContainsString('Di-submit otomatis via Bot Lempar Jaring Loker (Glints)', $app->statusHistories->first()->note);
+        $this->assertStringContainsString('Di-submit otomatis via LemparGawe Bot (Glints)', $app->statusHistories->first()->note);
     }
 
     public function test_can_ingest_batch_of_jobs(): void
@@ -130,6 +130,28 @@ class BotApiTest extends TestCase
             'user_id' => $user->id,
             'company' => 'Traveloka',
             'position' => 'Data Analyst',
+        ]);
+    }
+
+    public function test_can_ingest_with_custom_bot_name_for_backward_compatibility(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->generateApiToken();
+
+        $payload = [
+            'company' => 'Gojek',
+            'position' => 'Senior Go Developer',
+            'platform' => 'JobStreet',
+            'bot_name' => 'Bot-Lempar-Jaring-Loker',
+        ];
+
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
+            ->postJson('/api/bot/applications', $payload);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('job_applications', [
+            'company' => 'Gojek',
+            'source' => 'Bot-Lempar-Jaring-Loker (JobStreet)',
         ]);
     }
 

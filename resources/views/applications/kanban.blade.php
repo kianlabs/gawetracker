@@ -141,9 +141,9 @@
                                 <span class="badge {{ $app->days_waiting > 14 ? 'badge-destructive' : ($app->days_waiting > 7 ? 'badge-warning' : 'badge-muted') }} tabular-nums">
                                     Menunggu {{ $app->days_waiting }} hari
                                 </span>
-                                @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
+                                @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar')))
                                     <span class="badge badge-purple" style="font-size:0.625rem;padding:0.125rem 0.375rem;font-weight:600;letter-spacing:0.02em;" title="Di-submit otomatis via {{ $app->source }}">
-                                        BOT
+                                        {{ str_contains(strtolower($app->source), 'lempar') ? '🤖 LemparGawe' : 'Bot' }}
                                     </span>
                                 @endif
                                 @if ($app->match_score !== null)

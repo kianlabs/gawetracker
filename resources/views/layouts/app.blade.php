@@ -50,7 +50,7 @@
                     <a href="{{ route('integrations.index') }}"
                        class="nav-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}"
                        aria-current="{{ request()->routeIs('integrations.*') ? 'page' : 'false' }}">
-                        Bot Auto-Apply
+                        LemparGawe
                     </a>
                 </nav>
             </div>
