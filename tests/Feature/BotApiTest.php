@@ -188,4 +188,25 @@ class BotApiTest extends TestCase
         $response->assertRedirect('/integrations');
         $this->assertNotEquals($oldToken, $user->fresh()->api_token);
     }
+
+    public function test_user_can_update_bot_config(): void
+    {
+        $user = User::factory()->create();
+
+        \Illuminate\Support\Facades\Http::fake([
+            'http://localhost:3000/api/config' => \Illuminate\Support\Facades\Http::response(['success' => true], 200),
+        ]);
+
+        $response = $this->actingAs($user)->post('/integrations/bot/config', [
+            'searchKeywords' => 'Senior Laravel Developer',
+            'location' => 'Jakarta (Remote)',
+            'minSalary' => 15000000,
+            'limitPerDay' => 30,
+            'enableGlints' => '1',
+            'enableJobstreet' => '1',
+        ]);
+
+        $response->assertRedirect('/integrations');
+        $response->assertSessionHas('success');
+    }
 }

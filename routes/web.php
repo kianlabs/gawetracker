@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     // Bot & API integrations
     Route::get('/integrations', [IntegrationController::class, 'index'])->name('integrations.index');
     Route::post('/integrations/token/regenerate', [IntegrationController::class, 'regenerateToken'])->name('integrations.token.regenerate');
+    Route::post('/integrations/bot/config', [IntegrationController::class, 'updateBotConfig'])->name('integrations.bot.config');
 
     // Core applications resource
     Route::resource('applications', JobApplicationController::class);

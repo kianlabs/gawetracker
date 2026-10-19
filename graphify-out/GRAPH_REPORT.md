@@ -1,17 +1,17 @@
 # Graph Report - gawetracker  (2026-10-19)
 
 ## Corpus Check
-- 144 files · ~120,956 words
+- 144 files · ~121,916 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 35 file(s) not represented in the graph (top: (none) 21, .eml 4, .example 2)
+- Unclassified: 34 file(s) not represented in the graph (top: (none) 20, .eml 4, .example 2)
 
 ## Summary
-- 959 nodes · 1718 edges · 97 communities (20 shown, 77 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 101 edges (avg confidence: 0.88)
+- 961 nodes · 1724 edges · 97 communities (22 shown, 75 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 102 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `83355f00`
+- Built from commit: `d70cf766`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -110,15 +110,15 @@
   AGENTS.md → app/Http/Controllers/JobApplicationController.php
 - `Discovery (external job boards)` --references--> `JobDiscoveryController`  [INFERRED]
   AGENTS.md → app/Http/Controllers/JobDiscoveryController.php
+- `Controllers` --references--> `OfferController`  [INFERRED]
+  AGENTS.md → app/Http/Controllers/OfferController.php
 - `Models` --references--> `Company`  [INFERRED]
   AGENTS.md → app/Models/Company.php
-- `How it works` --references--> `Company`  [INFERRED]
-  README.md → app/Models/Company.php
 
 ## Import Cycles
 - None detected.
 
-## Communities (97 total, 77 thin omitted)
+## Communities (97 total, 75 thin omitted)
 
 ### Community 0 - "JobEmailParser"
 Cohesion: 0.06
@@ -140,13 +140,17 @@ Nodes (19): CSS, Discovery (external job boards), Environment Pitfall, GaweTrack
 Cohesion: 0.14
 Nodes (4): JobstreetSource, {closure#4}(), {closure#5}(), JobstreetSourceTest
 
+### Community 5 - "GoogleOAuthService"
+Cohesion: 0.13
+Nodes (3): GmailSetup, AuthController, GoogleOAuthService
+
 ### Community 6 - "GaweTracker"
 Cohesion: 0.07
 Nodes (25): 500 Error, Alternative: Fly.io, Create `fly.toml`, GaweTracker Deployment Guide, Migration Fails, Post-Deployment, Prerequisites, Railway Deployment (Recommended) (+17 more)
 
 ### Community 7 - "JobApplication"
-Cohesion: 0.10
-Nodes (3): IntegrationController, {closure#2}(), JobApplication
+Cohesion: 0.16
+Nodes (3): {closure#2}(), OfferController, JobApplication
 
 ### Community 8 - ".findOrCreateByName"
 Cohesion: 0.13
@@ -161,12 +165,16 @@ Cohesion: 0.17
 Nodes (3): JobMatchService, ExampleTest, JobMatchServiceTest
 
 ### Community 11 - "Illuminate\Http\RedirectResponse"
-Cohesion: 0.23
-Nodes (3): AuthController, GmailConnectionController, JobDiscoveryController
+Cohesion: 0.20
+Nodes (3): GmailConnectionController, IntegrationController, JobDiscoveryController
 
 ### Community 13 - "Controller"
-Cohesion: 0.17
-Nodes (6): Controllers, Controller, DashboardController, InterviewChecklistController, KanbanController, OfferController
+Cohesion: 0.19
+Nodes (4): Controllers, DashboardController, InterviewChecklistController, KanbanController
+
+### Community 14 - "Illuminate\Http\Request"
+Cohesion: 0.20
+Nodes (3): BotApplicationController, Controller, JobMatchController
 
 ### Community 24 - "Illuminate\Database\Schema\Blueprint"
 Cohesion: 0.23
@@ -202,14 +210,14 @@ Nodes (3): Notes, Regenerating, Screenshots
 
 ## Knowledge Gaps
 - **14 isolated node(s):** `DEBIAN_FRONTEND`, `concurrently`, `tailwindcss`, `@laravel/multiplex`, `layouts.app` (+9 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 412 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **77 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 413 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **75 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `JobApplication` connect `JobApplication` to `JobEmailParser`, `JobPosting`, `.findOrCreateByName`, `Illuminate\Http\RedirectResponse`, `Controller`, `Illuminate\Http\Request`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `AnalyticsController.php`, `TestCase`, `Illuminate\Database\Seeder`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `JobMatchTest`, `JobApplicationController`, `JobApplicationTest`, `DashboardController.php`?**
-  _High betweenness centrality (0.132) - this node is a cross-community bridge._
+  _High betweenness centrality (0.131) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `JobApplication` (e.g. with `Discovery (external job boards)` and `Models`) actually correct?**
   _`JobApplication` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DEBIAN_FRONTEND`, `concurrently`, `tailwindcss` to the rest of the system?**
@@ -221,4 +229,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `GlintsSource` be split into smaller, more focused modules?**
   _Cohesion score 0.06455399061032864 - nodes in this community are weakly interconnected._
 - **Why does `User` connect `User` to `JobEmailParser`, `JobPosting`, `GoogleOAuthService`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `JobDiscoveryTest`, `OfferChecklistTest`, `AuthController.php`, `UserFactory.php`, `GmailConnectionTest`, `TestCase`, `Illuminate\Database\Seeder`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `AuthTest`, `JobMatchTest`, `JobApplicationTest`?**
-  _High betweenness centrality (0.091) - this node is a cross-community bridge._
+  _High betweenness centrality (0.090) - this node is a cross-community bridge._

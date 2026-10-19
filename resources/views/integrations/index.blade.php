@@ -107,6 +107,124 @@
     </div>
 </div>
 
+{{-- ── Auto-Hunter Engine Command Center ─────────────────────────────── --}}
+<div class="section-card" style="margin-bottom:1.5rem;">
+    <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.625rem;">
+            <span class="brand-logo-badge" style="width:1.625rem;height:1.625rem;font-size:0.8125rem;">G</span>
+            <div>
+                <span class="section-title" style="font-size:0.9375rem;">GaweTracker Auto-Hunter Engine</span>
+                <span class="text-xs text-muted" style="display:block;">Pusat kendali robot pelamar otomatis multi-portal</span>
+            </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+            @if ($botEngineOnline)
+                <span class="badge badge-success" style="font-size:0.6875rem;">● Engine Online (Port 3000)</span>
+            @else
+                <span class="badge badge-warning" style="font-size:0.6875rem;">Engine Standby</span>
+            @endif
+            <a href="http://localhost:3000" target="_blank" class="btn btn-outline btn-sm" style="height:1.75rem;padding:0 0.5rem;font-size:0.75rem;display:inline-flex;align-items:center;gap:0.25rem;">
+                <span>Full Engine Studio</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="section-body" style="padding:1.25rem;">
+        {{-- Control buttons & Live status --}}
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;padding-bottom:1rem;border-bottom:1px solid hsl(var(--border));margin-bottom:1.25rem;">
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <button type="button" id="btnRunHeadless" onclick="startBotExecution('headless')" class="btn btn-default btn-sm" style="display:inline-flex;align-items:center;gap:0.375rem;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span>Jalankan Auto-Apply (Headless)</span>
+                </button>
+                <button type="button" id="btnRunSim" onclick="startBotExecution('simulation')" class="btn btn-outline btn-sm" style="display:inline-flex;align-items:center;gap:0.375rem;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span>Uji Mode Simulasi (Dry Run)</span>
+                </button>
+                <button type="button" id="btnStopBot" onclick="stopBotExecution()" class="btn btn-destructive btn-sm" style="display:none;align-items:center;gap:0.375rem;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12"/></svg>
+                    <span>Hentikan Bot</span>
+                </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span id="botExecStatus" class="text-xs text-muted font-medium">Status: Standby</span>
+                <button type="button" onclick="clearBotLogs()" class="btn btn-ghost btn-sm" style="height:1.625rem;font-size:0.6875rem;padding:0 0.375rem;">Bersihkan Log</button>
+            </div>
+        </div>
+
+        {{-- Grid: Target Config Form (Left) & Real-time Terminal Log (Right) --}}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:1.25rem;">
+            {{-- Target Criteria Form --}}
+            <form method="POST" action="{{ route('integrations.bot.config') }}" style="display:flex;flex-direction:column;gap:0.875rem;">
+                @csrf
+                <div>
+                    <label class="info-label" for="searchKeywords">Kata Kunci Posisi Target</label>
+                    <input type="text" id="searchKeywords" name="searchKeywords" class="input" style="margin-top:0.25rem;"
+                           value="{{ old('searchKeywords', $botConfig['searchKeywords'] ?? 'Frontend Developer') }}" required>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                    <div>
+                        <label class="info-label" for="location">Lokasi Target</label>
+                        <input type="text" id="location" name="location" class="input" style="margin-top:0.25rem;"
+                               value="{{ old('location', $botConfig['location'] ?? 'Jakarta') }}">
+                    </div>
+                    <div>
+                        <label class="info-label" for="minSalary">Gaji Minimal (IDR)</label>
+                        <input type="text" id="minSalary" name="minSalary" class="input tabular-nums" style="margin-top:0.25rem;"
+                               value="{{ old('minSalary', $botConfig['minSalary'] ?? '5000000') }}">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="info-label" style="margin-bottom:0.375rem;display:block;">Portal Aktif &amp; Batas Harian</label>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+                        <label style="display:flex;align-items:center;gap:0.375rem;font-size:0.75rem;cursor:pointer;">
+                            <input type="checkbox" name="enableGlints" value="1" {{ !empty($botConfig['enableGlints']) ? 'checked' : '' }}>
+                            <span>Glints</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:0.375rem;font-size:0.75rem;cursor:pointer;">
+                            <input type="checkbox" name="enableJobstreet" value="1" {{ !empty($botConfig['enableJobstreet']) ? 'checked' : '' }}>
+                            <span>JobStreet</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:0.375rem;font-size:0.75rem;cursor:pointer;">
+                            <input type="checkbox" name="enableIndeed" value="1" {{ !empty($botConfig['enableIndeed']) ? 'checked' : '' }}>
+                            <span>Indeed</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:0.375rem;font-size:0.75rem;cursor:pointer;">
+                            <input type="checkbox" name="enableLinkedin" value="1" {{ !empty($botConfig['enableLinkedin']) ? 'checked' : '' }}>
+                            <span>LinkedIn</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.25rem;">
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <label for="limitPerDay" class="text-xs text-muted">Kuota Maks / Hari:</label>
+                        <input type="number" id="limitPerDay" name="limitPerDay" class="input tabular-nums" style="width:4.5rem;height:1.75rem;padding:0 0.5rem;font-size:0.75rem;"
+                               value="{{ old('limitPerDay', $botConfig['limitPerDay'] ?? 20) }}" min="1" max="100">
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-sm" style="height:1.75rem;font-size:0.75rem;">Simpan Kriteria</button>
+                </div>
+            </form>
+
+            {{-- Live Terminal Console --}}
+            <div style="display:flex;flex-direction:column;gap:0.375rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span class="info-label">Live Execution Terminal</span>
+                    <span id="logCounter" class="text-xs text-muted tabular-nums">0 baris</span>
+                </div>
+                <div id="botTerminalLogs"
+                     style="height:210px;background:#09090b;color:#a1a1aa;border:1px solid hsl(var(--border));border-radius:var(--radius);padding:0.75rem;font-family:var(--font-mono);font-size:0.6875rem;line-height:1.45;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">
+[SISTEM] GaweTracker Auto-Hunter Engine siap.
+[INFO] Klik "Jalankan Auto-Apply" atau "Uji Mode Simulasi" untuk memulai sesi automasi.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="integration-grid">
     {{-- Left: Credentials & Documentation --}}
     <div style="display:flex;flex-direction:column;gap:1.25rem;">
@@ -377,6 +495,98 @@ async function pushToGaweTracker(jobData) {
             input.type = 'password';
             btn.textContent = 'Tampilkan';
         }
+    }
+
+    let botEventSource = null;
+    let lineCount = 2;
+
+    function startBotExecution(mode) {
+        const statusEl = document.getElementById('botExecStatus');
+        const btnHeadless = document.getElementById('btnRunHeadless');
+        const btnSim = document.getElementById('btnRunSim');
+        const btnStop = document.getElementById('btnStopBot');
+
+        if (botEventSource) {
+            botEventSource.close();
+        }
+
+        statusEl.innerHTML = '<span style="color:hsl(142 76% 36%);font-weight:600;">● Berjalan (' + mode + ')...</span>';
+        btnHeadless.disabled = true;
+        btnSim.disabled = true;
+        btnStop.style.display = 'inline-flex';
+
+        appendTerminalLog('[MULAI] Memulai eksekusi bot mode ' + mode + '...');
+
+        try {
+            botEventSource = new EventSource('http://localhost:3000/api/run-bot?mode=' + mode);
+
+            botEventSource.onmessage = function(e) {
+                try {
+                    const data = JSON.parse(e.data);
+                    if (data.message) {
+                        appendTerminalLog(data.message);
+                    }
+                } catch {
+                    appendTerminalLog(e.data);
+                }
+            };
+
+            botEventSource.onerror = function() {
+                appendTerminalLog('[SELESAI] Sesi automasi bot selesai / standby.');
+                statusEl.textContent = 'Status: Standby';
+                btnHeadless.disabled = false;
+                btnSim.disabled = false;
+                btnStop.style.display = 'none';
+                if (botEventSource) {
+                    botEventSource.close();
+                    botEventSource = null;
+                }
+            };
+        } catch (err) {
+            appendTerminalLog('[ERROR] Gagal menghubungi bot: ' + err.message);
+            statusEl.textContent = 'Status: Error';
+            btnHeadless.disabled = false;
+            btnSim.disabled = false;
+            btnStop.style.display = 'none';
+        }
+    }
+
+    function stopBotExecution() {
+        appendTerminalLog('[SISTEM] Mengirim sinyal penghentian ke Bot Engine...');
+        fetch('http://localhost:3000/api/run-bot', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                appendTerminalLog('[SISTEM] ' + (data.message || 'Bot dihentikan.'));
+                if (botEventSource) {
+                    botEventSource.close();
+                    botEventSource = null;
+                }
+                document.getElementById('botExecStatus').textContent = 'Status: Dihentikan';
+                document.getElementById('btnRunHeadless').disabled = false;
+                document.getElementById('btnRunSim').disabled = false;
+                document.getElementById('btnStopBot').style.display = 'none';
+            })
+            .catch(err => {
+                appendTerminalLog('[ERROR] Gagal menghentikan bot: ' + err.message);
+            });
+    }
+
+    function appendTerminalLog(msg) {
+        const terminal = document.getElementById('botTerminalLogs');
+        const time = new Date().toLocaleTimeString('id-ID');
+        terminal.textContent += '\n[' + time + '] ' + msg;
+        terminal.scrollTop = terminal.scrollHeight;
+        lineCount++;
+        const counter = document.getElementById('logCounter');
+        if (counter) counter.textContent = lineCount + ' baris';
+    }
+
+    function clearBotLogs() {
+        const terminal = document.getElementById('botTerminalLogs');
+        terminal.textContent = '[SISTEM] Log terminal dibersihkan.';
+        lineCount = 1;
+        const counter = document.getElementById('logCounter');
+        if (counter) counter.textContent = '1 baris';
     }
 </script>
 @endsection
