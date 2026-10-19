@@ -54,7 +54,7 @@
         border-bottom: 1px solid hsl(var(--border));
     }
     .checklist-row:last-child { border-bottom: none; }
-    .checklist-row:hover { background-color: hsl(240 4.8% 98%); }
+    .checklist-row:hover { background-color: hsla(240, 4.8%, 95.9%, 0.5); }
     .checklist-row.completed { opacity: 0.6; }
 
     .custom-checkbox {
@@ -63,7 +63,7 @@
         height: 1.125rem;
         border-radius: calc(var(--radius) - 2px);
         border: 1px solid hsl(var(--input));
-        background-color: hsl(var(--background));
+        background-color: hsl(var(--card));
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -199,13 +199,13 @@
                     </div>
                     <div>
                         <div class="info-label">Tanggal Melamar</div>
-                        <div class="info-value">{{ $application->applied_at ? $application->applied_at->format('d M Y') : '—' }}</div>
+                        <div class="info-value tabular-nums">{{ $application->applied_at ? $application->applied_at->format('d M Y') : '—' }}</div>
                     </div>
                     <div>
                         <div class="info-label">Sumber Lowongan</div>
                         <div class="info-value">
                             @if ($application->source && (str_contains(strtolower($application->source), 'bot') || str_contains(strtolower($application->source), 'lempar jaring')))
-                                <span class="badge badge-purple" style="font-size:0.75rem;">🤖 {{ $application->source }}</span>
+                                <span class="badge badge-purple" style="font-size:0.75rem;">{{ $application->source }}</span>
                             @else
                                 {{ $application->source ?: '—' }}
                             @endif
@@ -224,7 +224,7 @@
                     @if ($application->salary_note)
                     <div class="info-item-full">
                         <div class="info-label">Estimasi Gaji / Kompensasi</div>
-                        <div class="info-value">{{ $application->salary_note }}</div>
+                        <div class="info-value salary-num tabular-nums">{{ $application->salary_note }}</div>
                     </div>
                     @endif
                     <div>
@@ -243,7 +243,7 @@
         <div class="section-card">
             <div class="section-header">
                 <span class="section-title">Timeline Riwayat Status</span>
-                <span class="badge badge-secondary">{{ $application->statusHistories->count() }} catatan</span>
+                <span class="badge badge-secondary tabular-nums">{{ $application->statusHistories->count() }} catatan</span>
             </div>
             <div class="section-body" style="padding: 1.25rem;">
                 @if ($application->statusHistories->isNotEmpty())
@@ -266,7 +266,7 @@
                                         @endif
                                         <span class="badge {{ $toBadge }}">{{ $toMeta['label'] }}</span>
                                     </div>
-                                    <time class="text-xs text-muted">
+                                    <time class="text-xs text-muted tabular-nums">
                                         {{ $history->created_at ? $history->created_at->format('d M Y, H:i') : '—' }}
                                     </time>
                                 </div>
@@ -335,11 +335,10 @@
         <div class="section-card" id="match-score-card">
             <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;">
                 <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <span style="font-size:1.1rem;">🎯</span>
                     <span class="section-title">AI Match Score &amp; ATS Keyword</span>
                 </div>
                 @if ($matchScore !== null)
-                    <span class="badge {{ $matchScore >= 75 ? 'badge-success' : ($matchScore >= 50 ? 'badge-warning' : 'badge-destructive') }}">
+                    <span class="badge {{ $matchScore >= 75 ? 'badge-success' : ($matchScore >= 50 ? 'badge-warning' : 'badge-destructive') }} tabular-nums">
                         {{ $matchScore }}% Cocok
                     </span>
                 @endif
@@ -362,7 +361,7 @@
                                 <span style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:{{ $cardTextColor }};">Skor Kesesuaian Profil</span>
                                 <div style="font-size:0.875rem;font-weight:600;color:hsl(var(--foreground));margin-top:0.125rem;">{{ $cardStatusText }}</div>
                             </div>
-                            <div style="font-size:2rem;font-weight:800;line-height:1;color:{{ $cardTextColor }};">
+                            <div class="tabular-nums" style="font-size:2rem;font-weight:800;line-height:1;color:{{ $cardTextColor }};">
                                 {{ $matchScore }}%
                             </div>
                         </div>
@@ -371,11 +370,11 @@
                     {{-- Matched Keywords --}}
                     <div style="margin-bottom:1rem;">
                         <div class="info-label" style="display:flex;align-items:center;gap:0.375rem;color:hsl(142 76% 36%);">
-                            <span>✓</span> Kata Kunci Cocok (Matched Keywords)
+                            Kata Kunci Cocok (Matched Keywords)
                         </div>
                         <div style="display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.375rem;">
                             @forelse ($matchedKeywords as $keyword)
-                                <span class="badge badge-success" style="font-size:0.75rem;">✓ {{ $keyword }}</span>
+                                <span class="badge badge-success" style="font-size:0.75rem;">{{ $keyword }}</span>
                             @empty
                                 <span class="text-xs text-muted">Tidak ada kata kunci yang cocok secara spesifik.</span>
                             @endforelse
@@ -385,11 +384,11 @@
                     {{-- Missing Keywords --}}
                     <div style="margin-bottom:1rem;">
                         <div class="info-label" style="display:flex;align-items:center;gap:0.375rem;color:hsl(38 92% 40%);">
-                            <span>!</span> Kata Kunci ATS yang Perlu Ditambahkan (Keyword Gap)
+                            Kata Kunci ATS yang Perlu Ditambahkan (Keyword Gap)
                         </div>
                         <div style="display:flex;flex-wrap:wrap;gap:0.375rem;margin-top:0.375rem;">
                             @forelse ($missingKeywords as $keyword)
-                                <span class="badge badge-warning" style="font-size:0.75rem;">! {{ $keyword }}</span>
+                                <span class="badge badge-warning" style="font-size:0.75rem;">{{ $keyword }}</span>
                             @empty
                                 <span class="badge badge-secondary" style="font-size:0.75rem;">Semua kata kunci utama telah terpenuhi</span>
                             @endforelse
@@ -432,9 +431,8 @@
                             style="font-size:0.8125rem;"
                         >{{ old('job_description', $application->job_description ?? $application->notes) }}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-default btn-sm w-full" style="display:flex;align-items:center;justify-content:center;gap:0.375rem;">
-                        <span>🎯</span>
-                        <span>Analisis Kesesuaian (Match Score)</span>
+                    <button type="submit" class="btn btn-default btn-sm w-full">
+                        Analisis Kesesuaian (Match Score)
                     </button>
                 </form>
             </div>
@@ -449,7 +447,7 @@
                     $completedChecklists = $application->interviewChecklists->where('is_completed', true)->count();
                 @endphp
                 @if ($totalChecklists > 0)
-                    <span class="badge {{ $completedChecklists === $totalChecklists ? 'badge-success' : 'badge-info' }}">
+                    <span class="badge {{ $completedChecklists === $totalChecklists ? 'badge-success' : 'badge-info' }} tabular-nums">
                         {{ $completedChecklists }}/{{ $totalChecklists }}
                     </span>
                 @endif
@@ -473,7 +471,7 @@
                                     {{ $item->title }}
                                 </span>
                                 @if ($item->is_completed && $item->completed_at)
-                                    <span class="text-xs text-muted" style="display: block;">Selesai {{ $item->completed_at->format('d M, H:i') }}</span>
+                                    <span class="text-xs text-muted tabular-nums" style="display: block;">Selesai {{ $item->completed_at->format('d M, H:i') }}</span>
                                 @endif
                             </div>
                             <form method="POST" action="{{ route('checklists.destroy', $item) }}" onsubmit="return confirm('Hapus item checklist ini?');" style="display: inline-flex; margin: 0; flex-shrink: 0;">
@@ -557,7 +555,7 @@
                     <div class="info-label">Gaji Pokok</div>
                     <div class="info-value" style="font-weight: 600;">
                         @if ($offer->base_salary !== null)
-                            Rp {{ number_format($offer->base_salary, 0, ',', '.') }}
+                            <span class="salary-num tabular-nums">Rp {{ number_format($offer->base_salary, 0, ',', '.') }}</span>
                             <span class="text-xs text-muted font-normal">/ {{ match($offer->salary_period) { 'monthly' => 'bulan', 'yearly' => 'tahun', 'weekly' => 'minggu', 'hourly' => 'jam', default => $offer->salary_period ?: 'bulan' } }}</span>
                         @else —
                         @endif
@@ -594,7 +592,7 @@
                     <div class="info-value">
                         @if ($offer->deadline_at)
                             @php $dl = $offer->deadline_at; $isOver = $dl->isPast() && !$dl->isToday(); @endphp
-                            <span style="font-weight: 600; color: {{ $isOver ? 'hsl(var(--destructive))' : 'inherit' }};">{{ $dl->format('d M Y') }}</span>
+                            <span class="tabular-nums" style="font-weight: 600; color: {{ $isOver ? 'hsl(var(--destructive))' : 'inherit' }};">{{ $dl->format('d M Y') }}</span>
                             <span class="text-xs {{ $isOver ? 'field-error' : 'text-muted' }}">({{ $isOver ? 'Lewat tenggat' : ($dl->isToday() ? 'Hari ini' : $dl->diffForHumans()) }})</span>
                         @else —
                         @endif
@@ -712,11 +710,11 @@
                 <span class="section-title">Tindakan</span>
             </div>
             <div class="section-body" style="padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="{{ route('applications.edit', $application) }}" class="btn btn-outline w-full">Edit Lamaran</a>
-                <form method="POST" action="{{ route('applications.destroy', $application) }}" onsubmit="return confirm('Hapus lamaran {{ addslashes($application->company) }} — {{ addslashes($application->position) }}? Seluruh riwayat status juga akan dihapus.');">
+                <a href="{{ route('applications.edit', $application) }}" class="btn btn-outline w-full" style="justify-content:center;text-align:center;">Edit Lamaran</a>
+                <form method="POST" action="{{ route('applications.destroy', $application) }}" onsubmit="return confirm('Hapus lamaran {{ addslashes($application->company) }} — {{ addslashes($application->position) }}? Seluruh riwayat status juga akan dihapus.');" style="margin:0;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-destructive w-full">Hapus Lamaran</button>
+                    <button type="submit" class="btn btn-destructive w-full" style="justify-content:center;">Hapus Lamaran</button>
                 </form>
             </div>
         </div>

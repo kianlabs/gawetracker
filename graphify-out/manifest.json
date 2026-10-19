@@ -1,0 +1,920 @@
+{
+  "app/Console/Commands/BackfillCompanies.php": {
+    "mtime": 1791097061.7094405,
+    "seen": 1792370059.1313324,
+    "ast_hash": "31f0952532c4de974a3971afa3aad0f8",
+    "semantic_hash": ""
+  },
+  "app/Console/Commands/DiscoverJobs.php": {
+    "mtime": 1791351700.9193108,
+    "seen": 1792370059.131337,
+    "ast_hash": "589dbc99fac76d48625bc0507db9f1fc",
+    "semantic_hash": ""
+  },
+  "app/Console/Commands/GmailSetup.php": {
+    "mtime": 1791351700.9193108,
+    "seen": 1792370059.131339,
+    "ast_hash": "e30c4004a60491b08cfd3dd0eddb8e36",
+    "semantic_hash": ""
+  },
+  "app/Console/Commands/ImportJobEmails.php": {
+    "mtime": 1791351700.9193108,
+    "seen": 1792370059.1313403,
+    "ast_hash": "85bf1c327213b6bfe897f9aecaf5cd0b",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/AnalyticsController.php": {
+    "mtime": 1791097061.2580466,
+    "seen": 1792370059.1313415,
+    "ast_hash": "6329584cc2e07c791b2e0c5757051f67",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/Api/BotApplicationController.php": {
+    "mtime": 1792370612.7097418,
+    "seen": 1792371351.1930084,
+    "ast_hash": "c766ef47caff5429035577729dfc4d5c",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/AuthController.php": {
+    "mtime": 1791351700.9193108,
+    "seen": 1792370059.1313436,
+    "ast_hash": "9ea04383730e6f88808ca5d2813ddbed",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/Controller.php": {
+    "mtime": 1790766388.5891013,
+    "seen": 1792370059.1313443,
+    "ast_hash": "25a307335c0719bc9a91b3f7babd186d",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/DashboardController.php": {
+    "mtime": 1791097331.2433028,
+    "seen": 1792370059.131345,
+    "ast_hash": "fd12fa4537bb2b3d3ffa255c01741546",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/GmailConnectionController.php": {
+    "mtime": 1791351700.9193108,
+    "seen": 1792370059.1313462,
+    "ast_hash": "b509e5cfbfd32ca8cc4dc0d021f46f52",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/IntegrationController.php": {
+    "mtime": 1792339214.860773,
+    "seen": 1792370059.131347,
+    "ast_hash": "4bc7cb9db772826b1da383a19640a859",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/InterviewChecklistController.php": {
+    "mtime": 1791097059.8930185,
+    "seen": 1792370059.131348,
+    "ast_hash": "d3075579a786c97674ebd9ab6dbeded3",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/JobApplicationController.php": {
+    "mtime": 1791097060.4005876,
+    "seen": 1792370059.131349,
+    "ast_hash": "82e237dc0d8995b464332ac9ba15ad50",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/JobDiscoveryController.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.1313498,
+    "ast_hash": "a9c207bfea28b1ef3168f16ae512b14e",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/JobMatchController.php": {
+    "mtime": 1792330677.812645,
+    "seen": 1792370059.1313505,
+    "ast_hash": "34d2508fe0be0593dd561f7a6d6b18e1",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/KanbanController.php": {
+    "mtime": 1791097060.530423,
+    "seen": 1792370059.1313512,
+    "ast_hash": "ed61876ecdee3d53987f1c9c5fc0f5d7",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/OfferController.php": {
+    "mtime": 1790829405.2363482,
+    "seen": 1792370059.131352,
+    "ast_hash": "31fe13261bd82d0a34317c0b9451f9f8",
+    "semantic_hash": ""
+  },
+  "app/Http/Middleware/ValidateBotApiToken.php": {
+    "mtime": 1792338926.5323198,
+    "seen": 1792370059.1313531,
+    "ast_hash": "7d8d9db668533355e6818f484a5787e0",
+    "semantic_hash": ""
+  },
+  "app/Http/Requests/StoreJobApplicationRequest.php": {
+    "mtime": 1791097389.2341914,
+    "seen": 1792370059.1313539,
+    "ast_hash": "179db3648afc2672b762f315f35b3fc9",
+    "semantic_hash": ""
+  },
+  "app/Http/Requests/UpdateJobApplicationRequest.php": {
+    "mtime": 1791097389.2341914,
+    "seen": 1792370059.1313546,
+    "ast_hash": "3c84459948331489e0d43b9e23ff9929",
+    "semantic_hash": ""
+  },
+  "app/Models/Company.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.1313553,
+    "ast_hash": "b1a56cdaf1d466453a08ee735ac5f601",
+    "semantic_hash": ""
+  },
+  "app/Models/IngestedEmail.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.1313565,
+    "ast_hash": "a8d8536bb7aa1ec2766577e7a57e61d9",
+    "semantic_hash": ""
+  },
+  "app/Models/InterviewChecklist.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.1313574,
+    "ast_hash": "1f4c64a683fe5d70ec9a38f9fc53d071",
+    "semantic_hash": ""
+  },
+  "app/Models/JobApplication.php": {
+    "mtime": 1792339147.0437107,
+    "seen": 1792370059.1313581,
+    "ast_hash": "c9c0fa5bde304563f0817c144325f2fd",
+    "semantic_hash": ""
+  },
+  "app/Models/JobPosting.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.1313589,
+    "ast_hash": "ffcbc50fdd77138ae67598413489feb9",
+    "semantic_hash": ""
+  },
+  "app/Models/OfferDetail.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.13136,
+    "ast_hash": "b303171a9125d152339f4e30dfa74519",
+    "semantic_hash": ""
+  },
+  "app/Models/StatusHistory.php": {
+    "mtime": 1791351700.9283109,
+    "seen": 1792370059.1313608,
+    "ast_hash": "db2b98f5ed700822b7911c9b9ea1179f",
+    "semantic_hash": ""
+  },
+  "app/Models/User.php": {
+    "mtime": 1792338912.9482954,
+    "seen": 1792370059.1313615,
+    "ast_hash": "201fc213301c63910a2c30cb233c7819",
+    "semantic_hash": ""
+  },
+  "app/Providers/AppServiceProvider.php": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313622,
+    "ast_hash": "c0094f35cad6bba7636002a62186dae4",
+    "semantic_hash": ""
+  },
+  "app/Services/Discovery/DiscoveredJob.php": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313632,
+    "ast_hash": "4baddad5eb79a377c229c4cd80232e91",
+    "semantic_hash": ""
+  },
+  "app/Services/Discovery/GlintsSource.php": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313639,
+    "ast_hash": "3b35c4685a5eb477c388df0c2843c808",
+    "semantic_hash": ""
+  },
+  "app/Services/Discovery/JobDiscoveryService.php": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313648,
+    "ast_hash": "9c9744c3eb8512d48836e8d3da4e0050",
+    "semantic_hash": ""
+  },
+  "app/Services/Discovery/JobSource.php": {
+    "mtime": 1791077627.4889944,
+    "seen": 1792370059.1313658,
+    "ast_hash": "7a3aaedf5ce38b7474fb26e994367c1f",
+    "semantic_hash": ""
+  },
+  "app/Services/Discovery/JobstreetSource.php": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313667,
+    "ast_hash": "34bc3c6c010d60abfed9b65c6931ff75",
+    "semantic_hash": ""
+  },
+  "app/Services/EmailIngestionService.php": {
+    "mtime": 1791077582.917493,
+    "seen": 1792370059.1313674,
+    "ast_hash": "46cdc6693be198ce0c102c986796a255",
+    "semantic_hash": ""
+  },
+  "app/Services/GoogleOAuthService.php": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313682,
+    "ast_hash": "3633af8d06d803a29c15ba9a528d38c7",
+    "semantic_hash": ""
+  },
+  "app/Services/JobMatchService.php": {
+    "mtime": 1792330928.1460295,
+    "seen": 1792370059.1313689,
+    "ast_hash": "c8e62cd3bc3dce00192f2f090e2678fd",
+    "semantic_hash": ""
+  },
+  "app/Support/Company/CompanyNameNormalizer.php": {
+    "mtime": 1791077459.9558392,
+    "seen": 1792370059.1313698,
+    "ast_hash": "710ecd0ecd60d9b87fd348030bdfd605",
+    "semantic_hash": ""
+  },
+  "app/Support/Email/GmailClient.php": {
+    "mtime": 1791208062.5331511,
+    "seen": 1792370059.1313705,
+    "ast_hash": "a99179d9e558175fdb1f16d6c4ffe9b2",
+    "semantic_hash": ""
+  },
+  "app/Support/Email/JobEmailParser.php": {
+    "mtime": 1790998290.003212,
+    "seen": 1792370059.1313713,
+    "ast_hash": "bec0c6297acd237b45706b8a9bdbc8aa",
+    "semantic_hash": ""
+  },
+  "app/Support/Email/ParsedJobEmail.php": {
+    "mtime": 1790998289.5432866,
+    "seen": 1792370059.1313722,
+    "ast_hash": "3ee9cac3ab412aeb761988961f432769",
+    "semantic_hash": ""
+  },
+  "artisan": {
+    "mtime": 1790766388.589161,
+    "seen": 1792370059.1313732,
+    "ast_hash": "e66bb13691f6184c762c196427d8e685",
+    "semantic_hash": ""
+  },
+  "bootstrap/app.php": {
+    "mtime": 1792338974.012405,
+    "seen": 1792370059.131374,
+    "ast_hash": "4e5f7cd1a4b91a65e0baa9a7c2aba8b8",
+    "semantic_hash": ""
+  },
+  "bootstrap/providers.php": {
+    "mtime": 1790766388.5892272,
+    "seen": 1792370059.131375,
+    "ast_hash": "888c810b5a4720916f07aa05dd2c2dd3",
+    "semantic_hash": ""
+  },
+  "composer.json": {
+    "mtime": 1791351700.9293108,
+    "seen": 1792370059.1313758,
+    "ast_hash": "b370cf2d87c4de59dd4c1c90a1f0adbd",
+    "semantic_hash": ""
+  },
+  "config/app.php": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1313767,
+    "ast_hash": "8befef279da74e4a8e393cb3d59fd354",
+    "semantic_hash": ""
+  },
+  "config/auth.php": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1313775,
+    "ast_hash": "26354511ab860b301f2a3554bc388b91",
+    "semantic_hash": ""
+  },
+  "config/cache.php": {
+    "mtime": 1790766388.589741,
+    "seen": 1792370059.1313784,
+    "ast_hash": "399c7a3b4bca7e3cb9b622828682ab56",
+    "semantic_hash": ""
+  },
+  "config/database.php": {
+    "mtime": 1790766388.5897057,
+    "seen": 1792370059.1313791,
+    "ast_hash": "594a01554ab7583541a8fb05a69f935f",
+    "semantic_hash": ""
+  },
+  "config/filesystems.php": {
+    "mtime": 1790766388.5896723,
+    "seen": 1792370059.13138,
+    "ast_hash": "bde1aa1027f0448f17348dbd93f3d7ea",
+    "semantic_hash": ""
+  },
+  "config/logging.php": {
+    "mtime": 1790766388.5896358,
+    "seen": 1792370059.131381,
+    "ast_hash": "57cabdaa04bc44810fedbea9ce77b052",
+    "semantic_hash": ""
+  },
+  "config/mail.php": {
+    "mtime": 1790766388.589603,
+    "seen": 1792370059.1313818,
+    "ast_hash": "18601a927b48d38337ba2077426a7d60",
+    "semantic_hash": ""
+  },
+  "config/queue.php": {
+    "mtime": 1790766388.5895646,
+    "seen": 1792370059.1313825,
+    "ast_hash": "f98ce92e7bf51db1fabaf8a30e12fc5a",
+    "semantic_hash": ""
+  },
+  "config/services.php": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1313832,
+    "ast_hash": "085338fb3c11aca2f416eb05d3a85c1e",
+    "semantic_hash": ""
+  },
+  "config/session.php": {
+    "mtime": 1790766388.5894873,
+    "seen": 1792370059.1313841,
+    "ast_hash": "5ea7169252ec3cc7fad471f5cd0d7678",
+    "semantic_hash": ""
+  },
+  "database/factories/UserFactory.php": {
+    "mtime": 1790766388.5901465,
+    "seen": 1792370059.1313848,
+    "ast_hash": "1c9f381f9c2bc3027971a3bfdbe99164",
+    "semantic_hash": ""
+  },
+  "database/migrations/0001_01_01_000000_create_users_table.php": {
+    "mtime": 1790766388.59009,
+    "seen": 1792370059.1313856,
+    "ast_hash": "138280095e9d19f2ba6fb830415602e2",
+    "semantic_hash": ""
+  },
+  "database/migrations/0001_01_01_000001_create_cache_table.php": {
+    "mtime": 1790766388.590044,
+    "seen": 1792370059.1313865,
+    "ast_hash": "6952fb360e8d8b84e6f47573e4459d48",
+    "semantic_hash": ""
+  },
+  "database/migrations/0001_01_01_000002_create_jobs_table.php": {
+    "mtime": 1790766388.5900023,
+    "seen": 1792370059.1313875,
+    "ast_hash": "b0603b9fa0a27473971da76bb0c42ee1",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_09_30_110729_create_job_applications_table.php": {
+    "mtime": 1790766475.2771723,
+    "seen": 1792370059.1313882,
+    "ast_hash": "773dce694b583ea3780985d75e45402b",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_09_30_110730_create_status_histories_table.php": {
+    "mtime": 1790766482.0791745,
+    "seen": 1792370059.131389,
+    "ast_hash": "4af1d9ef9c015232701c37da464172c5",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_09_30_130000_create_interview_checklists_table.php": {
+    "mtime": 1790773044.7041454,
+    "seen": 1792370059.1313899,
+    "ast_hash": "6861fc3f5dceafc31fdd3c83849730a5",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_09_30_130001_create_offer_details_table.php": {
+    "mtime": 1790773048.9237442,
+    "seen": 1792370059.1313908,
+    "ast_hash": "6091ee76d35badd50cb7720ebfd927a1",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_01_042138_add_indexes_to_job_applications_table.php": {
+    "mtime": 1790828509.6137934,
+    "seen": 1792370059.1313915,
+    "ast_hash": "e3a34140bbe2f462eaa1d991c32f3b67",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_03_000000_create_ingested_emails_table.php": {
+    "mtime": 1790998109.4911432,
+    "seen": 1792370059.1313922,
+    "ast_hash": "f3fd8ad0324e14b79269dd705dfa1843",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_03_000001_add_gmail_oauth_to_users_table.php": {
+    "mtime": 1790998502.1534615,
+    "seen": 1792370059.1313932,
+    "ast_hash": "211ec951e45b1ac48210e11882fc6b7f",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_05_000000_create_companies_table.php": {
+    "mtime": 1791077465.1641803,
+    "seen": 1792370059.1313941,
+    "ast_hash": "6b46cec6d5721b1a88aed2a5f0593c10",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_05_000001_add_company_id_to_job_applications_table.php": {
+    "mtime": 1791077469.809535,
+    "seen": 1792370059.1313949,
+    "ast_hash": "f091a72543b93dbd5238f0ff58109b63",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_05_000002_create_job_postings_table.php": {
+    "mtime": 1791077655.870082,
+    "seen": 1792370059.1313956,
+    "ast_hash": "b602e6d8b3a82e41cc3e1e6c8de0bb98",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_06_000000_add_weekly_target_to_users_table.php": {
+    "mtime": 1791097306.7651832,
+    "seen": 1792370059.1313965,
+    "ast_hash": "e15e3abbd6d98d7adccb3f3b960fbc26",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_06_000001_add_interview_result_to_job_applications_table.php": {
+    "mtime": 1791097306.7673113,
+    "seen": 1792370059.1313975,
+    "ast_hash": "a326ed3b177dbd5e017655adedd4738f",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_18_140000_add_match_score_to_job_applications_table.php": {
+    "mtime": 1792330598.3587828,
+    "seen": 1792370059.1313982,
+    "ast_hash": "7c87008ee9b4082bbfee1143c21014e0",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_18_155440_add_api_token_to_users_table.php": {
+    "mtime": 1792338891.7932575,
+    "seen": 1792370059.131399,
+    "ast_hash": "c2fa1e3616028a164900f1913f307509",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_18_155940_add_user_id_to_job_applications_table.php": {
+    "mtime": 1792339186.4557798,
+    "seen": 1792370059.1313996,
+    "ast_hash": "f72cc40414f4b2242ba26ea1425b20c0",
+    "semantic_hash": ""
+  },
+  "database/seeders/DatabaseSeeder.php": {
+    "mtime": 1790766742.5642488,
+    "seen": 1792370059.1314003,
+    "ast_hash": "659c8f768950a6837d18f1610f20de59",
+    "semantic_hash": ""
+  },
+  "database/seeders/JobApplicationSeeder.php": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1314013,
+    "ast_hash": "06083af078e8b38ba06d4510ddeb25ff",
+    "semantic_hash": ""
+  },
+  "database/seeders/UserSeeder.php": {
+    "mtime": 1790766725.1642442,
+    "seen": 1792370059.131402,
+    "ast_hash": "feb13c521c7c60c87db09431068c6115",
+    "semantic_hash": ""
+  },
+  "deploy/oracle/backup.sh": {
+    "mtime": 1791000865.5201993,
+    "seen": 1792370059.1314027,
+    "ast_hash": "bd90ceba96a656d7da8e131ef613a4b5",
+    "semantic_hash": ""
+  },
+  "deploy/oracle/keepalive.sh": {
+    "mtime": 1791000865.5201993,
+    "seen": 1792370059.1314037,
+    "ast_hash": "79592dcc8fb8fd4ff16d4555d5efe690",
+    "semantic_hash": ""
+  },
+  "deploy/oracle/provision.sh": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1314046,
+    "ast_hash": "a1968a84823699a94222a4b17141a5ed",
+    "semantic_hash": ""
+  },
+  "deploy/oracle/release.sh": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1314054,
+    "ast_hash": "6b706ff7418d4bc256b72346c14842d1",
+    "semantic_hash": ""
+  },
+  "lang/en/auth.php": {
+    "mtime": 1790766574.3715343,
+    "seen": 1792370059.131406,
+    "ast_hash": "4be8b878be99fbeb2b4d0c73fb70b054",
+    "semantic_hash": ""
+  },
+  "lang/en/pagination.php": {
+    "mtime": 1790766574.3715866,
+    "seen": 1792370059.131407,
+    "ast_hash": "8c490ce6e34beb29a18e0a2f85383aa0",
+    "semantic_hash": ""
+  },
+  "lang/en/passwords.php": {
+    "mtime": 1790766574.3716223,
+    "seen": 1792370059.131408,
+    "ast_hash": "9f8d02f781c90ffca9b50f4e636659af",
+    "semantic_hash": ""
+  },
+  "lang/en/validation.php": {
+    "mtime": 1790766574.3763926,
+    "seen": 1792370059.1314087,
+    "ast_hash": "b27024e33f8f6d2b184b836dd197ca97",
+    "semantic_hash": ""
+  },
+  "lang/id/auth.php": {
+    "mtime": 1790766626.298217,
+    "seen": 1792370059.1314094,
+    "ast_hash": "3466dc933e246a47a188d969920db03a",
+    "semantic_hash": ""
+  },
+  "lang/id/validation.php": {
+    "mtime": 1790766636.76322,
+    "seen": 1792370059.1314108,
+    "ast_hash": "f5f52c113d5cce91b4d1a48d134c36af",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1790766388.5902317,
+    "seen": 1792370059.1314118,
+    "ast_hash": "59ec21ff5f1f5b3acb8f2f82c8b6dc77",
+    "semantic_hash": ""
+  },
+  "public/index.php": {
+    "mtime": 1790766388.5903654,
+    "seen": 1792370059.1314127,
+    "ast_hash": "d8eda274115af5fd2aaa8230af329ef7",
+    "semantic_hash": ""
+  },
+  "resources/js/app.js": {
+    "mtime": 1790766388.5905879,
+    "seen": 1792370059.1314135,
+    "ast_hash": "b519d08ef66fd54910edbedba6181ec2",
+    "semantic_hash": ""
+  },
+  "resources/views/analytics/index.blade.php": {
+    "mtime": 1792370657.4438097,
+    "seen": 1792371351.1930993,
+    "ast_hash": "20181bb2b77a0463f09aac352c2fc55a",
+    "semantic_hash": ""
+  },
+  "resources/views/applications/create.blade.php": {
+    "mtime": 1791097407.1921933,
+    "seen": 1792370059.1314151,
+    "ast_hash": "62df6a4364b26208316336651c856a9e",
+    "semantic_hash": ""
+  },
+  "resources/views/applications/edit.blade.php": {
+    "mtime": 1791097407.1921933,
+    "seen": 1792370059.131416,
+    "ast_hash": "d9af2bc1d4cf7e208c9ee2807f5bec64",
+    "semantic_hash": ""
+  },
+  "resources/views/applications/index.blade.php": {
+    "mtime": 1792370930.9411576,
+    "seen": 1792371351.1931026,
+    "ast_hash": "d85c53a99837957e0c44e4ff7198559a",
+    "semantic_hash": ""
+  },
+  "resources/views/applications/kanban.blade.php": {
+    "mtime": 1792370161.8247685,
+    "seen": 1792371351.1931036,
+    "ast_hash": "0863f9b1feab0bf970b4d859ee3e419d",
+    "semantic_hash": ""
+  },
+  "resources/views/applications/show.blade.php": {
+    "mtime": 1792371102.739333,
+    "seen": 1792371351.1931043,
+    "ast_hash": "6270808ca8f58e0b39c3bbf16e187940",
+    "semantic_hash": ""
+  },
+  "resources/views/auth/login.blade.php": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.1314192,
+    "ast_hash": "e0f3ca4f493d74d63b40c745c8c2ad13",
+    "semantic_hash": ""
+  },
+  "resources/views/components/badge.blade.php": {
+    "mtime": 1790778339.448316,
+    "seen": 1792370059.13142,
+    "ast_hash": "fae6dfdf096204e027dc29beddc43796",
+    "semantic_hash": ""
+  },
+  "resources/views/components/button.blade.php": {
+    "mtime": 1790778332.7284353,
+    "seen": 1792370059.1314206,
+    "ast_hash": "e836dd81beb81aa3c1d089d097b65940",
+    "semantic_hash": ""
+  },
+  "resources/views/components/card.blade.php": {
+    "mtime": 1790778326.2338355,
+    "seen": 1792370059.1314218,
+    "ast_hash": "21b6ef6fb5b6b2b675ac6592ffb0418c",
+    "semantic_hash": ""
+  },
+  "resources/views/components/input.blade.php": {
+    "mtime": 1790778515.5416574,
+    "seen": 1792370059.1314225,
+    "ast_hash": "7311eb35fa3bc50d1e5444753ceaccbb",
+    "semantic_hash": ""
+  },
+  "resources/views/dashboard.blade.php": {
+    "mtime": 1792370739.6709256,
+    "seen": 1792371351.1931105,
+    "ast_hash": "e13e628a6aff069a437733f87be6ca2e",
+    "semantic_hash": ""
+  },
+  "resources/views/discovery/index.blade.php": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.131424,
+    "ast_hash": "8dde40e8521b74827ff192263108c8d5",
+    "semantic_hash": ""
+  },
+  "resources/views/integrations/index.blade.php": {
+    "mtime": 1792371294.0085022,
+    "seen": 1792371351.1931126,
+    "ast_hash": "9a14916cdbf3c14b5751017100ef7033",
+    "semantic_hash": ""
+  },
+  "resources/views/layouts/app.blade.php": {
+    "mtime": 1792369983.0054932,
+    "seen": 1792370059.1314259,
+    "ast_hash": "b459197bd0d3942345ca9d234032a2b0",
+    "semantic_hash": ""
+  },
+  "resources/views/offers/index.blade.php": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.1314266,
+    "ast_hash": "9f3dbfb7a2c06a6be7aa7d20963e315b",
+    "semantic_hash": ""
+  },
+  "resources/views/welcome.blade.php": {
+    "mtime": 1790822419.4206712,
+    "seen": 1792370059.1314273,
+    "ast_hash": "1a03818ea91deb4f3989c6c994e5867c",
+    "semantic_hash": ""
+  },
+  "routes/api.php": {
+    "mtime": 1792338956.0273726,
+    "seen": 1792370059.131428,
+    "ast_hash": "721302b22219f0560d5d1f70fbf37f0a",
+    "semantic_hash": ""
+  },
+  "routes/console.php": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.1314292,
+    "ast_hash": "6b2143f241e22c7e0d3699e6c1cbd232",
+    "semantic_hash": ""
+  },
+  "routes/web.php": {
+    "mtime": 1792339214.9959092,
+    "seen": 1792370059.13143,
+    "ast_hash": "dca9a38c2024025331c7e7f1d14ce490",
+    "semantic_hash": ""
+  },
+  "scripts/deploy-container.sh": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.1314306,
+    "ast_hash": "f0befdcc4280a0e287a024c7bd81b47b",
+    "semantic_hash": ""
+  },
+  "tests/Feature/AnalyticsTest.php": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.1314313,
+    "ast_hash": "6487ae11c8eafa070ea62f5b0a4b157a",
+    "semantic_hash": ""
+  },
+  "tests/Feature/AuthTest.php": {
+    "mtime": 1791351700.931311,
+    "seen": 1792370059.1314325,
+    "ast_hash": "3d2a155437b497a7988c06f948917f7b",
+    "semantic_hash": ""
+  },
+  "tests/Feature/BotApiTest.php": {
+    "mtime": 1792339131.865684,
+    "seen": 1792370059.1314332,
+    "ast_hash": "c15db0195f0bdcdb20c2e4b6d931e6fb",
+    "semantic_hash": ""
+  },
+  "tests/Feature/DashboardTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314342,
+    "ast_hash": "c17f43b2574bf8ab18564af49a7368b5",
+    "semantic_hash": ""
+  },
+  "tests/Feature/EmailIngestionTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.131435,
+    "ast_hash": "a07845afc9bcc9d23574cc44185cabee",
+    "semantic_hash": ""
+  },
+  "tests/Feature/GmailConnectionTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314359,
+    "ast_hash": "f483c4faf75fd091f082c4f454f63f41",
+    "semantic_hash": ""
+  },
+  "tests/Feature/GmailSetupCommandTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314366,
+    "ast_hash": "15df7de4b3bf8e5a732afd8625befb3d",
+    "semantic_hash": ""
+  },
+  "tests/Feature/GoogleLoginTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314373,
+    "ast_hash": "a4deb3a72b2b9365a136b87ea8707d45",
+    "semantic_hash": ""
+  },
+  "tests/Feature/JobApplicationCrudTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.131438,
+    "ast_hash": "d737ee75f8d42b976357459d73856beb",
+    "semantic_hash": ""
+  },
+  "tests/Feature/JobApplicationDetailTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314392,
+    "ast_hash": "2d797b683f405e138070eb16b449353b",
+    "semantic_hash": ""
+  },
+  "tests/Feature/JobApplicationTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.13144,
+    "ast_hash": "f112f1fa3d4a2579814b546e3048799b",
+    "semantic_hash": ""
+  },
+  "tests/Feature/JobDiscoveryTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314406,
+    "ast_hash": "6ce8c34cd7e1eeafc0baa403d74858d8",
+    "semantic_hash": ""
+  },
+  "tests/Feature/JobMatchTest.php": {
+    "mtime": 1792330874.8213854,
+    "seen": 1792370059.1314414,
+    "ast_hash": "9d0d6d48e5666b4cb89c3218b75d4bbb",
+    "semantic_hash": ""
+  },
+  "tests/Feature/KanbanTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.131442,
+    "ast_hash": "1fbcc06a5ab24baac7d24a4e6ac6a294",
+    "semantic_hash": ""
+  },
+  "tests/Feature/OfferChecklistTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.131443,
+    "ast_hash": "9b3b006f6400613ddfe99e6bf430a652",
+    "semantic_hash": ""
+  },
+  "tests/Feature/QuickAddExportTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314437,
+    "ast_hash": "e554dc48bc346272058e6f354a40d15c",
+    "semantic_hash": ""
+  },
+  "tests/TestCase.php": {
+    "mtime": 1790766388.5916584,
+    "seen": 1792370059.1314447,
+    "ast_hash": "7e567dc27e68d5b57bae16af07f68907",
+    "semantic_hash": ""
+  },
+  "tests/Unit/CompanyNameNormalizerTest.php": {
+    "mtime": 1791097062.3515031,
+    "seen": 1792370059.1314454,
+    "ast_hash": "23a1dce83e097e4ebfc0524f66cdae66",
+    "semantic_hash": ""
+  },
+  "tests/Unit/ExampleTest.php": {
+    "mtime": 1790766388.5916057,
+    "seen": 1792370059.1314464,
+    "ast_hash": "3f679e9508c834f0ad95943455fcd836",
+    "semantic_hash": ""
+  },
+  "tests/Unit/GlintsSourceTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.131447,
+    "ast_hash": "9af2e3e74a8ff8a4a5ab092f3f2a25ef",
+    "semantic_hash": ""
+  },
+  "tests/Unit/JobDiscoveryServiceTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314478,
+    "ast_hash": "57a1a0ac6459d36742bb5cc6ef5cd104",
+    "semantic_hash": ""
+  },
+  "tests/Unit/JobEmailParserTest.php": {
+    "mtime": 1790998290.4653437,
+    "seen": 1792370059.1314485,
+    "ast_hash": "eede0d7bd783fc5644756b4ceaf11bd1",
+    "semantic_hash": ""
+  },
+  "tests/Unit/JobMatchServiceTest.php": {
+    "mtime": 1792330928.230876,
+    "seen": 1792370059.1314497,
+    "ast_hash": "6c9bb533b1e07067fb1705dfba19bbb0",
+    "semantic_hash": ""
+  },
+  "tests/Unit/JobstreetSourceTest.php": {
+    "mtime": 1791351700.9323108,
+    "seen": 1792370059.1314504,
+    "ast_hash": "3ffcd072a92aa142aaf7be0ea62046ae",
+    "semantic_hash": ""
+  },
+  "vite.config.js": {
+    "mtime": 1790766388.591814,
+    "seen": 1792370059.1314511,
+    "ast_hash": "8ef22d264079dab94f6d36526b0cb1bc",
+    "semantic_hash": ""
+  },
+  ".github/workflows/tests.yml": {
+    "mtime": 1792333900.6208775,
+    "seen": 1792370059.1314518,
+    "ast_hash": "feca34cca59204fe6c4f37bf0edb3807",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1791351700.9041662,
+    "seen": 1792370059.1314526,
+    "ast_hash": "271563d3d8ce1b384f358b24338de3f2",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1790787834.1952102,
+    "seen": 1792370059.1314535,
+    "ast_hash": "22b2a33f60fb226eff88cdf397f3545c",
+    "semantic_hash": ""
+  },
+  "DEPLOYMENT.md": {
+    "mtime": 1790830265.7087207,
+    "seen": 1792370059.1314542,
+    "ast_hash": "522f53de18dec5728557df51c9e053c7",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1791351700.9193108,
+    "seen": 1792370059.131455,
+    "ast_hash": "fa3e6f5d9de5d99faef337b521ff0f2a",
+    "semantic_hash": ""
+  },
+  "SCREENSHOTS.md": {
+    "mtime": 1791097799.657461,
+    "seen": 1792370059.1314557,
+    "ast_hash": "748c6e29c3b10100f715b59aa5320e37",
+    "semantic_hash": ""
+  },
+  "deploy/cloudflare-tunnel.md": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1314569,
+    "ast_hash": "550c82cb5c38559b5f9df6fd10fb8eb2",
+    "semantic_hash": ""
+  },
+  "deploy/fly/README.md": {
+    "mtime": 1791097886.363251,
+    "seen": 1792370059.1314576,
+    "ast_hash": "8a4bbd375b3d83d464d1726444b7c2f3",
+    "semantic_hash": ""
+  },
+  "deploy/oracle/README.md": {
+    "mtime": 1791351700.930311,
+    "seen": 1792370059.1314583,
+    "ast_hash": "b5816bab309b41a5bc2287154cb0939e",
+    "semantic_hash": ""
+  },
+  "orca.yaml": {
+    "mtime": 1790763069.530466,
+    "seen": 1792370059.131459,
+    "ast_hash": "027fd9b50f388976b7a8bc0ab8d7829b",
+    "semantic_hash": ""
+  },
+  "public/design-preview.html": {
+    "mtime": 1792368773.870146,
+    "seen": 1792370059.13146,
+    "ast_hash": "9a93a751a771201450604ae78e19c0e2",
+    "semantic_hash": ""
+  },
+  "public/robots.txt": {
+    "mtime": 1790766388.590315,
+    "seen": 1792370059.1314607,
+    "ast_hash": "b6216d61c03e6ce0c9aea6ca7808f7ca",
+    "semantic_hash": ""
+  },
+  "public/screenshots/analytics.png": {
+    "mtime": 1791097668.0042207,
+    "seen": 1792370059.1314614,
+    "ast_hash": "367ab877ade937f39ba9f8201bdab430",
+    "semantic_hash": ""
+  },
+  "public/screenshots/applications.png": {
+    "mtime": 1791097661.5232198,
+    "seen": 1792370059.131462,
+    "ast_hash": "9bf2648b482eab05002611d92b7868cd",
+    "semantic_hash": ""
+  },
+  "public/screenshots/dashboard.png": {
+    "mtime": 1791097658.6482196,
+    "seen": 1792370059.1314628,
+    "ast_hash": "4251799294d3c2c06e69e901e4d46f4b",
+    "semantic_hash": ""
+  },
+  "public/screenshots/kanban.png": {
+    "mtime": 1791097665.2622204,
+    "seen": 1792370059.131464,
+    "ast_hash": "4a9e1ad9e52337849adaccadfa227ca1",
+    "semantic_hash": ""
+  },
+  "public/screenshots/offers.png": {
+    "mtime": 1791097670.592221,
+    "seen": 1792370059.1314647,
+    "ast_hash": "44efd481eecf0ed9d599a9246283537e",
+    "semantic_hash": ""
+  }
+}

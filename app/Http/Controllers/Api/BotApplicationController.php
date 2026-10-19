@@ -177,6 +177,20 @@ class BotApplicationController extends Controller
                     'created_at' => now(),
                 ]);
 
+                // Auto-analyze ATS match score and keyword gap
+                try {
+                    $textToAnalyze = trim((string) ($application->job_description ?: ($application->notes ?: $application->position)));
+                    if ($textToAnalyze !== '') {
+                        $matchService = app(\App\Services\JobMatchService::class);
+                        $matchResult = $matchService->analyze($textToAnalyze, $application->position);
+                        $application->match_score = $matchResult['match_percentage'];
+                        $application->match_analysis = $matchResult;
+                        $application->save();
+                    }
+                } catch (\Throwable) {
+                    // Silently ignore ATS match errors during bot ingestion
+                }
+
                 $results[] = [
                     'index' => $index,
                     'id' => $application->id,
@@ -184,6 +198,7 @@ class BotApplicationController extends Controller
                     'position' => $application->position,
                     'status' => 'created',
                     'pipeline_status' => $application->status,
+                    'match_score' => $application->match_score,
                     'applied_at' => $application->applied_at?->format('Y-m-d'),
                 ];
                 $insertedCount++;

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaweTracker — Visual Design Preview (Anti-Slop Zinc & Obsidian)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ─── CSS Variables & Themes ─── */
+    :root {
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+      /* Light Zinc Palette (Linear/Vercel standard) */
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --surface-subtle: #f4f4f5;
+      --border: #e4e4e7;
+      --border-subtle: rgba(228, 228, 231, 0.6);
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      --text-dim: #a1a1aa;
+      --accent: #18181b;
+      --accent-fg: #fafafa;
+      
+      /* Semantic Status Tokens (Accessible WCAG AAA) */
+      --st-wishlist: #52525b;
+      --st-applied: #2563eb;
+      --st-screening: #d97706;
+      --st-interview: #7c3aed;
+      --st-offer: #059669;
+      --st-hired: #15803d;
+      --st-rejected: #dc2626;
+
+      --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+      --card-hover-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --radius: 8px;
+    }
+
+    /* Dark Mode (Obsidian Depth — Not washed out grey) */
+    [data-theme="dark"] {
+      --bg: #09090b;
+      --surface: #121215;
+      --surface-subtle: #18181b;
+      --border: #27272a;
+      --border-subtle: rgba(39, 39, 42, 0.5);
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      --accent: #f4f4f5;
+      --accent-fg: #09090b;
+
+      --st-wishlist: #a1a1aa;
+      --st-applied: #60a5fa;
+      --st-screening: #fbbf24;
+      --st-interview: #a78bfa;
+      --st-offer: #34d399;
+      --st-hired: #4ade80;
+      --st-rejected: #f87171;
+
+      --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      --card-hover-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      padding-bottom: 4rem;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ─── Floating Glass Header ─── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(250, 250, 250, 0.85);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+    [data-theme="dark"] .site-nav {
+      background: rgba(9, 9, 11, 0.82);
+    }
+    .nav-inner {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-badge {
+      width: 24px;
+      height: 24px;
+      background: var(--text-main);
+      color: var(--bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-link {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-radius: 6px;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-link.active, .nav-link:hover {
+      color: var(--text-main);
+      background: var(--surface-subtle);
+    }
+
+    /* ─── Control Bar / Toggle ─── */
+    .preview-banner {
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      padding: 0.625rem 0;
+      font-size: 0.8125rem;
+    }
+    .banner-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .theme-toggle-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.25rem 0.625rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.15s ease;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--surface-subtle);
+      border-color: var(--text-dim);
+    }
+
+    /* ─── Page Header ─── */
+    .page-header {
+      padding: 2rem 0 1.5rem 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .page-title {
+      font-size: 1.625rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+    .page-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn {
+      height: 34px;
+      padding: 0 0.875rem;
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--text-main);
+      color: var(--bg);
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    .btn-outline {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: var(--surface-subtle);
+    }
+    .kbd {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.3125rem;
+      border-radius: 4px;
+      background: rgba(125,125,125,0.15);
+      border: 1px solid rgba(125,125,125,0.25);
+    }
+
+    /* ─── KPI Strip ─── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.125rem;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--border);
+    }
+    .kpi-card.accent-blue::before { background: #3b82f6; }
+    .kpi-card.accent-purple::before { background: #8b5cf6; }
+    .kpi-card.accent-emerald::before { background: #10b981; }
+    .kpi-card.accent-amber::before { background: #f59e0b; }
+
+    .kpi-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0.375rem 0 0.125rem 0;
+      color: var(--text-main);
+    }
+    .kpi-footer {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* ─── Kanban Board ─── */
+    .kanban-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      overflow-x: auto;
+    }
+    @media (max-width: 1024px) {
+      .kanban-board {
+        grid-template-columns: repeat(2, 300px);
+      }
+    }
+    .kanban-col {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      min-height: 480px;
+    }
+    .col-header {
+      padding: 0.75rem 0.875rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    .col-count {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.125rem 0.4375rem;
+      border-radius: 9999px;
+      color: var(--text-muted);
+    }
+    .col-body {
+      padding: 0.625rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      flex: 1;
+    }
+
+    /* ─── Job Card (The Precision Craft) ─── */
+    .job-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.875rem;
+      box-shadow: var(--card-shadow);
+      cursor: grab;
+      position: relative;
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .job-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-hover-shadow);
+      border-color: var(--text-dim);
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .co-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+    .co-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .co-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-main);
+      truncate: true;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .job-role {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin-bottom: 0.625rem;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      font-size: 0.6875rem;
+    }
+    .badge {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.125rem 0.4375rem;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .badge-outline {
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: var(--surface-subtle);
+    }
+    .badge-bot {
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      color: #8b5cf6;
+    }
+    .badge-score {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #10b981;
+    }
+    .card-footer {
+      margin-top: 0.625rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.6875rem;
+      color: var(--text-dim);
+    }
+    .salary-num {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ─── Anti-Slop Comparison Box ─── */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    @media (max-width: 768px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+    }
+    .rule-card {
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .rule-bad {
+      border-left: 4px solid #ef4444;
+    }
+    .rule-good {
+      border-left: 4px solid #10b981;
+    }
+    .rule-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rule-list {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      padding-left: 1.25rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Preview Controller -->
+  <div class="preview-banner">
+    <div class="container banner-content">
+      <div>
+        <strong style="color:var(--text-main);">Anti-Slop Visual Specification</strong>
+        <span style="color:var(--text-dim);margin:0 0.375rem;">•</span>
+        <span style="color:var(--text-muted);">GaweTracker Zinc Precision &amp; Obsidian Protocol</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <span style="font-size:0.75rem;color:var(--text-muted);">Coba Ganti Tema:</span>
+        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span> <span id="theme-text">Dark Obsidian</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glass Navbar -->
+  <header class="site-nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <span class="brand-badge">G</span>
+        <span>GaweTracker</span>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active">Dashboard</a></li>
+          <li><a href="#" class="nav-link">Lamaran</a></li>
+          <li><a href="#" class="nav-link">Kanban</a></li>
+          <li><a href="#" class="nav-link">Analisis</a></li>
+          <li><a href="#" class="nav-link">Offer</a></li>
+          <li><a href="#" class="nav-link" style="color:#8b5cf6;">🤖 Integrasi Bot</a></li>
+        </ul>
+      </nav>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-size:0.8125rem;font-weight:600;color:var(--text-muted);">Kyan</span>
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;">K</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="container">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Papan Pipeline Lamaran</h1>
+        <p class="page-desc">Visualisasi presisi tanpa dekorasi kosong — data yang menuntut aksi di tempat pertama.</p>
+      </div>
+      <div class="action-group">
+        <button class="btn btn-outline">
+          Quick Add <kbd class="kbd">Q</kbd>
+        </button>
+        <button class="btn btn-primary">
+          + Tambah Lamaran
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Strip -->
+    <section class="kpi-grid">
+      <div class="kpi-card accent-blue">
+        <div class="kpi-label">Aktif Diproses</div>
+        <div class="kpi-value">14</div>
+        <div class="kpi-footer">Dalam pipeline rekrutmen</div>
+      </div>
+      <div class="kpi-card accent-amber">
+        <div class="kpi-label">Perlu Follow-up</div>
+        <div class="kpi-value" style="color:var(--st-screening);">3</div>
+        <div class="kpi-footer">&gt;7 hari tanpa kabar</div>
+      </div>
+      <div class="kpi-card accent-purple">
+        <div class="kpi-label">Tahap Interview</div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-footer">2 user interview pekan ini</div>
+      </div>
+      <div class="kpi-card accent-emerald">
+        <div class="kpi-label">Offering / Hired</div>
+        <div class="kpi-value" style="color:var(--st-offer);">2</div>
+        <div class="kpi-footer">1 deadline mendekati</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Target Mingguan</div>
+        <div class="kpi-value">7<span style="font-size:0.875rem;font-weight:400;color:var(--text-dim);">/8</span></div>
+        <div class="kpi-footer">87% tercapai</div>
+      </div>
+    </section>
+
+    <!-- Kanban Preview -->
+    <section>
+      <div class="kanban-section-title">
+        <span>Kolom Pipeline Rekrutmen</span>
+        <span style="font-size:0.75rem;color:var(--text-dim);font-weight:400;">(Sentuh atau sorot kartu untuk melihat micro-elevation)</span>
+      </div>
+
+      <div class="kanban-board">
+        <!-- Col 1: Wishlist -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span>Wishlist</span>
+            <span class="col-count">2</span>
+          </div>
+          <div class="col-body">
+            <div class="job-card">
+              <div class="card-top">
+                <div class="co-identity">
+                  <div class="co-avatar">G</div>
+                  <span class="co-name">GoTo Gojek</span>
+                </div>
+                <span class="badge badge-outline">Hybrid</span>
+              </div>
+              <p class="job-role">Senior Backend Engineer (Go/Laravel)</p>
+              <div class="card-meta">
+                <span class="badge badge-score">🎯 92% Match</span>
+                <span class="badge badge-outline">Jakarta</span>
+              </div>
+              <div class="card-footer">
+                <span class="salary-num">Rp 22–30jt</span>
+                <span>Ditambahkan 2h lalu</span>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="card-top">
+                <div class="co-identity">
+                  <div class="co-avatar">T</div>
+                  <span class="co-name">Traveloka</span>
+                </div>
+                <span class="badge badge-outline">Remote</span>
+              </div>
+              <p class="job-role">Fullstack Engineer</p>
+              <div class="card-meta">
+                <span class="badge badge-score">🎯 85% Match</span>
+              </div>
+              <div class="card-footer">
+                <span class="salary-num">Rp 18–24jt</span>
+                <span>Ditambahkan 4h lalu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 2: Applied -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span>Terkirim (Applied)</span>
+            <span class="col-count">3</span>
+          </div>
+          <div class="col-body">
+            <div class="job-card">
+              <div class="card-top">
+                <div class="co-identity">
+                  <div class="co-avatar">D</div>
+                  <span class="co-name">DANA Indonesia</span>
+                </div>
+                <span class="badge badge-bot">🤖 Bot Lempar Jaring</span>
+              </div>
+              <p class="job-role">Backend System Architect</p>
+              <div class="card-meta">
+                <span class="badge badge-outline">Glints</span>
+                <span class="badge badge-outline">Onsite</span>
+              </div>
+              <div class="card-footer">
+                <span class="salary-num">Rp 20–28jt</span>
+                <span>Terkirim 1h lalu</span>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="card-top">
+                <div class="co-identity">
+                  <div class="co-avatar">B</div>
+                  <span class="co-name">Bukalapak</span>
+                </div>
+                <span class="badge badge-outline">LinkedIn</span>
+              </div>
+              <p class="job-role">DevOps / Cloud Engineer</p>
+              <div class="card-meta">
+                <span class="badge badge-score">🎯 78% Match</span>
+              </div>
+              <div class="card-footer">
+                <span class="salary-num">Rp 16–22jt</span>
+                <span>Terkirim 3h lalu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 3: Interview -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span>Interview</span>
+            <span class="col-count">2</span>
+          </div>
+          <div class="col-body">
+            <div class="job-card" style="border-left: 3px solid var(--st-interview);">
+              <div class="card-top">
+                <div class="co-identity">
+                  <div class="co-avatar">M</div>
+                  <span class="co-name">Midtrans (GoTo Financial)</span>
+                </div>
+                <span class="badge badge-outline" style="color:var(--st-interview);border-color:var(--st-interview);">User Wawancara</span>
+              </div>
+              <p class="job-role">Lead Backend API Engineer</p>
+              <div class="card-meta">
+                <span class="badge badge-outline">Jumat, 14:00 WIB</span>
+              </div>
+              <div class="card-footer">
+                <span class="salary-num">Rp 25–35jt</span>
+                <span>Tahap 3 dari 4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 4: Offering -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span>Offering</span>
+            <span class="col-count">1</span>
+          </div>
+          <div class="col-body">
+            <div class="job-card" style="border-left: 3px solid var(--st-offer); background: rgba(16, 185, 129, 0.03);">
+              <div class="card-top">
+                <div class="co-identity">
+                  <div class="co-avatar">S</div>
+                  <span class="co-name">Sirclo</span>
+                </div>
+                <span class="badge" style="background:#10b981;color:#fff;">Offer Received</span>
+              </div>
+              <p class="job-role">Senior Software Engineer</p>
+              <div class="card-meta">
+                <span class="badge badge-outline" style="color:#059669;">Deadline: 24 Okt</span>
+              </div>
+              <div class="card-footer">
+                <span class="salary-num" style="color:#059669;font-weight:700;">Rp 24.500.000</span>
+                <span>Bandingkan &rsaquo;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Anti-Slop Directive Rationale -->
+    <div class="comparison-grid">
+      <div class="rule-card rule-bad">
+        <div class="rule-title" style="color:#ef4444;">
+          <span>✕</span> Kenapa Banyak UI AI Dianggap "AI Slop"?
+        </div>
+        <ul class="rule-list">
+          <li><strong>Gradasi Murahan:</strong> Menggunakan background ungu-pink (mesh gradient) yang menyilaukan mata dan membuat teks tidak terbaca.</li>
+          <li><strong>Drop Shadow 25px:</strong> Komponen melayang seperti kartu sulap tanpa batas fisik 1px yang tegas.</li>
+          <li><strong>Tombol Kapsul Lebay:</strong> Semua tombol dibikin bulat lonjong (pill) tanpa struktur hierarki.</li>
+          <li><strong>Delta Palsu &amp; Emoji Berantakan:</strong> Menempelkan emoji 🚀 🔥 di semua judul tanpa fungsi data riil.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card rule-good">
+        <div class="rule-title" style="color:#10b981;">
+          <span>✓</span> GaweTracker Precision Engineering (Anti-Slop Protocol)
+        </div>
+        <ul class="rule-list">
+          <li><strong>Zinc &amp; Obsidian Palette:</strong> Skala netral profesional developer tool (Linear, Vercel, Supabase) dengan kontras WCAG AAA.</li>
+          <li><strong>Hairline Boundaries:</strong> Batas fisik tegas 1px dengan micro-elevation bertingkat yang tajam di layar Retina.</li>
+          <li><strong>Tabular Figures:</strong> Angka gaji dan waktu menggunakan font JetBrains Mono agar lurus vertikal.</li>
+          <li><strong>Decision-First:</strong> Data yang butuh tindakan (follow-up macet, interview hari ini) ditempatkan paling atas.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        html.removeAttribute('data-theme');
+        document.getElementById('theme-icon').textContent = '🌙';
+        document.getElementById('theme-text').textContent = 'Dark Obsidian';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-icon').textContent = '☀️';
+        document.getElementById('theme-text').textContent = 'Light Zinc';
+      }
+    }
+  </script>
+</body>
+</html>

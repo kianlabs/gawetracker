@@ -15,19 +15,40 @@
         }
     }
     .code-block {
-        background-color: hsl(240 5.9% 10%);
-        color: #f8fafc;
+        background-color: #18181b;
+        color: #fafafa;
         padding: 1rem;
         border-radius: var(--radius);
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        border: 1px solid hsl(var(--border));
+        font-family: var(--font-mono);
         font-size: 0.8125rem;
         line-height: 1.5;
         overflow-x: auto;
         position: relative;
     }
     .token-mask {
-        font-family: ui-monospace, monospace;
-        letter-spacing: 0.1em;
+        font-family: var(--font-mono);
+        letter-spacing: 0.08em;
+    }
+    .endpoint-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+        box-shadow: var(--shadow-micro);
+    }
+    .endpoint-input {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: hsl(var(--foreground));
+        background: transparent;
+        border: none;
+        outline: none;
+        width: 100%;
+        flex: 1;
     }
     .metric-badge-box {
         display: grid;
@@ -47,7 +68,7 @@
 <div class="page-header">
     <div class="page-header-meta">
         <div style="display:flex;align-items:center;gap:0.5rem;">
-            <span class="badge badge-purple" style="font-size:0.75rem;">🤖 API &amp; Automation</span>
+            <span class="badge badge-purple" style="font-size:0.75rem;">API &amp; Automation</span>
             <h1 class="page-title">Integrasi Bot &amp; Webhook</h1>
         </div>
         <p class="page-subtitle">Hubungkan bot otomatis seperti Bot Lempar Jaring Loker atau Chrome Extension langsung ke pipeline GaweTracker</p>
@@ -98,46 +119,48 @@
             <div class="section-body" style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
                 {{-- Webhook URL --}}
                 <div>
-                    <label class="info-label" for="webhook-url">Webhook Ingestion URL (POST)</label>
-                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <label class="info-label" for="webhook-url">Webhook Ingestion URL</label>
+                    <div class="endpoint-box" style="margin-top:0.375rem;">
+                        <span class="badge badge-secondary" style="font-size:0.6875rem;font-weight:700;letter-spacing:0.04em;">POST</span>
                         <input type="text"
                                id="webhook-url"
                                readonly
                                value="{{ $webhookUrl }}"
-                               class="input"
-                               style="font-family:ui-monospace,monospace;font-size:0.8125rem;background-color:hsl(var(--muted)/0.3);flex:1;">
+                               class="endpoint-input">
                         <button type="button"
                                 class="btn btn-secondary btn-sm"
+                                style="flex-shrink:0;"
                                 onclick="copyText('webhook-url', this)">
                             Salin URL
                         </button>
                     </div>
-                    <p class="text-xs text-muted" style="margin-top:0.25rem;">Gunakan URL ini sebagai target output webhook di bot atau extension.</p>
+                    <p class="text-xs text-muted" style="margin-top:0.375rem;">Gunakan URL ini sebagai target output webhook di bot atau extension.</p>
                 </div>
 
                 {{-- API Token --}}
                 <div>
                     <label class="info-label" for="api-token">Personal API Key / Secret Token</label>
-                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <div class="endpoint-box" style="margin-top:0.375rem;">
                         <input type="password"
                                id="api-token"
                                readonly
                                value="{{ $apiToken }}"
-                               class="input token-mask"
-                               style="font-size:0.8125rem;background-color:hsl(var(--muted)/0.3);flex:1;">
+                               class="endpoint-input token-mask">
                         <button type="button"
                                 class="btn btn-outline btn-sm"
+                                style="flex-shrink:0;"
                                 onclick="togglePasswordVisibility('api-token', this)">
                             Tampilkan
                         </button>
                         <button type="button"
                                 class="btn btn-secondary btn-sm"
+                                style="flex-shrink:0;"
                                 onclick="copyText('api-token', this)">
                             Salin Key
                         </button>
                     </div>
-                    <p class="text-xs text-muted" style="margin-top:0.25rem;">
-                        Sertakan token ini dalam header <code>X-API-Key: {token}</code> atau <code>Authorization: Bearer {token}</code>.
+                    <p class="text-xs text-muted" style="margin-top:0.375rem;">
+                        Sertakan token ini dalam header <code style="font-family:var(--font-mono);font-size:0.75rem;">X-API-Key: {token}</code> atau <code style="font-family:var(--font-mono);font-size:0.75rem;">Authorization: Bearer {token}</code>.
                     </p>
                 </div>
 
@@ -235,12 +258,12 @@ async function pushToGaweTracker(jobData) {
         <div class="section-card">
             <div class="section-header">
                 <span class="section-title">Lamaran Terbaru via Bot</span>
-                <span class="badge badge-purple">{{ $recentBotApps->count() }} Terakhir</span>
+                <span class="badge badge-purple tabular-nums">{{ $recentBotApps->count() }} Terakhir</span>
             </div>
             <div class="section-body">
                 @if ($recentBotApps->isEmpty())
                     <div style="padding:2.5rem 1rem;text-align:center;">
-                        <span style="font-size:2rem;display:block;margin-bottom:0.5rem;">🤖</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:hsl(var(--muted-foreground));margin:0 auto 0.75rem auto;display:block;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m10 10-2 2 2 2"/><path d="m14 14 2-2-2-2"/></svg>
                         <p class="font-medium text-sm text-foreground">Belum ada lamaran via bot</p>
                         <p class="text-xs text-muted" style="margin-top:0.25rem;">Jalankan cURL di sebelah kiri atau hubungkan bot Anda untuk mulai mengisi otomatis.</p>
                     </div>
@@ -262,8 +285,8 @@ async function pushToGaweTracker(jobData) {
                                                 {{ $app->company }}
                                             </a>
                                             <div class="text-xs text-muted">{{ $app->position }}</div>
-                                            <div class="text-xs" style="color:hsl(262 83% 55%);margin-top:0.125rem;">
-                                                🤖 {{ $app->source }}
+                                            <div class="text-xs text-muted" style="margin-top:0.25rem;">
+                                                <span class="badge badge-secondary" style="font-size:0.6875rem;">{{ $app->source }}</span>
                                             </div>
                                         </td>
                                         <td>
@@ -290,7 +313,7 @@ async function pushToGaweTracker(jobData) {
             </div>
             <div class="section-body" style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div style="display:flex;gap:0.75rem;align-items:flex-start;">
-                    <span style="font-size:1.125rem;">⚡</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:hsl(var(--primary));flex-shrink:0;margin-top:2px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                     <div>
                         <strong class="text-sm text-foreground">Auto-Card di Kanban Board</strong>
                         <p class="text-xs text-muted">Setiap lamaran yang ditembak bot langsung bertengger di kolom <code>Terkirim (Applied)</code>.</p>
@@ -298,7 +321,7 @@ async function pushToGaweTracker(jobData) {
                 </div>
 
                 <div style="display:flex;gap:0.75rem;align-items:flex-start;">
-                    <span style="font-size:1.125rem;">🛡️</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:hsl(var(--primary));flex-shrink:0;margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     <div>
                         <strong class="text-sm text-foreground">Pencegah Lamaran Dobel (Deduplication)</strong>
                         <p class="text-xs text-muted">Jika bot mengirim perusahaan dan posisi yang sama dalam 30 hari terakhir, sistem otomatis menandainya agar database tetap bersih.</p>
@@ -306,7 +329,7 @@ async function pushToGaweTracker(jobData) {
                 </div>
 
                 <div style="display:flex;gap:0.75rem;align-items:flex-start;">
-                    <span style="font-size:1.125rem;">🎯</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:hsl(var(--primary));flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                     <div>
                         <strong class="text-sm text-foreground">Sinkron ke Target Mingguan</strong>
                         <p class="text-xs text-muted">Semua lamaran bot dihitung ke kemajuan target 5–10 lamaran mingguan Anda.</p>

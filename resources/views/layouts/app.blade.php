@@ -56,7 +56,10 @@
             </div>
 
             <div class="user-nav">
-                <span class="user-label">{{ Auth::user()->name }}</span>
+                <div class="flex items-center gap-2">
+                    <span class="user-avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr(Auth::user()->name ?: 'U', 0, 1)) }}</span>
+                    <span class="user-label">{{ Auth::user()->name }}</span>
+                </div>
                 @if (Auth::user()->hasGmailConnected())
                     <form method="POST" action="{{ route('gmail.disconnect') }}">
                         @csrf

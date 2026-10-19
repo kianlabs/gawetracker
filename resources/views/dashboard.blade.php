@@ -80,14 +80,14 @@
 
     <div class="metric-card accent-purple">
         <div class="metric-label">Win Rate Interview</div>
-        <div class="metric-value small tabular-nums" style="color:hsl(142 76% 30%);">{{ $win_rate }}%</div>
+        <div class="metric-value small tabular-nums">{{ $win_rate }}%</div>
         <div class="metric-footer">Tembus wawancara</div>
     </div>
 
-    <div class="metric-card" style="border-top-color:hsl(var(--foreground));">
+    <div class="metric-card accent-primary">
         <div class="metric-label">Target Mingguan</div>
         <div class="metric-value small tabular-nums">
-            {{ $weeklyCount }}<span class="text-xs font-normal text-muted" style="letter-spacing:0;">/{{ $weeklyTarget }}</span>
+            {{ $weeklyCount }}<span class="metric-fraction">/{{ $weeklyTarget }}</span>
         </div>
         <div class="progress" style="margin-top:0.25rem;" role="progressbar"
              aria-valuenow="{{ $weeklyPercentage }}" aria-valuemin="0" aria-valuemax="100">
@@ -211,7 +211,7 @@
             {{-- Progress visual --}}
             <div class="flex items-baseline justify-between mb-1">
                 <span class="text-xs text-muted">Kemajuan pekan ini</span>
-                <span class="text-xl font-bold tabular-nums">{{ $weeklyPercentage }}%</span>
+                <span class="metric-value small" aria-label="Kemajuan target mingguan">{{ $weeklyPercentage }}%</span>
             </div>
             <div class="progress mb-3" role="progressbar"
                  aria-valuenow="{{ $weeklyPercentage }}" aria-valuemin="0" aria-valuemax="100">
@@ -258,7 +258,13 @@
             <a href="{{ route('applications.kanban') }}"  class="nav-quick-link">Papan Kanban<span class="chevron">›</span></a>
             <a href="{{ route('analytics.index') }}"      class="nav-quick-link">Funnel &amp; Analisis<span class="chevron">›</span></a>
             <a href="{{ route('offers.index') }}"         class="nav-quick-link">Komparasi Offer<span class="chevron">›</span></a>
-            <a href="{{ route('integrations.index') }}"   class="nav-quick-link" style="color:hsl(262 83% 55%);">🤖 Integrasi Bot &amp; Webhook<span class="chevron">›</span></a>
+            <a href="{{ route('integrations.index') }}"   class="nav-quick-link" style="color:hsl(262 83% 55%);">
+                <span class="flex items-center gap-2">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+                    Integrasi Bot &amp; Webhook
+                </span>
+                <span class="chevron">›</span>
+            </a>
             <a href="{{ route('applications.export') }}"  class="nav-quick-link">Ekspor CSV<span class="chevron">↓</span></a>
         </div>
     </div>
@@ -323,7 +329,10 @@
                                            class="text-sm font-medium text-foreground"
                                            style="text-decoration:none;">{{ $app->company }}</a>
                                         @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
-                                            <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">🤖 Bot</span>
+                                            <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;gap:0.1875rem;" title="Di-submit otomatis via {{ $app->source }}">
+                                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+                                                Bot
+                                            </span>
                                         @endif
                                     </div>
                                 </div>

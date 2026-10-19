@@ -72,34 +72,34 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="metric-card accent-primary">
             <div class="metric-label">Total Lamaran</div>
-            <div class="metric-value">{{ $totalApplications }}</div>
+            <div class="metric-value tabular-nums">{{ $totalApplications }}</div>
             <div class="metric-footer">Semua berkas tercatat</div>
         </div>
         <div class="metric-card accent-green">
             <div class="metric-label">Win Rate Interview</div>
-            <div class="metric-value {{ $winRate !== null ? '' : 'small' }}">
+            <div class="metric-value tabular-nums {{ $winRate !== null ? '' : 'small' }}">
                 @if($winRate !== null)
-                    {{ $winRate }}<span style="font-size:1rem;font-weight:500">%</span>
+                    {{ $winRate }}<span class="metric-unit">%</span>
                 @else
-                    <span class="text-muted" style="font-size:1rem">Belum ada data</span>
+                    <span class="text-muted">Belum ada data</span>
                 @endif
             </div>
             <div class="metric-footer">Offer + Diterima dari tahap Interview</div>
         </div>
         <div class="metric-card accent-amber">
             <div class="metric-label">Tingkat Penolakan</div>
-            <div class="metric-value {{ $rejRate !== null ? '' : 'small' }}">
+            <div class="metric-value tabular-nums {{ $rejRate !== null ? '' : 'small' }}">
                 @if($rejRate !== null)
-                    {{ $rejRate }}<span style="font-size:1rem;font-weight:500">%</span>
+                    {{ $rejRate }}<span class="metric-unit">%</span>
                 @else
-                    <span class="text-muted" style="font-size:1rem">Belum ada data</span>
+                    <span class="text-muted">Belum ada data</span>
                 @endif
             </div>
             <div class="metric-footer">Dari total lamaran yang dikirim</div>
         </div>
-        <div class="metric-card">
+        <div class="metric-card accent-primary">
             <div class="metric-label">Aktif Diproses</div>
-            <div class="metric-value">{{ $activeCount }}</div>
+            <div class="metric-value tabular-nums">{{ $activeCount }}</div>
             <div class="metric-footer">Dalam pipeline saat ini</div>
         </div>
     </div>
@@ -125,7 +125,9 @@
 
             @if($totalApplications === 0)
                 <div class="empty-state">
-                    <div class="empty-state-icon">&#9638;</div>
+                    <div class="empty-state-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
                     <div class="empty-state-title">Belum ada data lamaran</div>
                     <div class="empty-state-desc">Tambahkan lamaran pertama Anda agar funnel dapat dihitung.</div>
                     <a href="{{ route('applications.create') }}" class="btn btn-default btn-sm" style="margin-top:1rem">Tambah Lamaran</a>
@@ -158,7 +160,9 @@
                         @if($idx > 0)
                             @php $prevKey = $stageKeys[$idx - 1]; $prevCount = $funnel[$prevKey]['count'] ?? 0; @endphp
                             <div class="flex items-center gap-2" style="padding: 0.125rem 1rem;">
-                                <span class="text-muted" style="font-size:0.7rem; line-height:1">&#9660;</span>
+                                <span class="text-muted flex-shrink-0" aria-hidden="true">
+                                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="4" x2="12" y2="20"/><polyline points="6 14 12 20 18 14"/></svg>
+                                </span>
                                 @if($prevCount > 0)
                                     <span class="text-xs {{ $convClass }}">Konversi {{ $item['conversion_rate'] }}%</span>
                                     @if($rejAtStage > 0)

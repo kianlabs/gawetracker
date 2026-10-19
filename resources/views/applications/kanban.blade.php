@@ -106,7 +106,7 @@
                             {{-- Company + work type --}}
                             <div class="flex items-start justify-between gap-2" style="margin-bottom:0.375rem;">
                                 <div class="flex items-center gap-2" style="min-width:0;">
-                                    @php $initial = mb_strtoupper(mb_substr($app->company, 0, 1)); @endphp
+                                    @php $initial = mb_strtoupper(mb_substr(trim($app->company) ?: '?', 0, 1)); @endphp
                                     @if ($app->logo_url)
                                         <img src="{{ $app->logo_url }}"
                                              alt="{{ $app->company }}"
@@ -117,7 +117,7 @@
                                         <span class="co-badge" aria-hidden="true">{{ $initial }}</span>
                                     @endif
                                     <a href="{{ route('applications.show', $app) }}"
-                                       class="font-semibold text-sm text-foreground"
+                                       class="font-semibold text-sm text-foreground hover:underline"
                                        style="text-decoration:none;line-height:1.3;word-break:break-word;min-width:0;"
                                        title="{{ $app->company }}">{{ $app->company }}</a>
                                 </div>
@@ -138,25 +138,25 @@
                                 @if ($app->location)
                                     <span class="text-xs text-muted truncate" style="max-width:8rem;">{{ $app->location }}</span>
                                 @endif
-                                <span class="badge {{ $app->days_waiting > 14 ? 'badge-destructive' : ($app->days_waiting > 7 ? 'badge-warning' : 'badge-muted') }}">
+                                <span class="badge {{ $app->days_waiting > 14 ? 'badge-destructive' : ($app->days_waiting > 7 ? 'badge-warning' : 'badge-muted') }} tabular-nums">
                                     Menunggu {{ $app->days_waiting }} hari
                                 </span>
                                 @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
-                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">
-                                        🤖 Bot
+                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.125rem 0.375rem;font-weight:600;letter-spacing:0.02em;" title="Di-submit otomatis via {{ $app->source }}">
+                                        BOT
                                     </span>
                                 @endif
                                 @if ($app->match_score !== null)
-                                    <span class="badge {{ $app->match_score >= 75 ? 'badge-success' : ($app->match_score >= 50 ? 'badge-warning' : 'badge-destructive') }}"
+                                    <span class="badge {{ $app->match_score >= 75 ? 'badge-success' : ($app->match_score >= 50 ? 'badge-warning' : 'badge-destructive') }} tabular-nums"
                                           title="ATS Match Score: {{ $app->match_score }}%">
-                                        🎯 {{ $app->match_score }}% Match
+                                        {{ $app->match_score }}% Match
                                     </span>
                                 @endif
                             </div>
 
                             @if ($app->salary_note)
                                 <div style="margin-bottom:0.5rem;">
-                                    <span class="text-xs text-muted">Gaji: <span class="font-medium text-foreground">{{ $app->salary_note }}</span></span>
+                                    <span class="text-xs text-muted">Gaji: <span class="font-medium text-foreground salary-num">{{ $app->salary_note }}</span></span>
                                 </div>
                             @endif
 
@@ -167,7 +167,7 @@
                                             class="btn btn-outline btn-sm w-full"
                                             style="height:1.75rem;padding:0 0.5rem;font-size:0.75rem;display:flex;align-items:center;justify-content:center;gap:0.25rem;"
                                             onclick="openMatchModal({{ $app->id }}, '{{ addslashes($app->company) }}', '{{ addslashes($app->position) }}', '{{ addslashes($app->job_description ?? $app->notes ?? '') }}', {{ $app->match_score ?? 'null' }}, {{ json_encode($app->match_analysis ?? null) }})">
-                                        <span>🎯</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                                         <span>{{ $app->match_score !== null ? 'Analisis: ' . $app->match_score . '%' : 'Analisis Kesesuaian' }}</span>
                                     </button>
                                 </div>
@@ -227,7 +227,7 @@
             </div>
 
             <button type="submit" id="btnRunMatch" class="btn btn-default w-full" style="display:flex;align-items:center;justify-content:center;gap:0.375rem;">
-                <span>🎯</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                 <span id="btnRunMatchText">Analisis Kesesuaian (Match Score)</span>
             </button>
         </form>
@@ -240,19 +240,19 @@
                         <span id="matchScoreLabel" style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;"></span>
                         <div id="matchStatusLabel" style="font-size:0.8125rem;font-weight:600;color:hsl(var(--foreground));"></div>
                     </div>
-                    <div id="matchScorePercent" style="font-size:1.75rem;font-weight:800;line-height:1;"></div>
+                    <div id="matchScorePercent" class="tabular-nums" style="font-size:1.75rem;font-weight:800;line-height:1;"></div>
                 </div>
             </div>
 
             {{-- Matched Badges --}}
             <div style="margin-bottom: 0.875rem;">
-                <div class="info-label" style="color:hsl(142 76% 36%); margin-bottom: 0.25rem;">✓ Kata Kunci Cocok (Matched Keywords)</div>
+                <div class="info-label" style="color:hsl(142 76% 36%); margin-bottom: 0.25rem;">Kata Kunci Cocok (Matched Keywords)</div>
                 <div id="matchedKeywordsContainer" style="display:flex;flex-wrap:wrap;gap:0.25rem;"></div>
             </div>
 
             {{-- Missing Badges --}}
             <div style="margin-bottom: 0.875rem;">
-                <div class="info-label" style="color:hsl(38 92% 40%); margin-bottom: 0.25rem;">! Kata Kunci ATS yang Perlu Ditambahkan (Keyword Gap)</div>
+                <div class="info-label" style="color:hsl(38 92% 40%); margin-bottom: 0.25rem;">Kata Kunci ATS yang Perlu Ditambahkan (Keyword Gap)</div>
                 <div id="missingKeywordsContainer" style="display:flex;flex-wrap:wrap;gap:0.25rem;"></div>
             </div>
 
@@ -273,7 +273,7 @@
     function openMatchModal(appId, company, position, description, score, analysis) {
         currentAppId = appId;
         document.getElementById('matchAppId').value = appId;
-        document.getElementById('kanbanMatchTitle').textContent = '🎯 AI Match Score — ' + company;
+        document.getElementById('kanbanMatchTitle').textContent = 'AI Match Score — ' + company;
         document.getElementById('kanbanMatchSubtitle').textContent = position;
         document.getElementById('matchDescriptionInput').value = description || '';
 

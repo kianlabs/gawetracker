@@ -150,7 +150,7 @@
                                                     {{ $app->company }}
                                                 </a>
                                                 @if ($app->source && (str_contains(strtolower($app->source), 'bot') || str_contains(strtolower($app->source), 'lempar jaring')))
-                                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">🤖 Bot</span>
+                                                    <span class="badge badge-purple" style="font-size:0.625rem;padding:0.0625rem 0.3125rem;" title="Di-submit otomatis via {{ $app->source }}">Bot</span>
                                                 @endif
                                             </div>
                                             @if ($app->source || $app->source_url)
@@ -174,7 +174,7 @@
                                         </a>
                                     </div>
                                     @if ($app->salary_note)
-                                        <div class="text-xs text-muted" style="margin-top:0.125rem;">{{ $app->salary_note }}</div>
+                                        <div class="text-xs text-muted tabular-nums salary-num" style="margin-top:0.125rem;">{{ $app->salary_note }}</div>
                                     @endif
                                 </td>
                                 <td>
@@ -198,10 +198,10 @@
                                     <span class="badge {{ $badgeVariant }}">{{ $statusLabel }}</span>
                                 </td>
                                 <td style="text-align:right;">
-                                    <div class="flex items-center justify-end gap-1" style="gap:0.375rem;">
+                                    <div class="flex items-center justify-end" style="gap:0.375rem;">
                                         <a href="{{ route('applications.show', $app) }}" class="btn btn-outline btn-sm">Detail</a>
                                         <a href="{{ route('applications.edit', $app) }}" class="btn btn-ghost btn-sm">Edit</a>
-                                        <form method="POST" action="{{ route('applications.destroy', $app) }}" onsubmit="return confirm('Hapus lamaran {{ addslashes($app->company) }} – {{ addslashes($app->position) }}? Semua riwayat status juga akan dihapus.')" style="display:inline;">
+                                        <form method="POST" action="{{ route('applications.destroy', $app) }}" onsubmit="return confirm('Hapus lamaran {{ addslashes($app->company) }} – {{ addslashes($app->position) }}? Semua riwayat status juga akan dihapus.')" style="display:inline-flex;margin:0;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-destructive btn-sm">Hapus</button>
