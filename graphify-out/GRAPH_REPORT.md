@@ -1,17 +1,17 @@
 # Graph Report - gawetracker  (2026-10-19)
 
 ## Corpus Check
-- 144 files · ~121,916 words
+- 144 files · ~121,964 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 34 file(s) not represented in the graph (top: (none) 20, .eml 4, .example 2)
 
 ## Summary
-- 961 nodes · 1724 edges · 97 communities (22 shown, 75 thin omitted)
+- 962 nodes · 1725 edges · 100 communities (21 shown, 79 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 102 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d70cf766`
+- Built from commit: `8bb14d1e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -43,7 +43,6 @@
 - Illuminate\Database\Schema\Blueprint
 - StoreJobApplicationRequest
 - GmailConnectionTest
-- TestCase
 - Deploy GaweTracker to Oracle Cloud (Always Free)
 - Illuminate\Database\Seeder
 - KanbanTest
@@ -70,7 +69,7 @@
 - 2026_10_18_155440_add_api_token_to_users_table.php
 - 2026_10_18_155940_add_user_id_to_job_applications_table.php
 - Deploy GaweTracker to Fly.io
-- GmailSetupCommandTest
+- EmailIngestionService
 - 2026_09_30_110730_create_status_histories_table.php
 - 2026_10_05_000000_create_companies_table.php
 - 2026_10_05_000002_create_job_postings_table.php
@@ -90,6 +89,8 @@
 - discovery/index.blade.php
 - integrations/index.blade.php
 - offers/index.blade.php
+- GmailClient
+- .fromGmail
 
 ## God Nodes (most connected - your core abstractions)
 1. `JobApplication` - 54 edges
@@ -106,27 +107,23 @@
 ## Surprising Connections (you probably didn't know these)
 - `Controllers` --references--> `AnalyticsController`  [INFERRED]
   AGENTS.md → app/Http/Controllers/AnalyticsController.php
+- `Controllers` --references--> `InterviewChecklistController`  [INFERRED]
+  AGENTS.md → app/Http/Controllers/InterviewChecklistController.php
 - `Controllers` --references--> `JobApplicationController`  [INFERRED]
   AGENTS.md → app/Http/Controllers/JobApplicationController.php
 - `Discovery (external job boards)` --references--> `JobDiscoveryController`  [INFERRED]
   AGENTS.md → app/Http/Controllers/JobDiscoveryController.php
 - `Controllers` --references--> `OfferController`  [INFERRED]
   AGENTS.md → app/Http/Controllers/OfferController.php
-- `Models` --references--> `Company`  [INFERRED]
-  AGENTS.md → app/Models/Company.php
 
 ## Import Cycles
 - None detected.
 
-## Communities (97 total, 75 thin omitted)
-
-### Community 0 - "JobEmailParser"
-Cohesion: 0.06
-Nodes (11): DiscoverJobs, ImportJobEmails, IngestedEmail, {closure#1}(), {closure#2}(), {closure#3}(), EmailIngestionService, GmailClient (+3 more)
+## Communities (100 total, 79 thin omitted)
 
 ### Community 1 - "GlintsSource"
 Cohesion: 0.06
-Nodes (15): DiscoveredJob, GlintsSource, JobDiscoveryService, JobSource, From the CLI, From the UI, How it works, Job discovery (Glints & JobStreet) (+7 more)
+Nodes (16): DiscoverJobs, DiscoveredJob, GlintsSource, JobDiscoveryService, JobSource, From the CLI, From the UI, How it works (+8 more)
 
 ### Community 2 - "composer.json"
 Cohesion: 0.04
@@ -134,15 +131,15 @@ Nodes (47): pestphp/pest-plugin, php-http/discovery, autoload, autoload-dev, psr
 
 ### Community 3 - "JobPosting"
 Cohesion: 0.06
-Nodes (19): CSS, Discovery (external job boards), Environment Pitfall, GaweTracker — Agent & Contributor Guidelines, Key Conventions, Models, Project Overview, Setup (+11 more)
+Nodes (20): CSS, Discovery (external job boards), Environment Pitfall, GaweTracker — Agent & Contributor Guidelines, Key Conventions, Models, Project Overview, Setup (+12 more)
 
 ### Community 4 - "JobstreetSource"
 Cohesion: 0.14
 Nodes (4): JobstreetSource, {closure#4}(), {closure#5}(), JobstreetSourceTest
 
 ### Community 5 - "GoogleOAuthService"
-Cohesion: 0.13
-Nodes (3): GmailSetup, AuthController, GoogleOAuthService
+Cohesion: 0.10
+Nodes (3): GmailSetup, GoogleOAuthService, GmailSetupCommandTest
 
 ### Community 6 - "GaweTracker"
 Cohesion: 0.07
@@ -151,10 +148,6 @@ Nodes (25): 500 Error, Alternative: Fly.io, Create `fly.toml`, GaweTracker Deplo
 ### Community 7 - "JobApplication"
 Cohesion: 0.16
 Nodes (3): {closure#2}(), OfferController, JobApplication
-
-### Community 8 - ".findOrCreateByName"
-Cohesion: 0.13
-Nodes (4): BackfillCompanies, Company, CompanyNameNormalizer, CompanyNameNormalizerTest
 
 ### Community 9 - "package.json"
 Cohesion: 0.10
@@ -165,16 +158,16 @@ Cohesion: 0.17
 Nodes (3): JobMatchService, ExampleTest, JobMatchServiceTest
 
 ### Community 11 - "Illuminate\Http\RedirectResponse"
-Cohesion: 0.20
-Nodes (3): GmailConnectionController, IntegrationController, JobDiscoveryController
+Cohesion: 0.15
+Nodes (4): AuthController, GmailConnectionController, InterviewChecklistController, JobDiscoveryController
 
 ### Community 13 - "Controller"
-Cohesion: 0.19
-Nodes (4): Controllers, DashboardController, InterviewChecklistController, KanbanController
+Cohesion: 0.28
+Nodes (3): Controllers, DashboardController, KanbanController
 
 ### Community 14 - "Illuminate\Http\Request"
-Cohesion: 0.20
-Nodes (3): BotApplicationController, Controller, JobMatchController
+Cohesion: 0.16
+Nodes (4): BotApplicationController, Controller, IntegrationController, JobMatchController
 
 ### Community 24 - "Illuminate\Database\Schema\Blueprint"
 Cohesion: 0.23
@@ -200,6 +193,10 @@ Nodes (8): Build, Cloudflare Access, Deploy GaweTracker via Cloudflare Tunnel, M
 Cohesion: 0.40
 Nodes (4): After deploy, Deploy GaweTracker to Fly.io, Prerequisites, Steps
 
+### Community 57 - "EmailIngestionService"
+Cohesion: 0.13
+Nodes (6): IngestedEmail, {closure#1}(), {closure#2}(), {closure#3}(), EmailIngestionService, ParsedJobEmail
+
 ### Community 61 - "provision.sh"
 Cohesion: 0.67
 Nodes (3): DEBIAN_FRONTEND, log(), provision.sh script
@@ -210,23 +207,23 @@ Nodes (3): Notes, Regenerating, Screenshots
 
 ## Knowledge Gaps
 - **14 isolated node(s):** `DEBIAN_FRONTEND`, `concurrently`, `tailwindcss`, `@laravel/multiplex`, `layouts.app` (+9 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 413 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **75 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 414 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **79 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `JobApplication` connect `JobApplication` to `JobEmailParser`, `JobPosting`, `.findOrCreateByName`, `Illuminate\Http\RedirectResponse`, `Controller`, `Illuminate\Http\Request`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `AnalyticsController.php`, `TestCase`, `Illuminate\Database\Seeder`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `JobMatchTest`, `JobApplicationController`, `JobApplicationTest`, `DashboardController.php`?**
+- **Why does `JobApplication` connect `JobApplication` to `JobPosting`, `.findOrCreateByName`, `Illuminate\Http\RedirectResponse`, `Illuminate\Http\Request`, `DashboardTest`, `AnalyticsTest`, `JobApplicationDetailTest`, `AnalyticsController.php`, `TestCase`, `Illuminate\Database\Seeder`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `JobMatchTest`, `JobApplicationController`, `JobApplicationTest`, `DashboardController.php`, `EmailIngestionService`, `.fromGmail`?**
   _High betweenness centrality (0.131) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `JobApplication` (e.g. with `Discovery (external job boards)` and `Models`) actually correct?**
   _`JobApplication` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DEBIAN_FRONTEND`, `concurrently`, `tailwindcss` to the rest of the system?**
   _14 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `JobEmailParser` be split into smaller, more focused modules?**
-  _Cohesion score 0.05516431924882629 - nodes in this community are weakly interconnected._
-- **Why does `TestCase` connect `TestCase` to `JobEmailParser`, `GlintsSource`, `JobPosting`, `JobstreetSource`, `GoogleOAuthService`, `.findOrCreateByName`, `GoogleLoginTest`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `JobDiscoveryTest`, `OfferChecklistTest`, `GmailConnectionTest`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `AuthTest`, `EmailIngestionTest`, `JobMatchTest`, `JobApplicationTest`, `GmailSetupCommandTest`?**
-  _High betweenness centrality (0.094) - this node is a cross-community bridge._
 - **Should `GlintsSource` be split into smaller, more focused modules?**
-  _Cohesion score 0.06455399061032864 - nodes in this community are weakly interconnected._
-- **Why does `User` connect `User` to `JobEmailParser`, `JobPosting`, `GoogleOAuthService`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `JobDiscoveryTest`, `OfferChecklistTest`, `AuthController.php`, `UserFactory.php`, `GmailConnectionTest`, `TestCase`, `Illuminate\Database\Seeder`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `AuthTest`, `JobMatchTest`, `JobApplicationTest`?**
+  _Cohesion score 0.0625694187338023 - nodes in this community are weakly interconnected._
+- **Why does `TestCase` connect `JobApplicationTest` to `GlintsSource`, `JobPosting`, `JobstreetSource`, `GoogleOAuthService`, `.findOrCreateByName`, `GoogleLoginTest`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `JobDiscoveryTest`, `OfferChecklistTest`, `GmailConnectionTest`, `TestCase`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `AuthTest`, `EmailIngestionTest`, `JobMatchTest`, `EmailIngestionService`?**
+  _High betweenness centrality (0.094) - this node is a cross-community bridge._
+- **Should `composer.json` be split into smaller, more focused modules?**
+  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
+- **Why does `User` connect `User` to `JobPosting`, `GoogleOAuthService`, `Illuminate\Http\RedirectResponse`, `DashboardTest`, `AnalyticsTest`, `JobApplicationCrudTest`, `JobApplicationDetailTest`, `JobDiscoveryTest`, `OfferChecklistTest`, `AuthController.php`, `UserFactory.php`, `GmailConnectionTest`, `TestCase`, `Illuminate\Database\Seeder`, `KanbanTest`, `QuickAddExportTest`, `Illuminate\Foundation\Testing\RefreshDatabase`, `AuthTest`, `JobMatchTest`, `JobApplicationTest`, `.fromGmail`?**
   _High betweenness centrality (0.090) - this node is a cross-community bridge._
