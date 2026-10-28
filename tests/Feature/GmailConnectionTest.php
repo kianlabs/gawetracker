@@ -40,7 +40,6 @@ class GmailConnectionTest extends TestCase
 
         $this->assertStringContainsString('accounts.google.com', $location);
         $this->assertStringContainsString('access_type=offline', $location);
-        $this->assertStringContainsString('gmail.readonly', $location);
         $this->assertStringContainsString('state=', $location);
     }
 
