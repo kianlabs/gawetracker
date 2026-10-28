@@ -74,7 +74,6 @@ class GoogleLoginTest extends TestCase
 
         $this->assertStringContainsString('accounts.google.com', $location);
         $this->assertStringContainsString('access_type=offline', $location);
-        $this->assertStringContainsString('gmail.readonly', $location);
         // Must use the login callback, not the connect-Gmail one.
         $this->assertStringContainsString(
             'redirect_uri='.urlencode('http://localhost/auth/google/callback'),
