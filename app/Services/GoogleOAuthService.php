@@ -19,11 +19,11 @@ class GoogleOAuthService
 
     private const TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token';
 
-    /** Read-only Gmail access — the minimum needed to ingest mail. */
+    /** OpenID Connect scopes for authentication only — no Gmail access. */
     public const SCOPES = [
-        'https://www.googleapis.com/auth/gmail.readonly',
         'openid',
         'email',
+        'profile',
     ];
 
     /**

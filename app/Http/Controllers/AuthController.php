@@ -61,8 +61,8 @@ class AuthController extends Controller
     /**
      * Start "Sign in with Google".
      *
-     * The scope includes gmail.readonly, so a successful sign-in also links the
-     * mailbox: there is no separate "connect Gmail" step afterwards.
+     * Uses OpenID Connect scopes (openid, email, profile) for authentication only.
+     * No Gmail access is requested during sign-in.
      */
     public function redirectToGoogle(): RedirectResponse
     {
