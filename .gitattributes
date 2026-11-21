@@ -9,3 +9,6 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Generated code-graph output; keep it out of GitHub language stats.
+graphify-out/** linguist-generated
